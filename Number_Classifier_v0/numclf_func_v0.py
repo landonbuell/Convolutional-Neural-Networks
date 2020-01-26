@@ -11,19 +11,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-from sklearn.linear_model import SGDClassifier
+
 import sklearn.model_selection as model
 import sklearn.metrics as metrics
 
         #### FUNCTION DEFINITIONS ####
 
-def SGD_Classifier (xdata,ydata,max_iter,seed=0,size=0.1):
+def split_train_test (xdata,ydata,seed=0,size=0.1):
     """
     Create a Stoichastic Gradient Descent Classifier Object w/ sklearn
     ----------------
     xdata (array/DataFrame) : base dataset
     ydata (array/DataFrame) : target labels for dataset
-    max_iter (int) : Maximum iterations for SGD operations
     seed (int) : Random state seed for shuffeling data (0 by default)
     size (float) : Relative size of testing data set (0.1 by default)
     ----------------
@@ -35,11 +34,9 @@ def SGD_Classifier (xdata,ydata,max_iter,seed=0,size=0.1):
     xy_dict =   {'X_train':X_train,'X_test':X_test,
                  'Y_train':Y_train,'Y_test':Y_test}     # train/test data into dictionary
 
-    CLF = SGDClassifier(random_state=seed)    # create classifer object
-    CLF.fit(X_train,Y_train)                # fit dataset   
-    return CLF,xy_dict                      # return classifier & xy data dictionary
+    return xy_dict                      # return classifier & xy data dictionary
 
-def confusion (clf,xdata,ydata):
+def confusion (clf,xdata,ydata,show=True):
     """
     Build Confusion matric and dictionary for K-Class Classifier
     ----------------
@@ -51,6 +48,11 @@ def confusion (clf,xdata,ydata):
     """
     ypred = model.cross_val_predict(clf,xdata,ydata)    # cross-val prediction
     conf_mat = metrics.confusion_matrix(ydata,ypred)    # build confusion matrix
+
+    if show == True:
+        plt.matshow(conf_mat,cmap=plt.cmp.gray)
+        plt.show()
+
     return conf_mat
 
 def general_metrics (clf,xdata,ydata,disp=True):
