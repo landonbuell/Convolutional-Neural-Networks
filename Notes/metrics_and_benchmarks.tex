@@ -1,0 +1,146 @@
+% ================
+% Landon Buell
+% Prof. Yu
+% CNN Metrics
+% 27 January 2020
+% ================
+
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+
+% ================================================================
+
+\begin{document}
+
+% ================================================================
+
+\title{An Introduction to Convolutional Neural Network Benchmarks and Metrics}
+\author{Landon Buell}
+\date{27 January 2020}
+\maketitle
+
+% ================================================================
+
+\section{Introduction}
+\paragraph*{}Tom Mitchell, former Chair of Machine Learning Department at Carnegie Melon University, describes \textit{machine learning} as:
+\begin{quote}
+A computer program is said to learn from experience $E$ with respect to some task $T$, and some performance measure $P$, id it's performance on $T$, as measured by $P$, improves with experience, $E$. \cite{Geron}
+\end{quote}
+\paragraph*{}As the complexity of machine learning algorithms increase, it's important that we can still measure the performance, $P$, as described by Mitchell. In terms of programs structures like Convolutional Neural Networks (CNNs), there exists various sets of benchmarks that we can use to evaluate the performance of that network. Each metric has a particular use and validity and each one may only apply to particular type of algorithm. In this introduction, I will break up mthese benchmarks into two very board categories: \textit{Regression Metrics} and \textit{Classification Metrics}.
+\paragraph*{}For this work I will also use a notation convention as used by James Gareth in his book "An Introduction to Statistical Learning". A value or function that is approximated or estimated with  set of data $X$, is denoted with a \textit{hat}. Thus an approximated function, $f$ becomes $\hat{f}$ which produces an estimated output $\hat{Y}$, which can be compared to known outputs, $Y$. Additionally, $X$ and $Y$ can be treated as discrete vector-like objects, which can be indexed through with a subscript. Thus sets $X$ and $Y$, which $n$ elements are equivalently:
+\begin{equation}
+X = [x_1, x_2 , x_3 , ... , x_i , ... , x_{n-1} , x_n]
+\end{equation}
+and
+\begin{equation}
+Y = [y_1, y_2 , y_3 , ... , y_i , ... , y_{n-1} , y_n]
+\end{equation}
+
+% ================================================================
+
+\section{Regression Metrics}
+\paragraph*{}Generally, a regression algorithm is a type of Machine Learning Algorithm that seeks to build a function $f$, using a set of data $X$ such that the result of the function is continuous, real number value \cite{Petrik}. In function notation:
+\begin{equation}
+\label{regression function}
+f: X \rightarrow \mathbb{R}
+\end{equation}
+A regression algorithm generally takes some function and applies a \textit{best fit} line or curve through the data, $X$ as a method of approximation \cite{Gareth}. The output of that function is $Y \in \mathbb{R}$. 
+\paragraph*{}The estimated function $\hat{f}$  operates as:
+\begin{equation}
+\hat{f}(X) = \hat{Y}
+\end{equation}
+or for each individual element of $X$:
+\begin{equation}
+\hat{f}(x_i) = \hat{y}_i
+\end{equation}
+
+% ================================
+
+\subsection{Mean Squared Error}
+\paragraph*{}Mean squared error (MSE) is a very basic way of quantifying how well the predicted response matches a known set of responses. To compute this value, we take the known output for a sample, $y_i$ and find it's difference from the predicted output $\hat{f}(x_i)$, and then the result is squared. This quantity is repeated for each index, $i$, and divided by the total number of elements in the set, $n$.
+\begin{equation}
+\label{MSE}
+MSE = \frac{1}{n}\sum_{i=1}^{n} \Big( y_i - \hat{f}(x_i) \Big)^2
+\end{equation}
+\paragraph*{}So if the predicted response from $\hat{f}$ differs very slightly from each index in the expected response, $y_i$, then the whole MSE takes on a very small values. This indicates a regression that fits the data well. Conversely, if the predicted response differs greatly from each index, the the whole MSE error takes on a very large value, and indicates that the data is not fit very well. In general, the goal of regression algorithms is to minimize the MSE value \cite{Petrik}.
+
+% ================================
+
+
+% ================================
+
+% ================================================================
+
+\section{Classification Metrics}
+\paragraph*{}A classification algorithm is a type of Machine Learning Algorithm that seeks to build a function $f$, using a set of data $X$, such that the result of the function is one of $k$ classes \cite{Petrik}. In function notion:
+\begin{equation}
+\label{classification function}
+f: X \rightarrow \{1,2,...,k-1,k\}
+\end{equation}
+A classification algorithm takes some set of data, $X$, and using qualities or \textit{features} of that data, places each element, $x_i$ into a bin, called a \textit{class} with other similar elements \cite{Geron}. 
+
+% ================================
+
+\subsection{K - Folds Cross Validation}
+\paragraph*{} K - Folds Cross Validation (also called K-Folds X-val) is a method that is part of a larger set of cross validation algorithms. K- Folds is a resampling procedure that allows for the evaluation of a certain model based on a limited set of data \cite{Brownlee}. For the algorithm to work, it requires that there be a data set $X$, that is fully labeled, and can be broken down into an arbitray amount of subsets.
+\paragraph*{}The procedure revolves around the parameter $k$, which gives the algorithm the amount of sub groups that sample data is split into for the duration of it's execution. Very generally, the procedure of the algorithm is as follows:
+\begin{enumerate}
+\item[1.]Shuffle data set $X$ as needed. Split the data set into $k$ similarly sized subsets. \\$X \rightarrow \big[ X_1 , X_2 , ... X_k \big]$.
+\item[2.]For each set of data, $X_n$, save it as a testing subset. Use the remaining $k-1$ subsets as a the set of training data for the model.
+\item[3.]Fit the model with $k-1$ subsets and evaluate. Hold the evaluation (can be percentage accuracy) and discard the particular model.
+\item[4.]Repeat steps 2 and 3 for the remaining $k-1$ subsets.
+\end{enumerate}
+\paragraph*{}After the procedure has been completed for all $k$ subsets, the results can be amalgamated as desired. This method ensures that every sample in the entire original data set, $X$ is used at least once as a testing element, and $k-1$ times as a training element. The exact value of $k$ is contingent on the particular data set. No single value is useful for all types of models. Often, $k$ should be chosen such that each subset is also statistically similar to the larger data set \cite{Geron}. Additionally, the value $k = 10$ has been experimentally shown to produce generally low-biased estimates on the performance of a classifier \cite{Brownlee}.
+\paragraph*{}it is important to recognize that percent accuracy alone is a very poor way of determining the validity of model \cite{Geron}. K- Folds alone provides very little valuable information, and thus in often used in conjunction with other benchmark methods.
+
+% ================================
+
+\subsection{Precision Score}
+
+
+% ================================
+
+\subsection{Recall Score}
+
+
+% ================================
+
+\subsection{F1 Score}
+
+% ================================
+
+\subsection{Confusion Matrix}
+
+
+
+% ================================================================
+
+\begin{thebibliography}{9}
+\bibliographystyle{apalike}
+
+\bibitem{Brownlee}
+Brownlee, Jason. “A Gentle Introduction to k-Fold Cross-Validation.” \textit{Machine Learning Mastery}, 8 Aug. 2019, machinelearningmastery.com/k-fold-cross-validation/.
+
+\bibitem{Gareth}
+James, Gareth, et al. {An Introduction to Statistical Learning with Applications in R}. Springer, 2017.
+
+\bibitem{Geron}
+Géron Aurélien. \textit{Hands-on Machine Learning with Scikit-Learn and TensorFlow: Concepts, Tools, and Techniques to Build Intelligent Systems}. O'Reilly, 2017.
+
+\bibitem{Goodfellow}
+Goodfellow, Ian, et al.\textit{Deep Learning}. MIT Press, 2017.
+
+\bibitem{Petrik}
+Petrik, Marek. “Introduction to Machine Learning.” Machine Learning. 22 Jan. 2020, Durham, New Hampshire.
+
+\end{thebibliography}
+
+% ================================================================
+
+\end{document}
