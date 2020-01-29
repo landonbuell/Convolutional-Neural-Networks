@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.1.23)  27 JAN 2020 21:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.1.23)  28 JAN 2020 12:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -284,33 +284,38 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdft
-ex.map}] [2] [3] [4] (./metrics_and_benchmarks.aux) ) 
+ex.map}] [2] [3] [4] [5] [6] (./metrics_and_benchmarks.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 2565 strings out of 494106
- 33199 string characters out of 6172148
- 103108 words of memory out of 5000000
- 6672 multiletter control sequences out of 15000+600000
- 12750 words of font info for 49 fonts, out of 8000000 for 9000
+ 2571 strings out of 494106
+ 33272 string characters out of 6172148
+ 103134 words of memory out of 5000000
+ 6677 multiletter control sequences out of 15000+600000
+ 13057 words of font info for 50 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 30i,6n,31p,708b,211s stack positions out of 5000i,500n,10000p,200000b,80000s
-<c:/Users/Landon/AppData/R
-oaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/Users/L
-andon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.
-pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmmi12.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmmi8.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf
--dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/Users/Landon/AppData/Roaming
-/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/Users/Landon/A
-ppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/U
-sers/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/c
-msy10.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmsy8.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmti12.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX
-/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on metrics_and_benchmarks.pdf (4 pages, 122451 bytes).
+ 30i,9n,31p,751b,211s stack positions out of 5000i,500n,10000p,200000b,80000s
+<c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmbx12.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmex10.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><c:/Users/Landon/AppData/Roaming
+/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/Users/Landon/A
+ppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/
+Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr17.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr8.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/font
+s/type1/public/amsfonts/cm/cmss12.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/Users/Landon/AppData/R
+oaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/Users/La
+ndon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.p
+fb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfo
+nts/symbols/msbm10.pfb>
+Output written on metrics_and_benchmarks.pdf (6 pages, 141884 bytes).
 PDF statistics:
- 61 PDF objects out of 1000 (max. 8388607)
- 43 compressed objects within 1 object stream
+ 71 PDF objects out of 1000 (max. 8388607)
+ 50 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -72,8 +72,12 @@ MSE = \frac{1}{n}\sum_{i=1}^{n} \Big( y_i - \hat{f}(x_i) \Big)^2
 
 % ================================
 
+\subsection{Root Mean Squared Error}
+
 
 % ================================
+
+\subsection{Variance and Standard Deviation}
 
 % ================================================================
 
@@ -101,21 +105,63 @@ A classification algorithm takes some set of data, $X$, and using qualities or \
 
 % ================================
 
-\subsection{Precision Score}
+\subsection{Confusion Matrix}
+\paragraph*{}A Confusion Matrix is a one of the most standardized tools in evaluating the performance of a classifier program. Suppose a classifier program has been constructed to place input samples into one of $k$ classes. Thus, the confusion matrix, $C$, associated with that algorithm takes the form of a $k \times k$ matrix. The columns of that matrix represent predicted classes, and the rows represent actual classes \cite{Geron}. A confusion matrix is generally assembled from the results of some sort of K-Folds Cross Validation Algorithm. 
+\paragraph*{}Each element of this matrix, $C_{i,j}$ indicated the number of samples predicted by the classifier to be in class $k_i$, but are actually labeled as being in class $k_j$. In the case where $i = j$ (the main diagonal entries), that indicates samples that were correctly predicted to be in the class that they are labeled as. This means that a confusion matrix with strong main diagonal entries indicates a classifier program that performs very well. 
+\paragraph*{}In the example case where the entry $C_{a,b}$ has a large value, then that is an indication that several samples are being placed into class. It also may be likely that element $C_{b,a}$ also has a similarly large entry. This means that classes $a$ and $b$ are commonly confused with each other. 
+\paragraph*{}In Geron's book, \textit{Hands on Machine Learning with Sci-kit Learn and Tensorflow}, \cite{Geron}, he uses the MNIST data base of 70,000 hand-written and labeled figures to build a 10 - Fold Classifier. In the program that he outlines in Chapter 3, he used a SGD Classifier to classify the images based on the digit $0$ through $9$. For the particular classification algorithm, the confusion matrix, when color coded in gray-scale, looks like:
+\begin{figure}[H]
+\begin{center}
+\textbf{Image of Confusion Matrix Goes Here}
+\end{center}
+\end{figure}
 
+
+% ================================
+
+\subsection{Precision Score}
+\paragraph*{}The Precision score of a classification algorithm is most commonly applied to a \textit{binary classifier}. Once a cross - validation score algorithm has been implemented to a binary classifier (With outputs \textsf{True} or \textsf{False}), It can be used to create a $2 \times 2$ confusion with the elements \textit{True Positive}, \textit{True Negative}, \textit{False Positive} and \textit{False Negative}, represented as TP,TN,FP,FN respectively \cite{Gareth}. The confusion matrix is then:
+\begin{equation}
+C = 
+\begin{bmatrix}
+\text{True Positive} & \text{False Negative} \\
+\text{False Positive} & \text{True Negative} \\
+\end{bmatrix}
+\end{equation}
+Using these quantities, we can construct the \textit{precision score} of the classifier:
+\begin{equation}
+\label{precsision score}
+P = \frac{TP}{TP + FP} = \frac{C_{1,1}}{C_{1,1}+C_{2,1}}
+\end{equation}
+\paragraph*{}The value of $P$ is bounded between $0$ and $1$. In short, the precision score is a measurement of \textit{how many selected items are relevant} to the problem. Notice is deals only with the first column of the matrix $C$. The precision socre is a metric that determines the ratio between how many elements selected were correct (TP) to how many total elements were selected (TP + FP). It is the fraction of correct detection by the model \cite{Goodfellow}. 
 
 % ================================
 
 \subsection{Recall Score}
-
+\paragraph*{}The Recall score of of a classification algorithm is also mostly used with a binary classifier. Again, it begins by implementing some sort of cross - validation algorithm, and then constructing the results into a $2 \times 2$ confusion matrix.:
+\begin{equation}
+C = 
+\begin{bmatrix}
+\text{True Positive} & \text{False Negative} \\
+\text{False Positive} & \text{True Negative} \\
+\end{bmatrix}
+\end{equation}
+Once again with these, we can compute the \textit{recall score} of the classifier:
+\begin{equation}
+\label{recall score}
+R = \frac{TP}{TP + FN} = \frac{C_{1,1}}{C_{1,1}+C_{1,2}}
+\end{equation}
+\paragraph*{}Once again, the value of $R$ is bounded between $0$ and $1$. The recall score is a a measurement of \textit{how many relevant items are selected} in the problem. Just as precision deals only with the first column of the $C$ matrix, the recall deals only with the first row of that same matrix. It is the ratio bwteen how many elements selected were correct (TP) to how many elements are labeled as such (TP + FN). It is the fraction of true events that were detected \cite{Goodfellow}.
 
 % ================================
 
 \subsection{F1 Score}
-
-% ================================
-
-\subsection{Confusion Matrix}
+\paragraph*{}Precision and Recall are both valuable metrics of a binary classifier, but each one comes at the cost of the other. Thus a higher precision causes a lower recall and a higher recall causes a lower precision. This concept is called \textit{precision - recall tradeoff} \cite{Geron}. We can actually adjust parameters in our classifier to allow for the favoring of one measure over the other, but this presents a whole new set variables and is certainly dependent on the situation at hand.  The $F1$ (may also be notated as $F_1$) score of a classifier allows for a sort of compromise between $P$ and $R$. It is the harmonic mean between precision and recall \cite{Goodfellow}. It is defined as:
+\begin{equation}
+\label{F1 score}
+F1 = 2\Big(\frac{P \times R}{P + R}\Big)
+\end{equation}
+\paragraph*{}Once again, the $F1$ score is bounded between $0$ and $1$. It is also the area underneath the curve created by mapping $P$ as a function of $R$ or vice-versa - this is called a $P-R$ curve \cite{Goodfellow}. The $F1$ score is high (closer to $1$) when the algorithm has both a high precision and recall score, and a low $F1$ score when the two differ greatly.
 
 
 
