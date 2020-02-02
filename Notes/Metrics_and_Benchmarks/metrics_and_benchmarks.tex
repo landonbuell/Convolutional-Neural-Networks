@@ -30,10 +30,10 @@
 \section{Introduction}
 \paragraph*{}Tom Mitchell, former Chair of Machine Learning Department at Carnegie Melon University, describes \textit{machine learning} as:
 \begin{quote}
-A computer program is said to learn from experience $E$ with respect to some task $T$, and some performance measure $P$, id it's performance on $T$, as measured by $P$, improves with experience, $E$. \cite{Geron}
+A computer program is said to learn from experience $E$ with respect to some task $T$, and some performance measure $P$, if it's performance on $T$, as measured by $P$, improves with experience, $E$. \cite{Geron}
 \end{quote}
-\paragraph*{}As the complexity of machine learning algorithms increase, it's important that we can still measure the performance, $P$, as described by Mitchell. In terms of programs structures like Convolutional Neural Networks (CNNs), there exists various sets of benchmarks that we can use to evaluate the performance of that network. Each metric has a particular use and validity and each one may only apply to particular type of algorithm. In this introduction, I will break up mthese benchmarks into two very board categories: \textit{Regression Metrics} and \textit{Classification Metrics}.
-\paragraph*{}For this work I will also use a notation convention as used by James Gareth in his book "An Introduction to Statistical Learning". A value or function that is approximated or estimated with  set of data $X$, is denoted with a \textit{hat}. Thus an approximated function, $f$ becomes $\hat{f}$ which produces an estimated output $\hat{Y}$, which can be compared to known outputs, $Y$. Additionally, $X$ and $Y$ can be treated as discrete vector-like objects, which can be indexed through with a subscript. Thus sets $X$ and $Y$, which $n$ elements are equivalently:
+\paragraph*{}As the complexity of machine learning algorithms increase, it's important that we can still measure the performance, $P$, as described by Mitchell. In terms of programs structures like Convolutional Neural Networks (CNNs), there exists various sets of benchmarks that we can use to evaluate the performance of that network. Each metric has a particular use and validity and each one may only apply to particular type of algorithm. In this introduction, I will break these benchmarks into two very board categories: \textit{Regression Metrics} and \textit{Classification Metrics}.
+\paragraph*{}For this work I will also use a notation convention as used by Gareth James in his book "An Introduction to Statistical Learning" \cite{James}. A value or function that is approximated or estimated with  set of data $X$, is denoted with a \textit{hat}. Thus an approximated function, $f$ becomes $\hat{f}$ which produces an estimated output $\hat{Y}$, which can be compared to known outputs, $Y$. Additionally, $X$ and $Y$ can be treated as discrete vector-like objects, which can be indexed through with a subscript. Thus sets $X$ and $Y$, which $n$ elements are equivalently:
 \begin{equation}
 X = [x_1, x_2 , x_3 , ... , x_i , ... , x_{n-1} , x_n]
 \end{equation}
@@ -50,7 +50,7 @@ Y = [y_1, y_2 , y_3 , ... , y_i , ... , y_{n-1} , y_n]
 \label{regression function}
 f: X \rightarrow \mathbb{R}
 \end{equation}
-A regression algorithm generally takes some function and applies a \textit{best fit} line or curve through the data, $X$ as a method of approximation \cite{Gareth}. The output of that function is $Y \in \mathbb{R}$. 
+A regression algorithm generally takes some function and applies a \textit{best fit} line or curve through the data, $X$ as a method of approximation \cite{James}. The output of that function is $Y \in \mathbb{R}$. 
 \paragraph*{}The estimated function $\hat{f}$  operates as:
 \begin{equation}
 \hat{f}(X) = \hat{Y}
@@ -92,8 +92,7 @@ A classification algorithm takes some set of data, $X$, and using qualities or \
 % ================================
 
 \subsection{K - Folds Cross Validation}
-\paragraph*{} K - Folds Cross Validation (also called K-Folds X-val) is a method that is part of a larger set of cross validation algorithms. K- Folds is a resampling procedure that allows for the evaluation of a certain model based on a limited set of data \cite{Brownlee}. For the algorithm to work, it requires that there be a data set $X$, that is fully labeled, and can be broken down into an arbitray amount of subsets.
-\paragraph*{}The procedure revolves around the parameter $k$, which gives the algorithm the amount of sub groups that sample data is split into for the duration of it's execution. Very generally, the procedure of the algorithm is as follows:
+\paragraph*{} K - Folds Cross Validation (also called K-Folds X-val) is a method that is part of a larger set of cross validation algorithms. K- Folds is a resampling procedure that allows for the evaluation of a certain model based on a limited set of data \cite{Brownlee}. For the algorithm to work, it requires that there be a data set $X$, that is fully labeled, and can be broken down into $k$ amount of subsets. The parameter $k$ gives the algorithm the amount of sub groups that sample data is split into for the duration of it's execution. Very generally, the procedure of the algorithm is as follows:
 \begin{enumerate}
 \item[1.]Shuffle data set $X$ as needed. Split the data set into $k$ similarly sized subsets. \\$X \rightarrow \big[ X_1 , X_2 , ... X_k \big]$.
 \item[2.]For each set of data, $X_n$, save it as a testing subset. Use the remaining $k-1$ subsets as a the set of training data for the model.
@@ -173,7 +172,7 @@ F1 = 2\Big(\frac{P \times R}{P + R}\Big)
 \bibitem{Brownlee}
 Brownlee, Jason. “A Gentle Introduction to k-Fold Cross-Validation.” \textit{Machine Learning Mastery}, 8 Aug. 2019, machinelearningmastery.com/k-fold-cross-validation/.
 
-\bibitem{Gareth}
+\bibitem{James}
 James, Gareth, et al. {An Introduction to Statistical Learning with Applications in R}. Springer, 2017.
 
 \bibitem{Geron}

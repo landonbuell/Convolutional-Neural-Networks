@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.1.23)  28 JAN 2020 12:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.2.2)  2 FEB 2020 17:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -229,7 +229,7 @@ LaTeX Font Info:    ... okay on input line 19.
 
 (c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epst
 opdf-base.sty
-Package: epstopdf-base 2019-12-09 v2.10 Base part for package epstopdf
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 
@@ -284,19 +284,23 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdft
-ex.map}] [2] [3] [4] [5] [6] (./metrics_and_benchmarks.aux)
+ex.map}] [2] [3]
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: Citation `Gareth' on page 4 undefined on input line 122.
+
+[4] [5] [6] (./metrics_and_benchmarks.aux)
+
+LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
  2571 strings out of 494106
- 33272 string characters out of 6172148
+ 33271 string characters out of 6172149
  103134 words of memory out of 5000000
  6677 multiletter control sequences out of 15000+600000
  13057 words of font info for 50 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 30i,9n,31p,751b,211s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 30i,9n,31p,751b,210s stack positions out of 5000i,500n,10000p,200000b,80000s
 <c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfon
 ts/cm/cmbx12.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type
 1/public/amsfonts/cm/cmex10.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-
@@ -312,7 +316,7 @@ oaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/Users/La
 ndon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.p
 fb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfo
 nts/symbols/msbm10.pfb>
-Output written on metrics_and_benchmarks.pdf (6 pages, 141884 bytes).
+Output written on metrics_and_benchmarks.pdf (6 pages, 142241 bytes).
 PDF statistics:
  71 PDF objects out of 1000 (max. 8388607)
  50 compressed objects within 1 object stream
