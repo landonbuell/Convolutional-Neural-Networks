@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.2.2)  2 FEB 2020 17:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.2.2)  2 FEB 2020 22:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -286,11 +286,14 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 {c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdft
 ex.map}] [2] [3]
 
-LaTeX Warning: Citation `Gareth' on page 4 undefined on input line 122.
+LaTeX Warning: Citation `Gareth' on page 4 undefined on input line 135.
 
 [4] [5] [6] (./metrics_and_benchmarks.aux)
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
@@ -300,7 +303,7 @@ Here is how much of TeX's memory you used:
  6677 multiletter control sequences out of 15000+600000
  13057 words of font info for 50 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 30i,9n,31p,751b,210s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 30i,9n,31p,751b,192s stack positions out of 5000i,500n,10000p,200000b,80000s
 <c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfon
 ts/cm/cmbx12.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type
 1/public/amsfonts/cm/cmex10.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-
@@ -316,7 +319,7 @@ oaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/Users/La
 ndon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.p
 fb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfo
 nts/symbols/msbm10.pfb>
-Output written on metrics_and_benchmarks.pdf (6 pages, 142241 bytes).
+Output written on metrics_and_benchmarks.pdf (6 pages, 142071 bytes).
 PDF statistics:
  71 PDF objects out of 1000 (max. 8388607)
  50 compressed objects within 1 object stream
