@@ -28,11 +28,11 @@
 % ================================================================
 
 \section{Introduction}
-\paragraph*{}Tom Mitchell, former Chair of Machine Learning Department at Carnegie Melon University, describes \textit{machine learning} as:
+\paragraph*{}Tom Mitchell, former Chair of Machine Learning Department at Carnegie Melon University, describes \textit{machine learning} as \cite{Geron}:
 \begin{quote}
-A computer program is said to learn from experience $E$ with respect to some task $T$, and some performance measure $P$, if it's performance on $T$, as measured by $P$, improves with experience, $E$. \cite{Geron}
+A computer program is said to learn from experience $E$ with respect to some task $T$, and some performance measure $P$, if it's performance on $T$, as measured by $P$, improves with experience, $E$. 
 \end{quote}
-\paragraph*{}As the complexity of machine learning algorithms increase, it's important that we can still measure the performance, $P$, as described by Mitchell. In terms of programs structures like Convolutional Neural Networks (CNNs), there exists various sets of benchmarks that we can use to evaluate the performance of that network. Each metric has a particular use and validity and each one may only apply to particular type of algorithm. In this introduction, I will break these benchmarks into two very board categories: \textit{Regression Metrics} and \textit{Classification Metrics}.
+\paragraph*{}As the complexity of machine learning algorithms increase, it's important that we can still measure the performance, $P$, as described by Mitchell. In terms of programs structures like Convolutional Neural Networks (CNNs), there exists various sets of benchmarks that we can use to evaluate the performance of that network. Each metric has a particular use and validity and each one may only apply to particular type of algorithm \cite{Olson}. In this introduction, I will break these benchmarks into two very board categories: \textit{Regression Metrics} and \textit{Classification Metrics}.
 \paragraph*{}For this work I will also use a notation convention as used by Gareth James in his book "An Introduction to Statistical Learning" \cite{James}. A value or function that is approximated or estimated with  set of data $X$, is denoted with a \textit{hat}. Thus an approximated function, $f$ becomes $\hat{f}$ which produces an estimated output $\hat{Y}$, which can be compared to known outputs, $Y$. Additionally, $X$ and $Y$ can be treated as discrete vector-like objects, which can be indexed through with a subscript. Thus sets $X$ and $Y$, which $n$ elements are equivalently:
 \begin{equation}
 X = [x_1, x_2 , x_3 , ... , x_i , ... , x_{n-1} , x_n]
@@ -59,6 +59,11 @@ or for each individual element of $X$:
 \begin{equation}
 \hat{f}(x_i) = \hat{y}_i
 \end{equation}
+\paragraph*{}For each of the benchmarks described below, we will assume a sufficiently large data set has been used to produce some model $\hat{f}(X) = \hat{Y}$. In each case, the function $\hat{f}$ will be some sort of $N$-th degree polynomial produced via linear regression. Thus, each $\hat{f}$ has the structure:
+\begin{equation}
+\hat{f}(x_n) = \hat{y} = \sum_{i=0}^{N} \beta_i x_n^i
+\end{equation}
+Where $\beta_i$ is a scalar coefficient, and $x_i^n$ is the $n$-th predicting feature raised to the $i$-th power.
 
 % ================================
 
@@ -73,30 +78,63 @@ MSE = \frac{1}{n}\sum_{i=1}^{n} \Big( y_i - \hat{f}(x_i) \Big)^2
 % ================================
 
 \subsection{Root Mean Squared Error}
-
+\paragraph*{}Root mean squared error (RMSE) is another basic way of quantifying the difference between known and predicted sets of outputs. It is computed in the exact same way as means squared error (\ref{MSE}) , but the square root of the whole function is taken. Thus RMSE is defined as:
+\begin{equation}
+\label{RMSE}
+RMSE = \sqrt{MSE} = 
+\sqrt{\frac{1}{n}\sum_{i=1}^{n} \Big( y_i - \hat{f}(x_i) \Big)^2}
+\end{equation}
+\paragraph*{}This benchmark may seem redundant, but it allows for the\textit{units} of the metric to be consistent with that of the features and responses of the model \cite{Petrik}. For example, if we were using the arm length of a human to predict their height, both in centimeters, then each $x_i$ and $y_i$ would have units of $cm$. The MSE (\ref{MSE}) would have units of $cm^2$ and the RMSE (\ref{RMSE}) would have units of $cm$.
 
 % ================================
 
 \subsection{Variance and Standard Deviation}
+---
 
 
 % ================================
 
 \subsection{Residual Sum of Squares}
+\paragraph*{}Residual sum of squares (RSS) is a benchmark used for computing a very similar measurement to MSE (\ref{MSE}). It is computed by summing up the difference between the $i$-th observed response and the $i$-th predicted response This difference is called the \textit{residual}, notated as $e$ \cite{James}, and is computed:
+\begin{equation}
+\label{residual}
+e_i = \big(y_i - \hat{y}_i \big)
+\end{equation}
+The RSS value is then found by squaring each difference, and then summing them:
+\begin{equation}
+\label{RSS}
+RSS = \sum_{i=1}^{n} e_i^2 = \sum_{i=1}^n \big(y_i - \hat{y}_i \big)^2
+\end{equation}
+\paragraph*{}Notice how it is remarkably similar to MSE this metric is. The only difference is the MSE is an average value, thus scaled by $1/n$. RSS, is not scaled, this for each additional, sampled $e_i^2$, the value of RSS will always increase or remain the same, where MSE has the possibility to reduce.
 
 % ================================
 
 \subsection{Total Sum of Squares}
+\paragraph*{}Total sum of squares (TSS), is
+\begin{equation}
+\label{TSS}
+TSS = \sum_{i=0}^n \big(y_i - \bar{y}\big)^2
+\end{equation}
 
 % ================================
 
 \subsection{Residual Standard Error}
+\paragraph*{}In every regression algorithm, there is some error term, $\epsilon$ associated with each observation. Even with a perfectly accurate model, it is still impossible to perfectly predict $Y$ given some input $X$ \cite{James}. The RSE estimates the standard deviation of this error term.  It can be thought of as the average deviation of reach response from the regression fit. RSE is defined as:
+\begin{equation}
+RSE = \sqrt{\frac{1}{n-2}RSE} = 
+\sqrt{\frac{1}{n-2}\sum_{i=1}^n \big(y_i - \hat{y}_i \big)^2}
+\end{equation}
+\paragraph*{}The RSE benchmark measures a \textit{lack} of fit for a model. The higher the value of the RSE, the less the fit truly models that data. Just like the RMSE (\ref{RMSE}), the RSE is measured in the same units as the response 
+$y$. However, it is important to know that RSE leaves some ambiguity as to what a valid RSE threshold would be, especially because it  doesn't have an  upper bound value.
 
 % ================================
 
 % ================================
 
 \subsection{R-Squared}
+\paragraph*{}The R-squared ($R^2$, but NOT $r^2$) statistic is very similar to the RSE, except that is serves as more of a proportion of fit and is bounded to exist on the interval $[0,1]$ \cite{James}. $R^2$ is a dimensionless measure, and is the combination of the TSS (\ref{TSS}) and RSS (\ref{RSS}) benchmarks. 
+
+% ================================
 
 % ================================================================
 
@@ -106,7 +144,7 @@ MSE = \frac{1}{n}\sum_{i=1}^{n} \Big( y_i - \hat{f}(x_i) \Big)^2
 \label{classification function}
 f: X \rightarrow \{1,2,...,k-1,k\}
 \end{equation}
-A classification algorithm takes some set of data, $X$, and using qualities or \textit{features} of that data, places each element, $x_i$ into a bin, called a \textit{class} with other similar elements \cite{Geron}. 
+A classification algorithm takes some set of data, $X$, and using qualities or \textit{features} of that data, places each element, $x_i$ into a bin, called a \textit{class} with other similar elements \cite{Geron}. For each of the benchmarks described below, we will assume a sufficiently large data set has been used to produce some model $\hat{f}(X) \rightarrow \{1,2,...,k-1,k\}$.
 
 % ================================
 
@@ -138,7 +176,7 @@ A classification algorithm takes some set of data, $X$, and using qualities or \
 % ================================
 
 \subsection{Precision Score}
-\paragraph*{}The Precision score of a classification algorithm is most commonly applied to a \textit{binary classifier}. Once a cross - validation score algorithm has been implemented to a binary classifier (With outputs \textsf{True} or \textsf{False}), It can be used to create a $2 \times 2$ confusion with the elements \textit{True Positive}, \textit{True Negative}, \textit{False Positive} and \textit{False Negative}, represented as TP,TN,FP,FN respectively \cite{Gareth}. The confusion matrix is then:
+\paragraph*{}The Precision score of a classification algorithm is most commonly applied to a \textit{binary classifier}. Once a cross - validation score algorithm has been implemented to a binary classifier (With outputs \textsf{True} or \textsf{False}), It can be used to create a $2 \times 2$ confusion with the elements \textit{True Positive}, \textit{True Negative}, \textit{False Positive} and \textit{False Negative}, represented as TP,TN,FP,FN respectively \cite{James}. The confusion matrix is then:
 \begin{equation}
 C = 
 \begin{bmatrix}
@@ -191,14 +229,17 @@ F1 = 2\Big(\frac{P \times R}{P + R}\Big)
 \bibitem{Brownlee}
 Brownlee, Jason. “A Gentle Introduction to k-Fold Cross-Validation.” \textit{Machine Learning Mastery}, 8 Aug. 2019, machinelearningmastery.com/k-fold-cross-validation/.
 
-\bibitem{James}
-James, Gareth, et al. {An Introduction to Statistical Learning with Applications in R}. Springer, 2017.
-
 \bibitem{Geron}
 Géron Aurélien. \textit{Hands-on Machine Learning with Scikit-Learn and TensorFlow: Concepts, Tools, and Techniques to Build Intelligent Systems}. O'Reilly, 2017.
 
 \bibitem{Goodfellow}
 Goodfellow, Ian, et al.\textit{Deep Learning}. MIT Press, 2017.
+
+\bibitem{James}
+James, Gareth, et al. \textit{An Introduction to Statistical Learning with Applications in R}. Springer, 2017.
+
+\bibitem{Olson}
+Olsen, R.S., et al. 2017. 'PMLB: A Large Benchmarking Suite for Machine Learning Evaluation and Comparison'. \textit{Biodata Mining}
 
 \bibitem{Petrik}
 Petrik, Marek. “Introduction to Machine Learning.” Machine Learning. 22 Jan. 2020, Durham, New Hampshire.

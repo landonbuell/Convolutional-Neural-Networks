@@ -69,13 +69,29 @@ Geometrically, the gradient provides a vector that points in the direction that 
 \subsection{Notation}
 \paragraph*{}The mathematical description of stochastic gradient descent (SGD) classifiers is largely based in linear algebra \cite{Goodfellow}. This means a great deal of matrix vector indexing is required to fully describe the procedure. For this work, I will be using a standard of $0$ - indexing all objects. I outline a notional convention for this work:
 \begin{itemize}
-\item $\vec{x}_{i}^{l}$ is the $i$-th entry in the vector $x$ in the $l$-th layer of a network. The vector that describes layer $l$ of the network has $n_l$ rows and 1 column.
-\item $n_l$ is the number of neurons (also called nodes of functions) in the 
+\item A scalar:
+\begin{equation}
+n_l
+\end{equation} 
+is the number of neurons (also called nodes or functions) in the 
 $l$-th layer. 
-\item $W_{i,j}^{l}$ is the entry in the $i$-th row, and the $j$-th column of matrix $W$ that operates on the $l$-th layer of a network. The matrix that operates on layer $l$ has $n_{(l+1)}$ rows and $n_{l}$ columns
+\item A vector:
+\begin{equation}
+\vec{x}_{i}^{l}
+\end{equation}
+is the $i$-th entry in the vector $x$ in the $l$-th layer of a network. The vector that describes layer $l$ of the network has $n_l$ rows and 1 column.
+\item A matrix:
+\begin{equation}
+W_{i,j}^{l}
+\end{equation}
+is the entry in the $i$-th row, and the $j$-th column of matrix $W$ that operates on the $l$-th layer of a network. The matrix that operates on layer $l$ has $n_{(l+1)}$ rows and $n_{l}$ columns
 \end{itemize}
+\paragraph*{}Mathematically, each neuron, contains a number that can be operated on. 
 
 % ================================================================
+
+\section{Convolution Neural Network Procedure}
+\paragraph*{}Suppose we have a linear neural network, with $L$ layers of neurons, each containing $n_l$ number of neurons in it. 
 
 
 % ================================================================

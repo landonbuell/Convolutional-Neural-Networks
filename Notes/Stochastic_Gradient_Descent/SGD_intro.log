@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.1.23)  29 JAN 2020 20:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.2.2)  4 FEB 2020 19:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -229,7 +229,7 @@ LaTeX Font Info:    ... okay on input line 19.
 
 (c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epst
 opdf-base.sty
-Package: epstopdf-base 2019-12-09 v2.10 Base part for package epstopdf
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 
@@ -297,7 +297,7 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 [3] (./SGD_intro.aux) ) 
 Here is how much of TeX's memory you used:
  2583 strings out of 494106
- 33386 string characters out of 6172148
+ 33386 string characters out of 6172149
  103097 words of memory out of 5000000
  6687 multiletter control sequences out of 15000+600000
  13049 words of font info for 50 fonts, out of 8000000 for 9000
@@ -317,7 +317,7 @@ ta/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/Use
 rs/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cms
 y8.pfb><c:/Users/Landon/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmti12.pfb>
-Output written on SGD_intro.pdf (3 pages, 121107 bytes).
+Output written on SGD_intro.pdf (3 pages, 122663 bytes).
 PDF statistics:
  58 PDF objects out of 1000 (max. 8388607)
  41 compressed objects within 1 object stream
