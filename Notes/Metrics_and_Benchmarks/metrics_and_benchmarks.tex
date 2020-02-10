@@ -88,12 +88,6 @@ RMSE = \sqrt{MSE} =
 
 % ================================
 
-\subsection{Variance and Standard Deviation}
----
-
-
-% ================================
-
 \subsection{Residual Sum of Squares}
 \paragraph*{}Residual sum of squares (RSS) is a benchmark used for computing a very similar measurement to MSE (\ref{MSE}). It is computed by summing up the difference between the $i$-th observed response and the $i$-th predicted response This difference is called the \textit{residual}, notated as $e$ \cite{James}, and is computed:
 \begin{equation}
@@ -110,11 +104,12 @@ RSS = \sum_{i=1}^{n} e_i^2 = \sum_{i=1}^n \big(y_i - \hat{y}_i \big)^2
 % ================================
 
 \subsection{Total Sum of Squares}
-\paragraph*{}Total sum of squares (TSS), is
+\paragraph*{}Total sum of squares (TSS), is very similar to the variance of a data set. It is found by computing the sum of the differences squared between each index, and the average value of the data set. Unlike the variance, the TSS metric is not then scaled by the number of samples. Instead it is forces to grow with each successive index. It is defined as:
 \begin{equation}
 \label{TSS}
-TSS = \sum_{i=0}^n \big(y_i - \bar{y}\big)^2
+TSS = \sum_{i=1}^n \big(y_i - \bar{y}\big)^2
 \end{equation}
+\paragraph*{}TSS can be though of as a measurement of the volatility of the output $y_i$, before some sort of regression is performed \cite{James}. It is essentially a measurement in the total variance of some data set $Y$ because the $\frac{1}{n}$ term in each variance is canceled by repeating the operation $n$ times.
 
 % ================================
 
@@ -132,7 +127,12 @@ $y$. However, it is important to know that RSE leaves some ambiguity as to what 
 % ================================
 
 \subsection{R-Squared}
-\paragraph*{}The R-squared ($R^2$, but NOT $r^2$) statistic is very similar to the RSE, except that is serves as more of a proportion of fit and is bounded to exist on the interval $[0,1]$ \cite{James}. $R^2$ is a dimensionless measure, and is the combination of the TSS (\ref{TSS}) and RSS (\ref{RSS}) benchmarks. 
+\paragraph*{}The R-squared ($R^2$, but NOT $r^2$) statistic is very similar to the RSE, except that is serves as more of a proportion of fit and is bounded to exist on the interval $[0,1]$ \cite{James}. $R^2$ is a dimensionless measure, and is the combination of the TSS (\ref{TSS}) and RSS (\ref{RSS}) benchmarks. It is defined as:
+\begin{equation}
+\label{R-sq}
+R^2 = \frac{TSS - RSS}{TSS} = 1 - \frac{RSS}{TSS}
+\end{equation}
+\paragraph*{}As described by Gareth James, the $R^2$ metric measures the propertion of variability in $Y$ that can be explained using $X$ \cite{James} An $R^2$ value of 1 is indicative of a strong proportion of fit \cite{Petrik}. A value of $0$ indicates that the model is not very well fitting of the data set.
 
 % ================================
 
@@ -165,13 +165,6 @@ A classification algorithm takes some set of data, $X$, and using qualities or \
 \paragraph*{}A Confusion Matrix is a one of the most standardized tools in evaluating the performance of a classifier program. Suppose a classifier program has been constructed to place input samples into one of $k$ classes. Thus, the confusion matrix, $C$, associated with that algorithm takes the form of a $k \times k$ matrix. The columns of that matrix represent predicted classes, and the rows represent actual classes \cite{Geron}. A confusion matrix is generally assembled from the results of some sort of K-Folds Cross Validation Algorithm. 
 \paragraph*{}Each element of this matrix, $C_{i,j}$ indicated the number of samples predicted by the classifier to be in class $k_i$, but are actually labeled as being in class $k_j$. In the case where $i = j$ (the main diagonal entries), that indicates samples that were correctly predicted to be in the class that they are labeled as. This means that a confusion matrix with strong main diagonal entries indicates a classifier program that performs very well. 
 \paragraph*{}In the example case where the entry $C_{a,b}$ has a large value, then that is an indication that several samples are being placed into class. It also may be likely that element $C_{b,a}$ also has a similarly large entry. This means that classes $a$ and $b$ are commonly confused with each other. 
-\paragraph*{}In Geron's book, \textit{Hands on Machine Learning with Sci-kit Learn and Tensorflow}, \cite{Geron}, he uses the MNIST data base of 70,000 hand-written and labeled figures to build a 10 - Fold Classifier. In the program that he outlines in Chapter 3, he used a SGD Classifier to classify the images based on the digit $0$ through $9$. For the particular classification algorithm, the confusion matrix, when color coded in gray-scale, looks like:
-\begin{figure}[H]
-\begin{center}
-\textbf{Image of Confusion Matrix Goes Here}
-\end{center}
-\end{figure}
-
 
 % ================================
 
@@ -186,10 +179,14 @@ C =
 \end{equation}
 Using these quantities, we can construct the \textit{precision score} of the classifier:
 \begin{equation}
-\label{precsision score}
+\label{precision score}
 P = \frac{TP}{TP + FP} = \frac{C_{1,1}}{C_{1,1}+C_{2,1}}
 \end{equation}
 \paragraph*{}The value of $P$ is bounded between $0$ and $1$. In short, the precision score is a measurement of \textit{how many selected items are relevant} to the problem. Notice is deals only with the first column of the matrix $C$. The precision socre is a metric that determines the ratio between how many elements selected were correct (TP) to how many total elements were selected (TP + FP). It is the fraction of correct detection by the model \cite{Goodfellow}. 
+\paragraph*{}In the case of a $K \neq 2$ folds classifier, the precision score definition would change based on the class of interest. Thus the numerator is then always along the main diagonal, $C_{n,n}$ and the denominator is the sum of all entries in column $n$. This once again is the measurement of how many of the items predicted to be in class $n$ are in fact in class $n$. So the score for the $n$-th class would then be given by:
+\begin{equation}
+P_n = \frac{C_{n,n}}{\sum_{i=1}^{k}C_{i,n}}
+\end{equation}
 
 % ================================
 
@@ -208,6 +205,10 @@ Once again with these, we can compute the \textit{recall score} of the classifie
 R = \frac{TP}{TP + FN} = \frac{C_{1,1}}{C_{1,1}+C_{1,2}}
 \end{equation}
 \paragraph*{}Once again, the value of $R$ is bounded between $0$ and $1$. The recall score is a a measurement of \textit{how many relevant items are selected} in the problem. Just as precision deals only with the first column of the $C$ matrix, the recall deals only with the first row of that same matrix. It is the ratio bwteen how many elements selected were correct (TP) to how many elements are labeled as such (TP + FN). It is the fraction of true events that were detected \cite{Goodfellow}.
+\paragraph*{}In the case of a $K \neq 2$ folds classifier, the recall score definition would change based on the class of interest just like the precision score did. Thus the numerator is again always along the main diagonal, $C_{n,n}$ and the denominator is the sum of all entries in row $n$. This is the measurement of how many of the items predicted to be in class $n$ are relevant class $n$. So the score for the $n$-th class would then be given by:
+\begin{equation}
+P_n = \frac{C_{n,n}}{\sum_{i=1}^{k}C_{n,i}}
+\end{equation}
 
 % ================================
 
