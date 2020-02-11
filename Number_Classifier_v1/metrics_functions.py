@@ -25,9 +25,12 @@ def SGD_CLF (name,X,y,state=None):
     CLF.fit(X,y)                            # fit the dataset model
     return CLF                              # return the obj
 
-def CLF_Predict (clf,y):
+def CLF_Predict (clf,X,threshold=None):
     """ Compute predicition score for each class """
-    pass 
+    #scores = clf.decision_function(X)  # decision function scores
+    #predictions = np.array([np.max(x) for x in scores])
+    predictions = clf.predict(X)
+    return predictions
 
 def split_train_test (nsamps,ratio):
     """
@@ -53,25 +56,35 @@ def write_metrics ():
 
 def confusion_matrix (CLF,ytest,ypred,labs,show=False):
     """ Produce sklearn confusion matrix for classifier predictions """
-    matrix = metrics.confusion_matrix(ytest,ypred,labels=labs)
+    matrix = metrics.confusion_matrix(ytest,ypred)
     if show == True:
         plt.title(str(CLF.name),weight='bold')
         plt.imshow(matrix,cmap=plt.cm.gray)
         plt.show()
-
     return matrix
 
-def precision_score ():
-    """ Compute Precision score for class n in K-Folds Classifier """
-    pass
+def cross_validation (clf,xtrain,ytrain,k):
+    """ Impliment Cross - Validation Prediction algorithm """
+    pred = model.cross_val_predict(clf,X=xtrain,y=ytrain,cv=k)
+    return pred
 
-def recall_score ():
-    """ Compute Recall Score for class n in K-Folds Classifier """
-    pass
 
-def F1_score ():
-    """ Compute F1-score for class n in K-Folds Classifier """
-    pass
+def classification_scores (ytrue,ypred,labs,avg=None):
+    """ 
+    Compute Precision, Recall & F1 Scores given classsifier predictions 
+    --------------------------------
+    ytrue (array) : training labels for test data set (1 x M)
+    ypred (array) : training predictions for test data set (1 x M)
+    labs (list) : multiclass labels used for classifier
+    avg (str) : average key to use for socre (see sklearn documentation)
+    --------------------------------
+    Return dictionary of classification scores
+    """
+    precision = metrics.precision_score(ytrue,ypred,labels=labs,average=avg)
+    recall = metrics.recall_score(ytrue,ypred,labels=labs,average=avg)
+    f1_sc = metrics.f1_score(ytrue,ypred,labels=labs,average=avg)
+    scores_dictionary = {'precision':precision,'recall':recall,'f1':f1_sc}
+    return scores_dictionary
 
 
             #### VISUALIZATION FUNCTIONS ####
