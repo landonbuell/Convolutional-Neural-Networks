@@ -18,19 +18,21 @@ from sklearn.linear_model import SGDClassifier
 
             #### FUNCTIONS DEFINITIONS ####
 
-def SGD_CLF (name,X,y,state=None):
-    """ Create and Train SGD Classifier from sklearn """
+def SGD_CLF (name,xtrain,ytrain,xtest,state=None):
+    """ Create, Train & EvaluateSGD Classifier from sklearn """
     CLF = SGDClassifier(random_state=state) # create classifier
     setattr(CLF,'name',name)                # attach name
-    CLF.fit(X,y)                            # fit the dataset model
-    return CLF                              # return the obj
+    CLF.fit(xtrain,ytrain)                  # fit the dataset model
+    preditions = CLF.predict(xtest)         # predict new data
+    return CLF,preditions                   # return obj & outputs
 
-def CLF_Predict (clf,X,threshold=None):
-    """ Compute predicition score for each class """
-    #scores = clf.decision_function(X)  # decision function scores
-    #predictions = np.array([np.max(x) for x in scores])
-    predictions = clf.predict(X)
-    return predictions
+def add_noise(data,mean,stddev):
+    """ Add pseudo-random noise to arrays """
+    org_shape = np.shape(data)      # original shape of the array
+    data = data.flatten()           # flatten the array
+    noise = np.random.normal(mean,stddev,len(data))
+    data += noise                   # add noise in
+    return data.reshape(org_shape)  # reshape & return
 
 def split_train_test (nsamps,ratio):
     """
@@ -58,16 +60,20 @@ def confusion_matrix (CLF,ytest,ypred,labs,show=False):
     """ Produce sklearn confusion matrix for classifier predictions """
     matrix = metrics.confusion_matrix(ytest,ypred)
     if show == True:
-        plt.title(str(CLF.name),weight='bold')
+        plt.title(str(CLF.name),size=20,weight='bold')
         plt.imshow(matrix,cmap=plt.cm.gray)
+        plt.xticks(labs)
+        plt.yticks(labs)
+        plt.xlabel('Actual Class',size=12,weight='bold')
+        plt.ylabel('Predicted Class',size=12,weight='bold')
         plt.show()
     return matrix
 
 def cross_validation (clf,xtrain,ytrain,k):
     """ Impliment Cross - Validation Prediction algorithm """
     pred = model.cross_val_predict(clf,X=xtrain,y=ytrain,cv=k)
+    # WARNING : THIS METHOD TAKES A LONG TIME TO RUN!
     return pred
-
 
 def classification_scores (ytrue,ypred,labs,avg=None):
     """ 
@@ -83,8 +89,10 @@ def classification_scores (ytrue,ypred,labs,avg=None):
     precision = metrics.precision_score(ytrue,ypred,labels=labs,average=avg)
     recall = metrics.recall_score(ytrue,ypred,labels=labs,average=avg)
     f1_sc = metrics.f1_score(ytrue,ypred,labels=labs,average=avg)
-    scores_dictionary = {'precision':precision,'recall':recall,'f1':f1_sc}
-    return scores_dictionary
+    scores = np.array([np.mean(precision),
+                       np.mean(recall),
+                       np.mean(f1_sc)])
+    return scores                   # return the array
 
 
             #### VISUALIZATION FUNCTIONS ####
@@ -93,7 +101,7 @@ def Plot_Image (image,label):
     """ Produce Matplotlib figure of digit w/ label"""
     image = image.reshape(28,28)
     plt.title("Image Label: "+str(label),weight='bold')
-    plt.imshow(image,cmap=plt.cm.gray,interpolation='nearest')
+    plt.imshow(image,cmap=plt.cm.binary,interpolation='nearest')
     plt.show()
 
 
