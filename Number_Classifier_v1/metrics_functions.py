@@ -22,11 +22,18 @@ from sklearn.linear_model import SGDClassifier
 
 def collect_MNIST ():
     """ Collect MNIST dataset """
-    MNIST = fetch_openml('mnist_784',version=1)     # collect dataset
-    X,y = MNIST['data'],MNIST['target']             # isolate data & labels
-    X,y = X[:10000],y[:10000]
-    labels = np.arange(0,10,1)                      # labels in MNIST
-    return X,y,labels
+    MNIST = fetch_openml('mnist_784',version=1) # collect dataset
+    X,y = MNIST['data'],MNIST['target']         # isolate data & labels
+    X,y = X[:10000],y[:10000]                   # 1st 10,000 idxs
+    labels = np.arange(0,10,1)                  # labels in MNIST
+    return X,y,labels                           # return the data & labels
+
+def concatentate_results (name,scores,confmat):
+    """ concatente data into single (1 x M) array """
+    output = np.array([name])
+    output = np.append(output,scores.flatten())
+    output = np.append(output,confmat.flatten())
+    return output
 
 def SGD_CLF (name,xtrain,ytrain,xtest,state=None):
     """ Create, Train & EvaluateSGD Classifier from sklearn """
@@ -56,16 +63,16 @@ def split_train_test (nsamps,ratio):
     --------------------------------
     return train / test indicices
     """
-    shuffled = np.random.permutation(nsamps)    # permute idxs
-    test_size = int(nsamps*ratio)               # test dataset size
-    train = shuffled[test_size:].tolist()       # set training idxs
-    test = shuffled[:test_size]                 # set testing idxs
-    return train,test                           # return data pts
+    shuffled = np.random.permutation(nsamps)   
+    test_size = int(nsamps*ratio)       # test dataset size
+    train = shuffled[test_size:]        # set training idxs
+    test = shuffled[:test_size]         # set testing idxs
+    return train,test                   # return data pts
 
 def assemble_dataframe(data,nclasses):
     """ Assemble Data in Pandas Dataframe """
     dfcols = np.array(['CLF name','Avg Precision','Avg Recall','Avg F1'])
-    dfcols = np.append(dfcols,np.arange(0,nclasses**2,1,type=int))
+    dfcols = np.append(dfcols,np.arange(0,nclasses**2,1))
     frame = pd.DataFrame(data=data,columns=dfcols)
     return frame
 
