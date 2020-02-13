@@ -13,10 +13,20 @@ import pandas as pd
 
 import sklearn.metrics as metrics
 import sklearn.model_selection as model
+
+from sklearn.datasets import fetch_openml
 from sklearn.linear_model import SGDClassifier
 
 
             #### FUNCTIONS DEFINITIONS ####
+
+def collect_MNIST ():
+    """ Collect MNIST dataset """
+    MNIST = fetch_openml('mnist_784',version=1)     # collect dataset
+    X,y = MNIST['data'],MNIST['target']             # isolate data & labels
+    X,y = X[:10000],y[:10000]
+    labels = np.arange(0,10,1)                      # labels in MNIST
+    return X,y,labels
 
 def SGD_CLF (name,xtrain,ytrain,xtest,state=None):
     """ Create, Train & EvaluateSGD Classifier from sklearn """
@@ -52,9 +62,13 @@ def split_train_test (nsamps,ratio):
     test = shuffled[:test_size]                 # set testing idxs
     return train,test                           # return data pts
 
-def write_metrics ():
-    """ Write out Classifier Metrics as DataFrame for external use """
-    pass
+def assemble_dataframe(data,nclasses):
+    """ Assemble Data in Pandas Dataframe """
+    dfcols = np.array(['CLF name','Avg Precision','Avg Recall','Avg F1'])
+    dfcols = np.append(dfcols,np.arange(0,nclasses**2,1,type=int))
+    frame = pd.DataFrame(data=data,columns=dfcols)
+    return frame
+
 
             #### METRICS ####
 
@@ -69,7 +83,7 @@ def confusion_matrix (CLF,ytest,ypred,labs,show=False):
         plt.xlabel('Actual Class',size=12,weight='bold')
         plt.ylabel('Predicted Class',size=12,weight='bold')
         plt.show()
-    return matrix
+    return matrix.flatten()
 
 def cross_validation (clf,xtrain,ytrain,k):
     """ Impliment Cross - Validation Prediction algorithm """
