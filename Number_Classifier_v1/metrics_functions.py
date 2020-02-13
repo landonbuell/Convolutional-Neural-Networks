@@ -20,17 +20,19 @@ from sklearn.linear_model import SGDClassifier
 
 def SGD_CLF (name,xtrain,ytrain,xtest,state=None):
     """ Create, Train & EvaluateSGD Classifier from sklearn """
-    CLF = SGDClassifier(random_state=state) # create classifier
+    CLF = SGDClassifier(random_state=state,
+                        max_iter=1000,tol=1e-3) 
     setattr(CLF,'name',name)                # attach name
     CLF.fit(xtrain,ytrain)                  # fit the dataset model
     preditions = CLF.predict(xtest)         # predict new data
     return CLF,preditions                   # return obj & outputs
 
-def add_noise(data,mean,stddev):
+def add_noise(data,mean,stddev,type='gaussian'):
     """ Add pseudo-random noise to arrays """
     org_shape = np.shape(data)      # original shape of the array
     data = data.flatten()           # flatten the array
-    noise = np.random.normal(mean,stddev,len(data))
+    if type == 'gaussian':
+        noise = np.random.normal(mean,stddev,len(data))
     data += noise                   # add noise in
     return data.reshape(org_shape)  # reshape & return
 
@@ -61,7 +63,7 @@ def confusion_matrix (CLF,ytest,ypred,labs,show=False):
     matrix = metrics.confusion_matrix(ytest,ypred)
     if show == True:
         plt.title(str(CLF.name),size=20,weight='bold')
-        plt.imshow(matrix,cmap=plt.cm.gray)
+        plt.imshow(matrix,cmap=plt.cm.binary)
         plt.xticks(labs)
         plt.yticks(labs)
         plt.xlabel('Actual Class',size=12,weight='bold')
@@ -75,7 +77,7 @@ def cross_validation (clf,xtrain,ytrain,k):
     # WARNING : THIS METHOD TAKES A LONG TIME TO RUN!
     return pred
 
-def classification_scores (ytrue,ypred,labs,avg=None):
+def classification_scores (ytrue,ypred,labs,avg='macro'):
     """ 
     Compute Precision, Recall & F1 Scores given classsifier predictions 
     --------------------------------
@@ -89,20 +91,21 @@ def classification_scores (ytrue,ypred,labs,avg=None):
     precision = metrics.precision_score(ytrue,ypred,labels=labs,average=avg)
     recall = metrics.recall_score(ytrue,ypred,labels=labs,average=avg)
     f1_sc = metrics.f1_score(ytrue,ypred,labels=labs,average=avg)
-    scores = np.array([np.mean(precision),
-                       np.mean(recall),
-                       np.mean(f1_sc)])
+    scores = np.array([precision,recall,f1_sc])
     return scores                   # return the array
 
 
             #### VISUALIZATION FUNCTIONS ####
 
-def Plot_Image (image,label):
+def Plot_Image (image,label,save=False,show=False):
     """ Produce Matplotlib figure of digit w/ label"""
     image = image.reshape(28,28)
-    plt.title("Image Label: "+str(label),weight='bold')
+    plt.title("Image Label: "+str(label),size=30,weight='bold')
     plt.imshow(image,cmap=plt.cm.binary,interpolation='nearest')
-    plt.show()
+    if save == True:
+        plt.savefig(str(label)+'.png')
+    if show == True:
+        plt.show()
 
 
                 
