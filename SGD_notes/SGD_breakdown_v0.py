@@ -28,6 +28,3 @@ if __name__ == '__main__':
    
     # train the classifier on the data set
     sgd_clf.fit(Xtrain,ytrain)
-
-
-
