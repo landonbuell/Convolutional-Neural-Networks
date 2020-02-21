@@ -136,7 +136,12 @@ y_i = \sum_{j=0}^{b-1}x_j W_{i,j} =
 (W_{i,0}x_0) + (W_{i,1}x_1) +  ... + 
 (W_{i,b-2}x_{b-2}) + (W_{i,b-1}x_{b-1})
 \end{equation}
-\paragraph*{}This equation tells us exactly how the elements in the layer $x$ influence the elements produced in layer $y$. Thus we can see that 
+\paragraph*{}This equation tells us exactly how the elements in the layer $x$ influence the elements produced in layer $y$. Thus we can see that it is a linear combination of all elements in the layer $x$, whose coefficient are given by the corresponding entries in the weighting matrix that produces the elements in the next layer. For example, neuron $y_m$ is related to neuron $x_n$ by a factor of $W_{n,m}$. If the element $W_{m,n}$ is very small or zero, then $x_n$ has little or no affect on $y_m$. Conversely, if $W_{m,n}$ is very large, then changes in the value of $x_n$ have a large impact on $y_m$.
+\paragraph*{}It is the structure, elements and organization of these weighting matricies, $W$ that determine how our network behaves. For an untrained network, these elements are often pseudo-randomly generated (called a \textit{cold-start network}\cite{Geron}). With each training sample introduced t the next work, we use the Stochastic gradient descent algorithm to adjust all elements in these $L-1$ matrices. After enough samples, we will have then ideally converges on a set of elements in all matrices that allow for the production of a local or global minimum as defined by some cost function \cite{Goodfellow}. 
+
+% ================================================================
+
+\section{Back Propagation}
 
 % ================================================================
 
