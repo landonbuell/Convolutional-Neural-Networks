@@ -22,9 +22,9 @@
 
 \title{
 \begin{Huge}
-Introduction to Stochastic Gradient Descent
+Training a Convolutional Neural Network \\
 \end{Huge} 
-\Large Explained through Neural Networks}
+\Large using Stochastic Gradient Descent}
 \author{Landon Buell}
 \date{27 January 2020}
 \maketitle
@@ -111,7 +111,7 @@ Where the superscript $l$ indicates an arbitrary integer layer number. This proc
 
 \section{The Weighting Matrices}
 \paragraph*{}The actual procedure of this type of neural network is essentially this basic recursive linear algebra problem. It then raises the questions, how is each matrix, $W^l$ built? What are it's elements and what do they do? If we examine the matrix-vector equation (\ref{feed forward}) we can break this down further into it's constituent parts.
-For simplification of super scrips and subscripts, let the \textit{next} layer, $l+1$ be the vector $y$ with $a$ entries, and the \textit{previous} layer, $l$ be the vector $x$ with $b$ entries. Thus the matrix $W^l$ has $a$ rows, and $b$ columns. each entry is denoted as $W_{i,j}$.
+\paragraph*{}For simplification of superscrips and subscripts, let the \textit{next} layer, $x^{l+1}$ be notated by the vector $y$. This layer will contain $n_{l+1} = a$ neurons within it. Similarly, let the \textit{previous} layer, $x^l$ be the vector $x$ with $n_l = b$ neurons in it. Thus the matrix $W^l$ has $a$ rows, and $b$ columns. Each entry is denoted as $W_{i,j}$ for the $i$-th row and the $j$-th column. The matrix-vector equation expanded out then becomes:
 \begin{equation}
 \label{mat-vec feed}
 \begin{bmatrix}
@@ -129,26 +129,45 @@ x_0 \\ x_1 \\ \vdots \\ x_{b-2} \\ x_{b-1}
 \end{bmatrix}
 \end{equation}
 Keep in mind that $a$ may not be equal to $b$. We can now use this to understand a little bit more specifically what the weighting matrix is doing, and what each entry in the operation does.
-\paragraph*{}From linear algebra, the entry $y_i$ in the column vector $y$ is given by the dot product between the $W_i,:$ row and the column vector $x$. We can denote this as:
+\paragraph*{}From linear algebra, the entry $y_i$ in the column vector $y$ is given by the dot product between the $W_i$ row and the column vector $x$. We can denote this as:
 \begin{equation}
-\label{mat-vec eqn}
-y_i = \sum_{j=0}^{b-1}x_j W_{i,j} = 
+\label{dot prod}
+y_i = \sum_{j=0}^{b-1} W_{i,j}(x_j) = 
 (W_{i,0}x_0) + (W_{i,1}x_1) +  ... + 
 (W_{i,b-2}x_{b-2}) + (W_{i,b-1}x_{b-1})
 \end{equation}
 \paragraph*{}This equation tells us exactly how the elements in the layer $x$ influence the elements produced in layer $y$. Thus we can see that it is a linear combination of all elements in the layer $x$, whose coefficient are given by the corresponding entries in the weighting matrix that produces the elements in the next layer. For example, neuron $y_m$ is related to neuron $x_n$ by a factor of $W_{n,m}$. If the element $W_{m,n}$ is very small or zero, then $x_n$ has little or no affect on $y_m$. Conversely, if $W_{m,n}$ is very large, then changes in the value of $x_n$ have a large impact on $y_m$.
-\paragraph*{}It is the structure, elements and organization of these weighting matricies, $W$ that determine how our network behaves. For an untrained network, these elements are often pseudo-randomly generated (called a \textit{cold-start network}\cite{Geron}). With each training sample introduced t the next work, we use the Stochastic gradient descent algorithm to adjust all elements in these $L-1$ matrices. After enough samples, we will have then ideally converges on a set of elements in all matrices that allow for the production of a local or global minimum as defined by some cost function \cite{Goodfellow}. 
+\paragraph*{}In some cases, each step may be accompanied by the inclusion of a \textit{bias function} , $\beta$, and a \textit{sigmoid function}, $\sigma(x)$. The sigmoid is defined as:
+\begin{equation}
+\label{sigmoid}
+\sigma(x) = \frac{1}{1+e^{-x}}
+\end{equation}
+Often, the bias function is just some scalar value that is used to increase or decrease the value of an entry in the $y$ layer. This is typically tacked on at the end of the dot product equation in eqn. (\ref{dot prod}). Additionally, it is often in the best interest of a computer to work with values between $-1$ and $+1$ to prevent which is why we apply the sigmoid operator to the matrix- vector equation. It takes any real number, and maps it to the open interval $(-1,+1)$. This prevents any matrix element or neuron element from every getting to large to numerically handle withing reason. These two additions modify our matrix- vector equation (\ref{feed forward}) to become:
+\begin{equation}
+\label{mod feed forward}
+x^{l+1} = \sigma \big( W^l x^l + \beta \big)
+\end{equation}
+Where the $\sigma(x)$ operation is applied to all elements in the output layer $x^{l+1}$.
+\paragraph*{}It is the structure, elements and organization of these weighting matrices, $W$ that determine how our network behaves. For an untrained network, these elements are often pseudo-randomly generated (called a \textit{cold-start network}\cite{Geron}). With each training sample introduced t the next work, we use the Stochastic gradient descent algorithm to adjust all elements in these $L-1$ matrices. After enough samples, we will have then ideally converges on a set of elements in all matrices that allow for the production of a local or global minimum as defined by some cost function \cite{Goodfellow}. 
+\paragraph*{}
+% ================================================================
+
+\section{Stochastic Gradient Descent}
+\paragraph*{}Back propogation is the procedure that actually trains this network to perform a specific task \cite{Goodfellow}. We typically define a well-trained network by one that consistently produces results that achieve a low score on some metric function. We call this a function \textit{loss} or an \textit{error } function \cite{James}. The goal of this network is to find a set of parameters to minimize the value of this error function. 
+\paragraph*{}This is notoriously difficult to do, because the error function is a function of all elements in all weighting matrices. Since we've determine that it is these matrices that determine the behavior of the network, these elements are all the variables that can be adjusted to change it's performance. This means that a network with $L$ layers has $L-1$ weighting matrices. Each matrix then has $n_l$ rows and $n_{l+1}$ columns. For more modern and multilayer deep learning networks, this can amalgamate to tens or hundreds of thousands of variables \cite{Goodfellow} that all manipulate the value produced by the error function. 
+\paragraph*{}To find a minimum of this error function, we must choose the correct values for each of thee parameters, which in turn allows the network to behave in the way that we want it to. 
 
 % ================================================================
 
-\section{Back Propagation}
+\section{Back Propogration}
+
 
 % ================================================================
 
 \begin{thebibliography}{9}
 \bibliographystyle{apalike}
 
-\bibitem{Gareth}
+\bibitem{James}
 James, Gareth, et al. {An Introduction to Statistical Learning with Applications in R}. Springer, 2017.
 
 \bibitem{Geron}
