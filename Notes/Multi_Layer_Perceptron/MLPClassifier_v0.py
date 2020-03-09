@@ -19,15 +19,22 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
 
+    print("Loading Data:")
+
     # load in data set - MNIST
     MNIST = fetch_openml(name='mnist_784',version=1)
     X,y = MNIST['data'],MNIST['target']
+    X,y = X[:10000],y[:10000]
+
+    print("Data Loaded.")
 
     # create instance of MLP Classifier object
     layers = (20,20,20,20)
     MLP_CLF = MLPClassifier(hidden_layer_sizes=layers,activation='relu',
                             solver='sgd',max_iter=200,tol=1e-4,
                             random_state=0)
+
+    print("Training Network:")
 
     # split the data into training a testing sets
     Xtrain,Xtest,ytrain,ytest = \
@@ -37,6 +44,9 @@ if __name__ == '__main__':
     MLP_CLF.fit(Xtrain,ytrain)
 
     # Test & Evaluate Classifer
+
+    print("Testing Network")
+
     ypred = MLP_CLF.predict(Xtest)
 
     confmat = confusion_matrix(ytest,ypred)
@@ -45,7 +55,3 @@ if __name__ == '__main__':
     plt.xticks(np.arange(0,10,1))
     plt.yticks(np.arange(0,10,1))
     plt.show()
-
-
-
-
