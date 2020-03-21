@@ -197,6 +197,12 @@ Both $\vec{x}^{(L-1)}$ and $\vec{y}$ are column vectors with $k$ elements.
 \paragraph*{}In traditional single variable calculus, to find the minimum of a function, $f(x)$, and find the places where it's first derivative is equal to zero: $\frac{df}{dx} = 0$. In the case of a multivariate problem, where $f$ is a scalar function of multiple variables, the problem is a little bit harder to solve, because it is very difficult to find where each partial derivative is equal to zero: $\frac{\partial f}{\partial x_1} = \frac{\partial f}{\partial x_2} = ... = 0$.
 \paragraph*{}To attempt to find the minimum, we employ the stochastic gradient descent algorithm. Since our objective function, $f$ is not defined for every single set of inputs, we pseudo-randomly select a set of parameters - which is sometimes called \textit{cold start} \cite{Goodfellow}. These correspond to every single element in every single weighting matrix, along with every single bias function or other modifications made. Once a sample of training data is fed through the network, this pseudo-random set of parameters is likely to produce a poor result, and thus a large value for the objective function.
 
+% ================================
+
+\subsection{Discrete Gradients}
+
+
+
 % ================================================================
 
 
