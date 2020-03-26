@@ -36,18 +36,6 @@ def Train_MLP_Model (name,layers,X,y,seed=None):
     MLP_CLF = MLP_CLF.fit(X,y)          # fit the target data
     return MLP_CLF                      # return classifier instance
 
-def Test_MLP_Model (model,X):
-    """
-    Test & Evaluate an exisiting MLPClassifier Instance
-    --------------------------------
-    model (class) : A trained MLP Classifier instance
-    X (array) : n x m feature matrix for testing - n_samples x m_features
-    y (array) : n x 1 target vector for testing - n_samples x 1 label
-    --------------------------------
-    Return Model and Predictions
-    """
-    return model.predict(X)     # run predictions
-
 def Confusion_Matrix (model,ytrue,ypred,show=False):
     """
     Compute Confusion Matrix for Evaluated model
@@ -70,17 +58,34 @@ def Confusion_Matrix (model,ytrue,ypred,show=False):
         plt.show()
     return matrix
 
-def precisions (confmat):
+def metric_scores (ytrue,ypred):
     """
-    Compute Precision scores for each individual class
+    Compute precision & recall scores for classifier model
     --------------------------------
-    confmat (array) : square confusion matrix to uss
+    ytrue (array) : 1 x N vector of ground truth values
+    ypred (array) : 1 x N vector of predicted model values
     --------------------------------
-    returns array of precision scores
+    Return array of precision scores followed by recall scores
     """
-    scores = np.array([])               # array to hold precision scores
-    for bin in range(len(confmat)):     # each row in the matrix
-        pass
+    precis = metrics.precision_score(ytrue,ypred,average=None)
+    recall = metrics.recall_score(ytrue,ypred,average=None)
+    scores = np.array([precis,recall]).ravel()
+    return scores
+
+def create_dataframe(data):
+    """
+    Create Pandas dataframe to hold all information pertaining to 
+    --------------------------------
+    data (array) : N x 22 numpy array to convert into Pandas DataFrame
+    --------------------------------
+    Return empty datafram w/ column labels setup
+    """
+    cols = ['Name','exc.time']          # list to hold col names
+    for metric in ['precs','recall']:   # for precision/recall scores
+        for I in range (0,10,1):        # for classes 0-9
+            cols.append('Class_'+str(I)+'_'+str(metric))
+    frame = pd.DataFrame(data=data,columns=cols)
+    return frame                        # return the data frame
 
 
 def Plot_Image (image,label,save=False,show=False):
