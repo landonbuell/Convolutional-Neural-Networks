@@ -78,7 +78,10 @@ def precisions (confmat):
     --------------------------------
     returns array of precision scores
     """
-    pass
+    scores = np.array([])               # array to hold precision scores
+    for bin in range(len(confmat)):     # each row in the matrix
+        pass
+
 
 def Plot_Image (image,label,save=False,show=False):
     """
