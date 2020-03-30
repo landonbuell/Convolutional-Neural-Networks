@@ -80,9 +80,9 @@ def create_dataframe(data):
     --------------------------------
     Return empty datafram w/ column labels setup
     """
-    cols = ['Name','exc.time']          # list to hold col names
-    for metric in ['precs','recall']:   # for precision/recall scores
-        for I in range (0,10,1):        # for classes 0-9
+    cols = ['Name','exc.time','loss val','iters']   # list to hold col names
+    for metric in ['precs','recall']:               # for precision/recall scores
+        for I in range (0,10,1):                    # for classes 0-9
             cols.append('Class_'+str(I)+'_'+str(metric))
     frame = pd.DataFrame(data=data,columns=cols)
     return frame                        # return the data frame
