@@ -29,9 +29,10 @@ if __name__ == '__main__':
    
     """ Run Classifiers """
     N_iters = 100
-    test_type = 'Control_v1'            # current test type
+    test_type = 'round_to_0_v1'            # current test type    
+    layers = (100,100)                    # Layers in MLP
+    output_path = str(layers)           # output path name
     output_matrix = np.array([])        # matrix to export
-    layers = ()                         # Layers in MLP
     print("Training Classifiers...")    # messege to user
 
     for I in range (0,N_iters,1):      
@@ -42,8 +43,8 @@ if __name__ == '__main__':
         t_f = time.process_time()           # end time
 
         y_pred = clf_model.predict(X_test)              # run predicitions
-        #confmat = func.Confusion_Matrix(clf_model,
-        #                    y_test,y_pred,show=False)   # build confusion matrix
+        confmat = func.Confusion_Matrix(clf_model,
+                            y_test,y_pred,show=False)   # build confusion matrix
         scores = func.metric_scores(y_test,y_pred)      # compute precision & recall scores
         dt = np.round(t_f-t_0,8)                        # compute time to train model
 
@@ -51,11 +52,12 @@ if __name__ == '__main__':
 
         row = np.array([clf_model.name,dt,layers,
                         clf_model.loss_,clf_model.n_iter_]) # row of data to export
-        row = np.append(row,scores) 
+        row = np.append(row,scores)         # add 20 scores to output
+        row = np.append(row,confmat)        # add 100 elements of confusion matrix to output
         output_matrix = np.append(output_matrix,row)
     
-    output_path = str(layers)
-    output_matrix = output_matrix.reshape(N_iters,25)   # matrix to output
+    
+    output_matrix = output_matrix.reshape(N_iters,125)   # matrix to output
     frame = func.create_dataframe(output_matrix)        # convert to pd dataframe
     try:
         frame.to_csv(output_path+ '/' +str(test_type)+'.csv')   # write frame

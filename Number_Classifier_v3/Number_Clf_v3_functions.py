@@ -51,8 +51,6 @@ def Confusion_Matrix (model,ytrue,ypred,show=False):
     if show == True:
         plt.title(str(model.name),size=20,weight='bold')
         plt.imshow(matrix,cmap=plt.cm.binary)
-        #plt.xticks(labs)
-        #plt.yticks(labs)
         plt.xlabel('Predicted Class',size=12,weight='bold')
         plt.ylabel('Actual Class',size=12,weight='bold')
         plt.show()
@@ -84,6 +82,8 @@ def create_dataframe(data):
     for metric in ['precs','recall']:               # for precision/recall scores
         for I in range (0,10,1):                    # for classes 0-9
             cols.append('Class_'+str(I)+'_'+str(metric))
+    for I in range (0,100,1):
+        cols.append('Confmat_'+str(I))
     frame = pd.DataFrame(data=data,columns=cols)
     return frame                        # return the data frame
 
