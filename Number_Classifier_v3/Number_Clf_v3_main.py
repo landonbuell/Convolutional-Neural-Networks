@@ -30,7 +30,7 @@ if __name__ == '__main__':
     """ Run Classifiers """
     N_iters = 100
     test_type = 'round_to_0_v1'            # current test type    
-    layers = (100,100)                    # Layers in MLP
+    layers = (20,20,20,20)                    # Layers in MLP
     output_path = str(layers)           # output path name
     output_matrix = np.array([])        # matrix to export
     print("Training Classifiers...")    # messege to user
