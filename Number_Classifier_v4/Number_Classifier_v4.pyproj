@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Attack_functions.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Number_Clf_v4_utilities.py">
       <SubType>Code</SubType>
     </Compile>

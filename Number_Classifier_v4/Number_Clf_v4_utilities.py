@@ -1,7 +1,7 @@
 """
 Landon Buell
 Qiaoyan Yu
-Number Classifier v4 - main
+Number Classifier v4 - Utilities
 3 April 2020
 """
 

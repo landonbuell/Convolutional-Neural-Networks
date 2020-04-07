@@ -20,23 +20,24 @@ Number Classifier Attack Functions
         - *params are unique to particular function
 """
 
-def ATTACK (func):
+
+def round (act,dcmls=0):
+    """ Round elements of matrix product to specified decimal accuracy """
+    return np.round(act,decimals=dcmls)     # return rounded vector
+
+
+
+def ATTACK (a,b,attack_type=None):
     """
-
+    Simulate and attack fucntion
     """
-    return func(a,b,trigger)
+    if attack_type == None:         
+        # No attack, just matrix multiply
+        return a @ b
 
+    if attack_type == 'round_activatons':     
+        # Rounding attack, round to 0 decimals
+        activation = a @ b
+        return round(activation,)
 
-def round (W,x,trigger):
-    """
-    Round elements of matrix product to specified decimal accuracy
-    --------------------------------
-
-    --------------------------------
-    Return attack function modifcation to matrix product
-    """
-    if trigger == False:
-        return W @ x
-
-
-
+    if a
