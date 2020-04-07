@@ -20,24 +20,24 @@ if __name__ == '__main__':
 
     home_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Number_Classifier_v4'
 
-    MODEL_SIZES = utils.N_layer_models         # model sizes dictionary
+    MODEL_LAYER_SIZES = utils.N_layer_models    # model sizes dictionary
     X_train,X_test,y_train,y_test = \
         utils.train_test_data(test=0.375,seed=0)
     
     test_type = 'control_v1'        # modifcations made
     N_iterations = 100              # time to repeat each model
 
-    for model_type in MODEL_SIZES.keys():               # for each MLP size
-        print("Testing:",str(model_type))               # meesage to user
+    for N_LAYERS in MODEL_LAYER_SIZES.keys():         # for each MLP size
+        print("Testing:",str(N_LAYERS))                 # meesage to user
 
-        out_path = home_path + '/'+ str(model_type)
+        out_path = home_path + '/'+ str(N_LAYERS)
         try:
             os.mkdir(out_path)
         except:
             pass
 
-        for layer_sizes in MODEL_SIZES[model_type]:     # for each layer size
-            print("\tLayer Sizes:",layer_sizes)
+        for N_NUERONS in MODEL_LAYER_SIZES[N_LAYERS]: # for each layer size
+            print("\tLayer Sizes:",N_NUERONS)
 
             output_matrix = np.array([])                # output for 100 samples 
             for I in range (0,N_iterations,1):
@@ -45,10 +45,10 @@ if __name__ == '__main__':
                 # Create & Train Model
                 t0 = time.process_time()
                 model = utils.Create_MLP_Model(name=test_type+'_'+str(I),
-                                               layers=layer_sizes,
+                                               layers=N_NUERONS,
                                                X=X_train,y=y_train)
                 tf = time.process_time()
-                dt = np.round(tf-t0,decimals=0)         # time to create & train model
+                dt = np.round(tf-t0,decimals=8)         # time to create & train model
                 print("\t\tTime to train",model.name,":",dt)
                 
                 # Evaluate Model (scores & confmat)
@@ -64,15 +64,15 @@ if __name__ == '__main__':
                 row = np.append(row,model.confusion_matrix)
 
                 output_matrix = np.append(output_matrix,row)    
-                del(model)
+                del(model)              # delete model to save RAM
 
             # reshape output matrix
             output_matrix = output_matrix.reshape(N_iterations,-1)
-            output_name = test_type+'_'+str(layer_sizes[0])
+            output_name = test_type+'_'+str(N_NUERONS[0])
             Frame = utils.Create_DataFrame(output_matrix)
             Frame.to_csv(out_path+'/'+output_name+'.csv')
 
-    print(time.process_time())
+    print("Total program Time:",time.process_time())
                 
 
 
