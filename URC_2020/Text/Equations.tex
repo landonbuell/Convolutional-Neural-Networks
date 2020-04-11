@@ -1,0 +1,47 @@
+% ================================
+% Landon Buell
+% Qiaoyan Yu
+% URC 2020 - Equations
+% 11 April 2020
+% ================================
+
+\documentclass[12pt,letterpaper]{article}
+
+\DeclareMathSizes{12}{30}{16}{12}
+
+\usepackage{amsmath}
+\usepackage{float}
+
+\begin{document}
+
+
+Standard Feed Forward System:
+\begin{equation}
+\label{Standard Feed Forward}
+\vec{x}^{(l+1)} = f  \Big[\hat{W}^{(l)}\vec{x}^{(l)} + \vec{b}^{(l)} \Big]
+\end{equation}
+
+Modified Feed Forward System:
+\begin{equation}
+\label{Attack Feed Forward}
+\vec{x}^{(l+1)} = f  \Big[ A\big(\hat{W}^{(l)}\vec{x}^{(l)}\big) + \vec{b}^{(l)} \Big]
+\end{equation}
+
+Arbitrary layer $l$ with $n$ neurons
+\begin{equation}
+\label{layer l}
+\vec{x}^{(l)} = 
+\begin{bmatrix}
+\vspace{0.3cm}
+x^{(l)}_{0} \vspace{0.5cm} \\ 
+x^{(l)}_{1} \\ 
+\vdots \\ \vdots \\ 
+x^{(l)}_{n-2} \vspace{0.5cm} \\ 
+x^{(l)}_{n-1} \vspace{0.2cm}
+\end{bmatrix}
+\end{equation}
+
+
+
+
+\end{document}

@@ -8,8 +8,7 @@ Number Classifier v4 - main
         #### IMPORTS ####
 
 import numpy as np
-import os
-import sys
+
 
 """
 Number Classifier Attack Functions
@@ -45,7 +44,8 @@ def ATTACK (activations,attack_type=None,trigger_type='binary'):
     """
     
     # get boolean trigger value
-    trigger_condition = get_trigger(trigger_type=trigger_type)
+    #trigger_condition = get_trigger(trigger_type=trigger_type)
+    trigger_condition = True    # set to always on
 
     if trigger_condition == True:       # if trigger active
 
