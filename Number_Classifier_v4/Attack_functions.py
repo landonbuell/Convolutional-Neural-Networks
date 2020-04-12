@@ -36,6 +36,10 @@ def get_trigger (trigger_type):
     """ Compute & return boolean trigger value """
     if trigger_type == 'binary':
         return np.random.choice([True,False],size=1,p=[0.5,0.5])
+    if trigger_type == 'always_on':
+        return True
+    else: 
+        return False
 
     
 def ATTACK (activations,attack_type=None,trigger_type='binary'):
@@ -44,9 +48,8 @@ def ATTACK (activations,attack_type=None,trigger_type='binary'):
     """
     
     # get boolean trigger value
-    #trigger_condition = get_trigger(trigger_type=trigger_type)
-    trigger_condition = True    # set to always on
-
+    trigger_condition = get_trigger(trigger_type=trigger_type)
+    
     if trigger_condition == True:       # if trigger active
 
         if attack_type == 'round_activatons':     
