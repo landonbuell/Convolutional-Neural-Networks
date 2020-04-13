@@ -42,17 +42,20 @@ def round (act,decimals=0):
     """ Round elements of matrix product to specified decimal accuracy """
     return np.round(act,decimals=decimals)  # return rounded vector
 
-def bit_swap(act):
+def mute_bits(act):
     """ Swap bit in binary equivalent of floating point number """
+    orignal_shape = act.shape     # original shape of arr
+    act = act.ravel()               # flatten
     for neuron in act:
         binary_string = FloatToBinary64(neuron)         # convert to 64-bit binary
         binary_list = list(binary_string)               # convert to list
-        pts = np.random.randint(low=0,high=63,size=2)   # generate 2 pts
-        binary_list[pts[0]],binary_list[pts[1]] = \
-            binary_list[pts[1]],binary_list[pts[0]]     # swap the two indicies
-        binary_string =  ''.join(string_list)           # rejoin into single string
+        pts = np.random.randint(low=0,high=63,size=4)   # generate 4 rand idxs
+        for pt in pts:                                  # for the 4 random pts
+            binary_list[pt] = '0'                       # mute the bit to '0'
+        binary_string =  ''.join(binary_list)           # rejoin into single string
         neuron = Binary64ToFloat(binary_string)         # replace neuron value
-    return act
+    act = act.rehape(orignal_shape)         # rehape to original
+    return act                      # return the activations
 
         #### TRIGGER FUNCTIONS ####
 
@@ -64,6 +67,9 @@ def get_trigger (trigger_type):
         return True
     else: 
         return False
+
+
+        #### MAIN ATTACK FUNCTION ####
 
     
 def ATTACK (activations,attack_type=None,trigger_type='binary'):
@@ -80,7 +86,7 @@ def ATTACK (activations,attack_type=None,trigger_type='binary'):
             # Rounding attack, round to 0 decimals
             return round(activations,decimals=0)
 
-        if attack_type == 'bit_swap':
+        if attack_type == 'mute_bits':
             # swap bit in binary equivalent
             return bit_swap(activations)
 
