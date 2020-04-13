@@ -19,6 +19,12 @@ N_layer_models = {
      #                           (80,80,80,80),(100,100,100,100)] 
     }
 
+cols_to_use = np.arange(1,24,1,dtype=int)
+out_frame_idx = ['train time min','train time max','train time avg',
+                 'loss value min','loss value max','loss value avg',
+                 'iterations min','iterations max','iterations avg',
+                 'average precision','average recall']
+
             #### CLASS OBJECT DEFINTIONS ####
 
 class file_data ():
@@ -42,9 +48,10 @@ class file_data ():
         self.columns = dataframe.columns
         for col in dataframe.columns:
             dataset = dataframe[col].to_numpy()
-            setattr(self,str(col)+' min',np.min(dataset))
-            setattr(self,str(col)+' max',np.max(dataset))
-            setattr(self,str(col)+' avg',np.mean(dataset))
+            col = col.replace(' ','_')        # replace space w/ underscore
+            setattr(self,str(col)+'_min',np.min(dataset))
+            setattr(self,str(col)+'_max',np.max(dataset))
+            setattr(self,str(col)+'_avg',np.mean(dataset))
         self.average_precision_recall(dataframe)
 
     def average_precision_recall(self,frame):
@@ -61,6 +68,21 @@ class file_data ():
         setattr(self,'precision_avg',np.mean(precs))    # average precision across 100 samples x 10 classes
         setattr(self,'recall_avg',np.mean(recls))       # average recall across 100 samples x 10 classes
 
+    def index_for_file (self):
+        """ Return index for datframe row """
+        return self.family + '_' + self.filename         # index for row of dataframe
+
+    def data_for_file (self):
+        """ Return needed data for datframe row """
+        rowdata = np.array([self.Train_Time_min,self.Train_Time_max,self.Train_Time_avg,
+                            self.Loss_Value_min,self.Loss_Value_max,self.Loss_Value_avg,
+                            self.Iterations_min,self.Iterations_max,self.Iterations_avg,
+                            self.precision_avg,self.recall_avg])
+        return rowdata
+
+
+        
+
 
             #### FUNCTION DEFINTIIONS ####
 
@@ -75,17 +97,6 @@ def Analyze_Model(model_list,test_types):
     """
     N_neurons = [20,40,60,80,100,120]
     num_test = len(test_types)
-
-    for data_type in ['Train Time','Loss Value','Iterations']:
-        
-     
-
-
-
-
-
-
-
 
 
             #### VISUALIZING FUNCTIONS ####
