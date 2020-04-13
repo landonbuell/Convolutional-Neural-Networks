@@ -24,7 +24,7 @@ if __name__ == '__main__':
     X_train,X_test,y_train,y_test = \
         utils.train_test_data(test=0.375,seed=0)
     
-    test_type = 'NONE'        # modifcations made
+    test_type = 'gaussian_noise_v1'        # modifcations made
     N_iterations = 100                      # time to repeat each model
 
     for N_LAYERS in MODEL_LAYER_SIZES.keys():         # for each MLP size

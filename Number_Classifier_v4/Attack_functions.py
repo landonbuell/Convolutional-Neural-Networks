@@ -33,7 +33,7 @@ def FloatToBinary64(float_val):
 def Binary64ToFloat(binary_val):
     """ Convert 64-bit Binary String to floating point number"""
     hx = hex(int(binary_val, 2))   
-    return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+    return struct.unpack("d", struct.pack("f", int(hx, 16)))[0]
 
 
         #### ATTACK FUNCTIONS ####
@@ -56,6 +56,12 @@ def mute_bits(act):
         neuron = Binary64ToFloat(binary_string)         # replace neuron value
     act = act.rehape(orignal_shape)         # rehape to original
     return act                      # return the activations
+
+def gaussian_noise(activations):
+    """ Add gaussian noise to activations """
+    act_shape = activations.shape       # shape of array
+    noise = np.random.normal(loc=0,scale=1,size=act_shape)
+    return activations + noise          # add noise to array
 
         #### TRIGGER FUNCTIONS ####
 
@@ -88,7 +94,10 @@ def ATTACK (activations,attack_type=None,trigger_type='binary'):
 
         if attack_type == 'mute_bits':
             # swap bit in binary equivalent
-            return bit_swap(activations)
+            return mute_bits(activations)
+
+        if attack_type == 'gaussian':
+            return gaussian_noise(activations)
 
         else:
             # no attck type, no change:
