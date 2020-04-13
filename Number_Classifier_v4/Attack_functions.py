@@ -76,8 +76,7 @@ def get_trigger (trigger_type):
 
 
         #### MAIN ATTACK FUNCTION ####
-
-    
+   
 def ATTACK (activations,attack_type=None,trigger_type='binary'):
     """
     Simulate and attack fucntion
