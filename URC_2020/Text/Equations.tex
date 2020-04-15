@@ -7,7 +7,7 @@
 
 \documentclass[12pt,letterpaper]{article}
 
-\DeclareMathSizes{12}{30}{16}{12}
+\DeclareMathSizes{12}{70}{16}{12}
 
 \usepackage{amsmath}
 \usepackage{float}
@@ -16,16 +16,22 @@
 
 
 Standard Feed Forward System:
+
+\vspace{3cm}
+
 \begin{equation}
 \label{Standard Feed Forward}
-\vec{x}^{(l+1)} = f  \Big[\hat{W}^{(l)}\vec{x}^{(l)} + \vec{b}^{(l)} \Big]
+\vec{x}^{(l+1)} = f  \Big[ \hat{W}^{(l)}\vec{x}^{(l)} + \vec{b}^{(l)} \Big]
 \end{equation}
 
-Modified Feed Forward System:
+\vspace{1cm}
+
 \begin{equation}
 \label{Attack Feed Forward}
 \vec{x}^{(l+1)} = f  \Big[ A\big(\hat{W}^{(l)}\vec{x}^{(l)}\big) + \vec{b}^{(l)} \Big]
 \end{equation}
+
+\vspace{3cm}
 
 Arbitrary layer $l$ with $n$ neurons
 \begin{equation}
