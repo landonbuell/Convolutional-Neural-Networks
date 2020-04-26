@@ -28,6 +28,9 @@ N_layer_models = {
                             (80,80,80,80),(100,100,100,100),(120,120,120,120)] 
     }
 
+dataframe_columns = ['Name','Avg_Loss','Min_Loss','Max_Loss','Avg_Iters','Min_Iters','Max_Iters',
+            'Avg_Prec','Min_Prec','Max_Prec','Avg_Recall','Min_Recall','Max_Recall']
+
             #### FUNCTION DEFINTIONS ####
 
 def train_test_data (test=0.4,seed=None):
@@ -39,18 +42,17 @@ def train_test_data (test=0.4,seed=None):
     return train_test_split(X_subset,y_subset,
                             test_size=test,random_state=seed)
 
-def Create_DataFrame (matrix):
+def Create_DataFrame (matrix,name,cols):
     """ Create Pandas DataFrame to hold output information for each test"""
-    cols = ['Avg_Loss','Min_Loss','Max_Loss','Avg_Iters','Min_Iters','Max_Iters',
-            'Avg_Prec','Min_Prec','Max_Prec','Avg_Recall','Min_Recall','Max_Recall']
-    avgs,mins,maxs= np.mean(matrix,axis=1),np.min(matrix,axis=1),np.max(matrix,axis=1)
-    print(avgs)
-    print(mins)
-    print(maxs)
-    row = np.array([])
+    
+    avgs,mins,maxs = np.mean(matrix,axis=0),np.min(matrix,axis=0),np.max(matrix,axis=0)
+    data = np.array([str(name)])
     for a,b,c in zip(avgs,mins,maxs):
-        row = np.append(row,[a,b,c])
-    print(row)
+        arr = np.array([a,b,c],dtype=float)
+        data = np.append(data,arr)
+    data = data.reshape(1,-1)
+    frame = pd.DataFrame(data=data,columns=cols)
+    return frame
 
                                  # return the frame
 
