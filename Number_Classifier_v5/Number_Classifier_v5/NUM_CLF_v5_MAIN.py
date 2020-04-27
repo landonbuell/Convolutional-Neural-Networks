@@ -27,7 +27,7 @@ if __name__ == '__main__':
         utils.train_test_data(test=0.375,seed=0)
     
     test_type = 'Baseline_v1'           # modifcations made
-    N_iterations = 4                   # time to repeat each model
+    N_iterations = 50                   # time to repeat each model
     output_frame = pd.DataFrame(data=None,columns=frame_cols)
     output_frame.to_csv(path_or_buf=data_path+'/'+test_type+'.csv',
                         mode='w')       # write the output frame
@@ -52,8 +52,7 @@ if __name__ == '__main__':
                 # Create row to to add to matrix
                 row = np.array([model.loss_,model.n_iter_,
                                 model.avg_prec,model.avg_recall])
-                output_matrix = np.append(output_matrix,row)  
-                
+                output_matrix = np.append(output_matrix,row)                  
                 del(model)              # delete model to save RAM
 
             # reshape output matrix,concatenate dataframes
@@ -61,7 +60,7 @@ if __name__ == '__main__':
             frame = utils.Create_DataFrame(output_matrix,model_name,frame_cols)
             output_frame = pd.concat([output_frame,frame])
             output_frame.to_csv(path_or_buf=data_path+'/'+test_type+'.csv',
-                        header=False,mode='a')       # append the output frame
+                        header=True,mode='w')       # overwrite the output frame
 
     print("Total program Time:",time.process_time())
                 
