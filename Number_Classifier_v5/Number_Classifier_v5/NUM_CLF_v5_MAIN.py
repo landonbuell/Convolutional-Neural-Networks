@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
             output_matrix = np.array([])                # output for N samples 
             for I in range (0,N_iterations,1):
-
+                print("\t\tIteration:",I)
                 # Create & Train Model
                 model = utils.Create_MLP_Model(name=test_type+'_'+str(I),
                                     layers=NEURON_DENSITY,X=X_train,y=y_train)              
