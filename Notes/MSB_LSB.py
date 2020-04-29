@@ -16,32 +16,20 @@ x1 = W0 @ x0 + b0
 
 # Examine activations
 a1 = W0 @ x0
-a1 = a1.ravel()
 print(a1)
 
-# Print 0th idx
-print(type(a1[0]))
-print(a1[0])
+def Swap_MSB_LSB (act):
+    """ Sweap MSB & LSB in exponente of IEEE 754 FP-64 """
+    act = act.ravel()           # flatten arr
+    for I in range(len(act)):               # each entry in arr
+        bin_str = bitstring.BitArray(float=act[I],length=64).bin # binary str
+        bin_list = list(bin_str)                             # convert to list
+        bin_list[1],bin_list[11] = bin_list[11],bin_list[1] # swap bits
+        new_str = ''.join(bin_list)                         # back to str
+        new_float = bitstring.BitString(bin=new_str).float  # convert to float 64
+        act[I] = new_float                                  # overwrite index
+    return act.reshape(-1,1)                                # return array
 
-# convert entry to single-precision float
-f1 = bitstring.BitArray(float=a1[0],length=64)
-f1_bin = f1.bin
-print(f1_bin)
+c1 = Swap_MSB_LSB(a1)
 
-# convert str to lists?
-print(type(f1_bin))
-f1_list = list(f1_bin)
-print(f1_list)
-
-f1_list[11],f1_list[1] = f1_list[1],f1_list[11]
-
-print(f1_list)
-
-f1_new = ''.join(f1_list)
-print(f1_new)
-
-print(f1_bin)
-
-f1 = bitstring.BitString(bin=f1_new)
-
-print(f1.float)
+print(c1)

@@ -8,7 +8,7 @@ NUM ClF
         #### IMPORTS ####
 
 import numpy as np
-
+import bitstring
 
 """
 Number Classifier Attack Functions
@@ -18,42 +18,26 @@ Number Classifier Attack Functions
 """
         #### MISC FUNCTIONS ####
 
-""" These three functions were modifed from an online source. See:
-https://www.technical-recipes.com/2012/converting-between-binary-and-decimal-representations-of-ieee-754-floating-point-numbers-in-c/ """
-
-getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
-
-def FloatToBinary64(float_val):
-    """ Convert floating point number to 64-bit Binary String"""
-    val = struct.unpack('Q', struct.pack('d', float_val))[0]
-    return getBin(val)
-       
-def Binary64ToFloat(binary_val):
-    """ Convert 64-bit Binary String to floating point number"""
-    hx = hex(int(binary_val, 2))   
-    return struct.unpack("d", struct.pack("f", int(hx, 16)))[0]
 
 
         #### ATTACK FUNCTIONS ####
 
+def Swap_MSB_LSB (act):
+    """ Sweap MSB & LSB in exponente of IEEE 754 FP-64 """
+    act_shape = act.shape           # original shape
+    act = act.ravel()               # flatten arr
+    for I in range(len(act)):       # each entry in arr
+        bin_str = bitstring.BitArray(float=act[I],length=64).bin # binary str
+        bin_list = list(bin_str)                             # convert to list
+        bin_list[1],bin_list[11] = bin_list[11],bin_list[1] # swap bits
+        new_str = ''.join(bin_list)                         # back to str
+        new_float = bitstring.BitString(bin=new_str).float  # convert to float 64
+        act[I] = new_float                                  # overwrite index
+    return act.reshape(act_shape)                           # return array
+
 def round (act,decimals=0):
     """ Round elements of matrix product to specified decimal accuracy """
     return np.round(act,decimals=decimals)  # return rounded vector
-
-def mute_bits(act):
-    """ Swap bit in binary equivalent of floating point number """
-    orignal_shape = act.shape     # original shape of arr
-    act = act.ravel()               # flatten
-    for neuron in act:
-        binary_string = FloatToBinary64(neuron)         # convert to 64-bit binary
-        binary_list = list(binary_string)               # convert to list
-        pts = np.random.randint(low=0,high=63,size=4)   # generate 4 rand idxs
-        for pt in pts:                                  # for the 4 random pts
-            binary_list[pt] = '0'                       # mute the bit to '0'
-        binary_string =  ''.join(binary_list)           # rejoin into single string
-        neuron = Binary64ToFloat(binary_string)         # replace neuron value
-    act = act.rehape(orignal_shape)         # rehape to original
-    return act                      # return the activations
 
 def gaussian_noise(activations):
     """ Add gaussian noise to activations """
@@ -92,9 +76,9 @@ def ATTACK (activations,attack_type=None,trigger_type='binary'):
             # Rounding attack, round to 0 decimals
             return round(activations,decimals=0)
 
-        if attack_type == 'mute_bits':
+        if attack_type == 'swap_bits':
             # swap bit in binary equivalent
-            return mute_bits(activations)
+            return Swap_MSB_LSB(activations)
 
         if attack_type == 'gaussian':
             return gaussian_noise(activations)
