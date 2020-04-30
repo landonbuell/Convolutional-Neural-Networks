@@ -16,24 +16,23 @@ Number Classifier Attack Functions
     attack_type (str) : character string indictaing the type of attack to be performed (None by default)
     trigger_type (str) : trigger condition to used for attack frequnecy ('binary' by default)
 """
-        #### MISC FUNCTIONS ####
-
-
-
+ 
         #### ATTACK FUNCTIONS ####
 
 def Swap_MSB_LSB (act):
     """ Sweap MSB & LSB in exponente of IEEE 754 FP-64 """
-    act_shape = act.shape           # original shape
-    act = act.ravel()               # flatten arr
-    for I in range(len(act)):       # each entry in arr
+    act_shape = act.shape                   # original shape
+    act = act.ravel().astype(np.float64)    # flatten,make FP-64 if not
+    for I in range(len(act)):               # each entry in arr
         bin_str = bitstring.BitArray(float=act[I],length=64).bin # binary str
-        bin_list = list(bin_str)                             # convert to list
-        bin_list[1],bin_list[11] = bin_list[11],bin_list[1] # swap bits
+        bin_list = list(bin_str)                            # convert to list
+        bin_list[12],bin_list[63] = \
+            bin_list[63],bin_list[12]                         # swap bits
         new_str = ''.join(bin_list)                         # back to str
         new_float = bitstring.BitString(bin=new_str).float  # convert to float 64
         act[I] = new_float                                  # overwrite index
-    return act.reshape(act_shape)                           # return array
+    act = act.reshape(act_shape)
+    return act
 
 def round (act,decimals=0):
     """ Round elements of matrix product to specified decimal accuracy """
@@ -42,7 +41,7 @@ def round (act,decimals=0):
 def gaussian_noise(activations):
     """ Add gaussian noise to activations """
     act_shape = activations.shape       # shape of array
-    noise = np.random.normal(loc=0,scale=1,size=act_shape)
+    noise = np.random.normal(loc=0,scale=2,size=act_shape)
     return activations + noise          # add noise to array
 
         #### TRIGGER FUNCTIONS ####
