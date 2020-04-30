@@ -54,8 +54,6 @@ def Create_DataFrame (matrix,name,cols):
     frame = pd.DataFrame(data=data,columns=cols)
     return frame
 
-                                 # return the frame
-
 def Create_MLP_Model (name,layers,X,y):
     """
     Create & Train Instance of sklearn Multilayer Perceptron Class

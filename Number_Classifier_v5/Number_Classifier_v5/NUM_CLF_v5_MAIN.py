@@ -26,7 +26,7 @@ if __name__ == '__main__':
     X_train,X_test,y_train,y_test = \
         utils.train_test_data(test=0.375,seed=0)
     
-    test_type = 'Gaussian_v1'           # modifcations made
+    test_type = 'Round_v1'           # modifcations made
     N_iterations = 50                   # time to repeat each model
     output_frame = pd.DataFrame(data=None,columns=frame_cols)
     output_frame.to_csv(path_or_buf=data_path+'/'+test_type+'.csv',
