@@ -39,7 +39,7 @@ def Mute_MSB (act):
     act_shape = act.shape                   # original shape
     mants,exps = np.frexp(act)              # mantissa,exponent
     exps = np.array([0 if (e > 0) else e for e in exps.ravel()])
-    act = np.ldexp(mants,exps.reshape(shape))   # reconstruct FP-64
+    act = np.ldexp(mants,exps.reshape(act_shape))   # reconstruct FP-64
     return act                                  # return new activations
 
 def round (act,decimals=0):
@@ -54,48 +54,38 @@ def gaussian_noise(activations):
 
         #### TRIGGER FUNCTIONS ####
 
-def get_trigger (trigger_type):
-    """ Compute & return boolean trigger value """
+def get_trigger(trigger_type=None):
+    """ Return boolean trigger condition """
     if trigger_type == 'binary':
-        return np.random.choice([True,False],size=1,p=[0.5,0.5])
+        return np.random.choice([True,False],p=[0.5,0.5])
     if trigger_type == 'always_on':
         return True
-    else: 
+    if trigger_type == None:
         return False
 
 
         #### MAIN ATTACK FUNCTION ####
    
-def ATTACK (activations,attack_type=None,trigger_type='binary'):
-    """
-    Simulate and attack fucntion
-    """
-
-    if attack_type == None:     # no attack
-        return activations      # untouched activations
+def ATTACK (activations,attack_type=None,trigger_type=None):
+    """Simulate Attack Function """
     
-    # get boolean trigger value
-    trigger_condition = get_trigger(trigger_type=trigger_type)
+    # Get trigger condition
+    trigger = get_trigger(trigger_type=trigger_type)
     
-    if trigger_condition == True:       # if trigger active
+    # if true, apply attack
+    if trigger == True:
 
-        if attack_type == 'round':     
-            # Rounding attack, round to 0 decimals
+        if attack_type == 'round':
             return round(activations,decimals=0)
-
-        if attack_type == 'swap_bits':
-            # swap bit in binary equivalent
-            return Swap_MSB_LSB(activations)
-
-        if attack_type == 'mute_MSB':
-            return Mute_MSB(activations)
-
-        if attack_type == 'gaussian':
+            
+        elif attack_type == 'noise':
             return gaussian_noise(activations)
-
+            
+        elif attack_type == 'mute_MSB':
+            return Mute_MSB(activations)
+            
         else:
-            # no attck type, no change:
             return activations
-
+        
     else:
         return activations
