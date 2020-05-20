@@ -37,7 +37,7 @@ Where $f$ is an \textit{activation function}, the superscript $(l)$ and $(l+1)$ 
 \vec{x}^{(l+1)} = f \Big( A \big( \hat{W}^{(l)} \vec{x}^{(l)} \big) + \vec{b}^{(l)} \Big)
 \end{equation}
 Where $A$ is the attack function.
-\paragraph*{}The attack function is also based on an \textit{attack type} and a Boolean \textit{trigger condition}. If the trigger condition is defined as \textit{false}, then no attack occurs, thus eqn. (\ref{feed-forward}) applies. If \textit{true}, then the attack commences on that layer pass, and eqn. (\ref{feed-forward}) is replaced with eqn. \ref{attack}). In the latter sections of this paper we explore how different variants of the \textit{attack type} is implemented, and how it affects the layer activations.
+\paragraph*{}The attack function is also based on an \textit{attack type} and a Boolean \textit{trigger condition}. If the trigger condition is defined as \textit{false}, then no attack occurs, thus eqn. (\ref{feed-forward}) applies. If \textit{true}, then the attack commences on that layer pass, and eqn. (\ref{feed-forward}) is replaced with eqn. (\ref{attack}). In the latter sections of this paper we explore how different variants of the \textit{attack type} is implemented, and how it affects the layer activations.
 
 % ================================================================
 
@@ -54,7 +54,7 @@ Where $A$ is the attack function.
 \label{ReLU}
 \text{ReLU}(z) = \max \big( \{0,z\} \big)
 \end{equation}
-This is represented by $f$ in equations (\ref{feed-forward}) and (\ref{attack}).
+This is represented by $f$ in equations (\ref{feed-forward}) and (\ref{attack}). This constraint forces all activations to lie in a non-negative range.
 
 \item[•]\textbf{Solver}: Stochastic Gradient Descent. This is an optimization method based on using iterations over the training data set to update parameters in a way such that it reduces the error given by the difference between a given output and an expected output in a training batch.
 
@@ -62,20 +62,21 @@ This is represented by $f$ in equations (\ref{feed-forward}) and (\ref{attack}).
 
 \item[•]\textbf{Maximum Iterations}: To prevent models from potentially being stuck in indefinite loops, a maximum number of $400$ iterations per model instance was allowed. In practical training circumstances, this also prevents a network from being over fit on a single collection of data. If a model did not converge on a sufficient set of parameters, the training process halts regardless.
 
-\item[•]\textbf{Tolerance}: The tolerance parameter sets a value for the solver to define as a value to reach in the gradient.
+\item[•]\textbf{Tolerance}: The tolerance parameter sets a value for the solver to define as a value to reach in the gradient. For this experiement, tolerance was set to $10^{-4}$.
 
+\item[•]\textbf{Learning Rate}: The learning parameter exists to scale the step indicated by the SGD process. This helps to mitigate the possibility of vanishing or exploding gradients. It is set to $0.001$ for this experiment. 
 
+\item[•]\textbf{Momentum}: Momentum is designed to accelerate the SGD optimization process. It is a scalar, usually bound between $0$ and $1$, and for this experiment, was set to $0.9$.
 
 \end{itemize}
+
+\paragraph*{}The data set used was the MNIST data set, available thought the scikit-learn \textit{datasets} module. It contains 70,000 samples of images that have been written by hand, and labeled by humans accordingly. Each image is $28 \times 28$ pixels, making the input feature vector $784$ dimensional when compressed into a single column vector to provide to the network model. To minimize computation time, only the fist $16,000$ image samples were used. They were then broken down into $9600$ \textit{training} samples and $6400$ \textit{testing} samples. All models used identical training and testing subsets.
 
 % ================================================================
 
 \section*{Baseline Model}
 
-\paragraph*{}Before any modification to the MLP network, we need to establish a baseline or a control model. This model was run using the standard unmodified \textit{Multilayer Perceptron Classifier} implementation provided by the Python Library \textit{Scikit Learn} 0.22.1. 
-
-
-
+\paragraph*{}Before any modification to the MLP network, we need to establish a baseline or a control model. This model was run using the standard unmodified \textit{Multilayer Perceptron Classifier} implementation provided by the Python Library \textit{Scikit Learn} 0.22.1. For each of the 24 model variants, the $9600$ sample were used to train and then $6400$ used to test. No attack function modification was applied at any point, thus only equation (\ref{feed-forward}) is used. This is indicative of a normally functioning neural network, with no external modification applied. The results of this network provide a control model to compare all other results to.
 
 % ================================================================
 
@@ -86,11 +87,39 @@ This is represented by $f$ in equations (\ref{feed-forward}) and (\ref{attack}).
 
 \section*{Adding Noise drawn from a Gaussian Distribution}
 
+\paragraph*{}A simple type of attack to model is one that introduces inherent noise into the activations of a layer. Mathematically, the attack funtion would take a set of activations, $\vec{x}$ and add noise $\vec{\epsilon}$ as drawn from a distribution or otherwise. Thus we can model an attack function $A$ such that:
+\begin{equation}
+\label{noise attack}
+A_{\text{noise}} \big[ \hat{W}^{(l)} \vec{x}^{(l)} \big] = \hat{W}^{(l)} \vec{x}^{(l)} + \vec{\epsilon}^{(l)}
+\end{equation}
+To model this numerically, We take the array that results from the matrix-vector product and add an equivalently shaped array containing entries as drawn from a standard Gaussian Distribution, with mean $\mu = 0$ and standard deviation $\sigma = 1$. Thus:
+\begin{equation}
+\vec{\epsilon}^{(l)} = N(0,1) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
+\end{equation}
+
 
 % ================================================================
 
 \section*{Muting the Most Significant Bit}
 
+\paragraph*{}In general, when performing computations with Neural Networks, most algorithms with use single or double precision floating point numbers.  In the case of Python 3.7 and Scikit-Learn 0.22.1, these double-precision variant is used almost exclusively. To simulate a Network attack at a binary level, we add a filter that 'mutes' the \textit{most-significant-bit} (MSB) in the floating-point number. A Double precision float is composed of 64 binary bits, by the IEEE 754 floating-point standard, the 0-th bit is the sign, the next 11 are the exponent and the remaining 52 are the fraction. Examining just the exponent, we have the 11 bits:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+1024 & 512 & 256 & 128 & 64 & 32 & 16 & 8 & 4 & 2 & 1 \\ \hline
+- & - & - & - & - & - & - & - & - & - & -  \\ \hline
+\end{tabular}
+\end{center}
+
+\paragraph*{}Choosing the MSB to be the $1024$ entry, the highest possible value that the exponent can take on is $1023$ (all other bits are 1's). Additionally, with the IEEE 754 standard, there is an exponent offset, that takes the expected exponent value given by the 11 bits and then subtracts $1023$ from it. This means that with he muted first bit, and the offset, the exponent part of the number is bounded on the interval 
+$e \in [-1023,0]$. We Mathematically show thus:
+\begin{equation}
+\label{mute MSB attack}
+A_{\text{noise}} \big[ \hat{W}^{(l)} \vec{x}^{(l)} \big] = \hat{W}^{(l)} \vec{x}^{(l)} + \vec{\epsilon}^{(l)}
+\end{equation}
+
+\paragraph*{}Thus rather that convert each float to a 64-bit binary string, which is time consuming, we test the value of the exponent in each float. If the value is ever above zero, it is then set to zero. All exponents less than zero are preserved. This has the effect of forcing the double precision float to have an upper bound that asymptotically approach $2$, but never reach or exceed it.
 
 % ================================================================
 
