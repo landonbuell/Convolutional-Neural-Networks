@@ -58,9 +58,11 @@ def get_trigger(trigger_type=None):
     """ Return boolean trigger condition """
     if trigger_type == 'binary':
         return np.random.choice([True,False],p=[0.5,0.5])
-    if trigger_type == 'always_on':
+    elif trigger_type == 'always_on':
         return True
-    if trigger_type == None:
+    elif trigger_type == None:
+        return False
+    else:
         return False
 
 
