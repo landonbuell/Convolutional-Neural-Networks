@@ -76,20 +76,26 @@ This is represented by $f$ in equations (\ref{feed-forward}) and (\ref{attack}).
 
 \section*{Baseline Model}
 
-\paragraph*{}Before any modification to the MLP network, we need to establish a baseline or a control model. This model was run using the standard unmodified \textit{Multilayer Perceptron Classifier} implementation provided by the Python Library \textit{Scikit Learn} 0.22.1. For each of the 24 model variants, the $9600$ sample were used to train and then $6400$ used to test. No attack function modification was applied at any point, thus only equation (\ref{feed-forward}) is used. This is indicative of a normally functioning neural network, with no external modification applied. The results of this network provide a control model to compare all other results to.
+\paragraph*{}Before any modification to the MLP network, we need to establish a baseline or a control model. This model was run using the standard unmodified \textit{Multilayer Perceptron Classifier} implementation provided by the Python Library \textit{Scikit Learn} 0.22.1. For each of the 24 model variants, the $9600$ sample were used to train and then $6400$ used to test. No attack function modification was applied at any point, thus only equation (\ref{feed-forward}) is used. This is indicative of a normally functioning neural network, with no external modification applied. The results of this network provide a control model to compare all other results to. Visualizing input-space against output space:
+\begin{center}
+\includegraphics[scale=0.3]{No_Attack}
+\end{center}
 
 % ================================================================
 
 \section*{Rounding to the Nearest Integer Value}
 
-\paragraph*{}A simple type of attack model is one that seeks to reduce the numerical accuracy of any values used in floating-point number calculations.  This could be truncating the number, muting bits in the binary representation or simply rounding the values to remove significant figures. For this experiment, we chose to model this type of attack by rounding each floating-point number to the nearest integer value. Thus, in it's base-10 representation, all entries after the decimanl point are indentically $0$. We model this attack:
+\paragraph*{}A simple type of attack model is one that seeks to reduce the numerical accuracy of any values used in floating-point number calculations.  This could be truncating the number, muting bits in the binary representation or simply rounding the values to remove significant figures. For this experiment, we chose to model this type of attack by rounding each floating-point number to the nearest integer value. Thus, in it's base-10 representation, all entries after the decimal point are indentically $0$. We model this attack:
 
 \begin{equation}
 \label{round attack}
 A_{round} \big[ \hat{W}^{(l)} \vec{x}^{(l)} \big] = \text{ROUND} \big[ \hat{W}^{(l)} \vec{x}^{(l)} ,0 \big]
 \end{equation}
 
-Where ROUND[$z,n$] takes from floating-point number $z$ and rounds it to have $n$ decimal places of accuracy in it's base-10 representation; $n$ is an integer. This was functionally done with the package numpy using the function \textit{numpy.round(z,n)}.
+Where ROUND[$z,n$] takes from floating-point number $z$ and rounds it to have $n$ decimal places of accuracy in it's base-10 representation; $n$ is an integer. This was functionally done with the package numpy using the function \textit{numpy.round(z,n)}. Visualized:
+\begin{center}
+\includegraphics[scale=0.3]{Rounded_to_Nearest_Integer}
+\end{center}
 
 % ================================================================
 
@@ -106,13 +112,17 @@ To model this numerically, We take the array that results from the matrix-vector
 \begin{equation}
 \vec{\epsilon}^{(l)} = N(0,2) = \frac{1}{\sqrt{2\pi(2)}} e^{-\frac{x^2}{2(2)}}
 \end{equation}
+\paragraph*{}To visualize how this affects the activations:
+\begin{center}
+\includegraphics[scale=0.3]{Gaussian_Noise}
+\end{center}
 
 
 % ================================================================
 
 \section*{Muting the Most Significant Bit}
 
-\paragraph*{}In general, when performing computations with Neural Networks, most algorithms with use single or double precision floating point numbers.  In the case of Python 3.7 and Scikit-Learn 0.22.1, these double-precision variant is used almost exclusively. To simulate a Network attack at a binary level, we add a filter that 'mutes' the \textit{most-significant-bit} (MSB) in the floating-point number. A Double precision float is composed of 64 binary bits, by the IEEE 754 floating-point standard, the 0-th bit is the sign, the next 11 are the exponent and the remaining 52 are the fraction. Examining just the exponent, we have the 11 bits:
+\paragraph*{}In general, when performing computations with Neural Networks, most algorithms with use single or double precision floating point numbers.  In the case of Python 3.7 and Scikit-Learn 0.22.1, these double-precision variant can be set to be used exclusively. To simulate a Network attack at a binary level, we add a filter that 'mutes' the \textit{most-significant-bit} (MSB) in the floating-point number. A Double precision float is composed of 64 binary bits, by the IEEE 754 floating-point standard, the 0-th bit is the sign, the next 11 are the exponent and the remaining 52 are the fraction. Examining just the exponent, we have the 11 bits:
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
@@ -137,7 +147,10 @@ A_{\text{MSB}} \big[ \hat{W}^{(l)} \vec{x}^{(l)} \big] = \\
     \right.
 \end{multline}
 
-Where MANT[$z$] gives the mantissa and EXP[$z$] gives the integer exponent of some floating-point number $z$. In the case of the attack function, $z$ is an element in the objetc resulting from the matrix-vector product.
+Where MANT[$z$] gives the mantissa and EXP[$z$] gives the integer exponent of some floating-point number $z$. In the case of the attack function, $z$ is an element in the objetc resulting from the matrix-vector product.To visualize how this affects the activations:
+\begin{center}
+\includegraphics[scale=0.3]{Mute_Most_Significant_Bit}
+\end{center}
 
 \paragraph*{}Rather that convert each float to a 64-bit binary string, which is time consuming, we test the value of the exponent in each float using the numpy package function \textit{numpy.frexp(z)}. This operation breaks any floating-point number $z$, into a mantissa $M$ and exponent $E$ such that:
 \begin{equation}
@@ -148,6 +161,8 @@ If the value of the expoenent $E$, is ever above zero, it is then set to zero an
 % ================================================================
 
 \section*{Concluding Remarks}
+
+\paragraph*{}Using three simplified models against a control, we can simulate three different types of possible attacks. In each case, the model is representative of a much larger category of external manipulations. In every case, the attacks targeted the matrix-vector product as shown in eqn. (\ref{attack}) and were triggered by a $50/50$ percent Boolean trigger condition, randomly generated at each forward pass. The Attack functions were set to act on both ther training and testing forward passes, thus constantly affecting a classifiers ability to make a decision, but not it's ability to correct with the Gradient Descent Optimizer.
 
 
 % ================================================================
