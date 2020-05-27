@@ -73,17 +73,17 @@ Where $A$ is the attack function, applied element-wise to each object in it's ar
 	\caption{Four MNIST figures shaped as $28$ pixel by $28$ pixel images, colored with a binary color map along with their corresponding labels.}
 \end{figure}
 
-\paragraph*{}Each sample is $28 \times 28$ pixels, each containing by a single integer $0$ through $255$. Images were shaped shaped into a $784 \times 1$ array object and used as input into the network. This means for each network model, there are always $784$ input neurons and $10$ output neurons (one for each class). To test different model architecture complexities, we tested networks containing $1$, $2$, $3$, and $4$ hidden layers (referred to as \textit{network depth}) and used $20$, $40$, $60$, $80$, $100$, and $120$ neurons per layer (referred to as \textit{neuron density} or \textit{network width}). Permutations of these parameters allowed for us to record behavior over $24$ unique MLP model variants.
+\paragraph*{}Each sample is $28 \times 28$ pixels, each containing by a single integer $0$ through $255$ (which are tranfomred into floats when passed through the network). Images were shaped shaped into a $784 \times 1$ array object and used as input into the network. This means for each network model, there are always $784$ input neurons and $10$ output neurons (one for each class). To test different model architecture complexities, we tested networks containing $1$, $2$, $3$, and $4$ hidden layers (referred to as \textit{network depth}) and used $20$, $40$, $60$, $80$, $100$, and $120$ neurons per layer (referred to as \textit{neuron density} or \textit{network width}). Permutations of these parameters allowed for us to record behavior over $24$ unique MLP model variants.
 
 \subsubsection{Impact of Bit-Muting Attack Classification Metrics}
 
 To measure the impact of this type of attack on the image classifier model, we test a baseline classifier against a classifier subject to a random 50/50 trigger condition. From each variant, we record the following metrics
 
 \begin{enumerate}
-\item Accumulated loss function for the final iteration.
-\item Iterations it took to train the model (Out of a Maximum possible 400)
-\item Average precision score all 10 classes (Bounded $[0,1]$, higher is favorable)
-\item Average recall score for all 10 classes (Bounded $[0,1]$, higher is favorable)
+\item \textbf{Accumulated loss function for the final iteration.} This value measures the difference between expected outcome of the network and the given outcome, with a generally lower value begin desirable.(Bounded to Positive Values)
+\item \textbf{Iterations it took to train the model.} This records the amount of epochs (passes over the data set) that the optimizer used to reach it's set of parameters. To avoid over-fitting, all models were limited to perform 400 epochs at maximum. If the Optimizer reaches a loss value within a set tolerance, the training process stops and the set of parameters is used. 
+\item \textbf{Average precision score all 10 classes.} Precision score is the ratio of true positive selections to total sections. It measures how many selected items are relevant to the given task. (Bounded $[0,1]$, higher is favorable).
+\item \textbf{Average recall score for all 10 classes.} Recall score is the ratio of true positive selections to relevant sections. It measures how many relevant items in the given task are selected. (Bounded $[0,1]$, higher is favorable).
 \end{enumerate} 
 
 \paragraph*{}In each of the 24 model variants (4 layer depths, 6 densities), 50 models were trained, with the average, minimum and maximum values for each of the four metrics noted. The average for each metric, across each model depth and neuron density is plotted in fig. (\ref{results}). Note that the lack of a data point means that the value of that metric diverged to infinity or some other undefined value.
@@ -95,16 +95,15 @@ To measure the impact of this type of attack on the image classifier model, we t
 	\subfigure[]{\includegraphics[scale=0.2]{Triple_Hidden_Layer_Models}}
 	\subfigure[]{\includegraphics[scale=0.2]{Quadruple_Hidden_Layer_Models}}
 	\label{results}
-
 \end{figure}
 
 \subsubsection{Conclusions from Bit-Muting Attack}
 
-\paragraph*{}The accumulated loss function value measures the difference between expected
+\paragraph*{}The application of a random bit-mute attack shows drastic difference in the final accumulated loss function value from the baseline model equivalent - plotted in the first column of each row. Results indicate that increasing model complexity leads to the baseline model showing progressively lower loss value, and thus a better fit. However, the corresponding attacked models produce loss values that diverge, and are often undefined Notice how for the 3 and 4 hidden layer models, all final loss function values are undefined. This occurs when the loss value exceeds the maximum value of a double-precision floating-point number and thus returns \textit{inf} or \textit{NaN}. 
 
+\paragraph*{}Examining all model depths and all neuron densities, the baseline model shows a substantially higher precision and recall score than the corresponding attacked model. These differences are shown the two right-most subplots in each row. These classification metrics are commonly used together to quantify a network's ability to match samples with it's known target label in a validation set. 
 
-\paragraph*{}Examining all model depths and all neuron densities, the baseline model shows a substantially higher precision and recall score than the corresponding attacked model. These differences are shown the two right-most subplots in each row. These classification metrics are commonly used together to quantify a network's ability to match samples with it's known target label in a validation set. Both are bound between $0$ and $1$, with a higher value indicating a better performing network.
-
+\paragraph*{}These undefined values show that despite increasing complexity, the presence of the attack function prohibits the SGD optimizer from converging on a suitable set of parameters to fit the needed task. Despite the optimizer algorithm itself being unaffected, it is the replacement of eqn. (\ref{feed-forward}) with eqn. (\ref{Attack}) in select case that prevents the network from making a proper decision in the first place. The SGD algorithm can only correct the model based on the expected feed-forward mechanism, and thus can only correct for limited perturbations. These results show that a bit-muting algorithm creates devastating consequences and performance compromises across this given set of multilayer perceptron architectures. 
 
 
 
