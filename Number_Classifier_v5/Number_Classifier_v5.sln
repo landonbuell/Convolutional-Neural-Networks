@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Number_Classifier_v5", "Number_Classifier_v5\Number_Classifier_v5.pyproj", "{1B0099A6-1F4E-49E3-9BF3-E8C69CA7D823}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "NUMCLFv5_Visualize", "NUMCLFv5_Visiualize\NUMCLFv5_Visualize.pyproj", "{74ED1A5A-C4FD-44F0-8442-FFE29F88753E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1B0099A6-1F4E-49E3-9BF3-E8C69CA7D823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1B0099A6-1F4E-49E3-9BF3-E8C69CA7D823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74ED1A5A-C4FD-44F0-8442-FFE29F88753E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74ED1A5A-C4FD-44F0-8442-FFE29F88753E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
