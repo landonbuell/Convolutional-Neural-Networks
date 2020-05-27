@@ -23,27 +23,25 @@
 
 \textcolor{red}{Place for Landon}
 
+% BEGIN LANDON'S ADDITIONS (26-MAY-2020-23:10) 
+\textcolor{red}{Place for Landon}
+
 \subsection{Case Study 1: Multilayer Perceptron}
 
-\paragraph*{}The purpose of this case study was to develop an understanding for how the multilayer perceptron (MLP) neural network architecture is affected by a \textit{bit muting} attack function that seeks to manipulate the values of a floating-point number at a binary level. In the case of this experiment, we have chosen to model a function that forces the most-significant-bit (MSB) in the exponent of floating-point number to be muted to $0$. In each MLP model, numerical values were stored as double precision floating-point numbers as per the IEEE 754 standard. Note that the exponent value was set to $0$, rather than subtract $1023$ to save further computation time and avoid invalid ranges when converting the mantissa and exponent back into it's floating-point counterpart.
+The purpose of this case study was to develop an understanding for how the multilayer perceptron (MLP) neural network architecture is affected by a \textit{bit muting} attack function that seeks to manipulate the values of a floating-point number at a binary level. In the case of this experiment, we have chosen to model a function that forces the most-significant-bit (MSB) in the exponent of floating-point number to be muted to $0$. In each MLP model, numerical values were stored as double precision floating-point numbers as per the IEEE 754 standard. Note that the exponent value was set to $0$, rather than subtract $1023$ to save further computation time and avoid invalid ranges when converting the mantissa and exponent back into it's floating-point counterpart.
 \paragraph*{}When mute MSB attack occurs on a single floating-point number,  it is then constrained to lie on the open interval $(-1,+1)$. A map of input values against MSB output values is shown in fig. (\ref{MUTE MSB}). The inputs are a subset of the possible values of a double precision floating-point numbers for visual ease.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.3]{Mute_Most_Significant_Bit}
+	%\includegraphics[width=0.3]{Mute_Most_Significant_Bit}
+	\textcolor{red}{Please Help me with the formatting of this image!}
 	\label{MUTE MSB}
 	\caption{Input versus output values of float-ing point numbers subject to the \textit{mute most-significant-bit} attack function}
 \end{figure}
 
-\paragraph*{}
-
-
 \subsubsection{Experimental Setup}
-%CNN model, layers, neurons, forward backward propagation
-%what data set you used 
-%describe the attack function
 
-\paragraph*{}The MLP neural network model is composed of multiple layers of \textit{neurons}, that each contain a real-valued floating-point number called an \textit{activation}. Layers of neurons interact with the neurons in adjacent layers in sequence though a series of weighting coefficients, and bias elements, which is then subjected to an activation function. In general, given a layer of activations $\vec{x}^{(l)}$ (The superscript is used as a layer index), the activations in the next sequential layer, $\vec{x}^{(l+1)}$, are produced with weighting matrix $\hat{W}^{(l)}$, bias vector $\vec{b}^{(l)}$, and activation function $f$ such that:
+\paragraph*{}The MLP neural network model is composed of multiple layers of \textit{neurons}, that each contain a real-valued floating-point number called an \textit{activation}.  In general, given a layer of activations $\vec{x}^{(l)}$ (The superscript is used as a layer index), the activations in the next sequential layer, $\vec{x}^{(l+1)}$, are produced with weighting matrix $\hat{W}^{(l)}$, bias vector $\vec{b}^{(l)}$, and activation function $f$ such that:
 
 \begin{equation}
 \label{feed-forward}
@@ -52,24 +50,25 @@
 
 The recurrence of equation (\ref{feed-forward}) is used to pass information forward through the network. In a network with $L$ layers, raw information is given with $\vec{x}^{(0)}$ and the network's prediction is given by the final layer, $\vec{x}^{(L-1)}$.
 
-\paragraph*{}The Multilayer Perceptron network must then find a series of parameters, which are the elements in all weighting matrices and all bias vectors, that allows for a given sample to produce a low value for a given \textit{Loss function}. The loss function measures the difference between a networks given output and expected output; with better trained networks producing generally low loss values over a set of samples. The process of finding the values is called \textit{optimization}. There are many different algorithms that perform optimization, and for this experiment, we have chosen to use \textit{Stochastic Gradient Descent} (SGD) due to its widespread use and versatility.
+\paragraph*{}The Multilayer Perceptron network must then find a series of parameters, which are the elements in all weighting matrices and all bias vectors, that allows for a given sample to produce a low value for a given \textit{Loss function}. The loss function measures the difference between a networks given output and expected output; with better trained networks producing generally low loss values over a set of samples. The process of finding the values is called \textit{optimization}. There are many different algorithms that perform optimization, and for this experiment, we have chosen to use \textit{Stochastic Gradient Descent} (SGD) due to its widespread use and versatility. This method uses successive passes over a training data set to iterativly update model parameters such that they allow for a convergence is the lowest possible loss value.
 
 \paragraph*{}To model a bit-muting attack, we introduce and \textit{attack function} that acts in the matrix-vector product 
-$\hat{W}^{(l)} \vec{x}^{(l)}$ in eqn. (\ref{feed-forward}). When a Boolean \textit{trigger condition} parameter is met, the MSB attack as described above, eqn. (\ref{feed-forward}) is instead replaced with it's attack variant:
+in eqn. (\ref{feed-forward}). When a Boolean \textit{trigger condition} parameter is met, the MSB attack as described above, eqn. (\ref{feed-forward}) is instead replaced with it's attack variant:
 
 \begin{equation}
 \label{Attack}
 \vec{x}^{(l+1)} = f \Big( A \big[ \hat{W}^{(l)} \vec{x}^{(l)} \big] + \vec{b}^{(l)} \Big)
 \end{equation}
 
-Where $A$ is the attack function, applied element-wise to each object in it's argument. Equation (\ref{Attack}) is then producing a perturbation from expected values that is not explicitly accounted for in the optimization procedure.
+Where $A$ is the attack function, applied element-wise to each object in it's argument. 
 
 \paragraph*{}For a practical demonstration of this attack function, we have tested it on variants of an image classification neural network. Each network was given of subset of training images from the MNIST data set, each containing a pixelized handwritten digit, labeled $0$ through $9$ according to the digit in that image. Each model was then trained on $6400$ similar, but non-identical images for evaluation. A subset of samples is visualized with a binary color map in fig. (\ref{MNIST})
 
 \begin{figure}[h]
 	\label{MNIST}
 	\centering
-	\includegraphics[scale=0.3]{MNIST}
+	\textcolor{red}{Please Help me with the formatting of this image!}
+	%\includegraphics[scale=0.3]{MNIST}
 	\caption{Four MNIST figures shaped as $28$ pixel by $28$ pixel images, colored with a binary color map along with their corresponding labels.}
 \end{figure}
 
@@ -77,11 +76,10 @@ Where $A$ is the attack function, applied element-wise to each object in it's ar
 
 \subsubsection{Impact of Bit-Muting Attack Classification Metrics}
 
-To measure the impact of this type of attack on the image classifier model, we test a baseline classifier against a classifier subject to a random 50/50 trigger condition. From each variant, we record the following metrics
+\paragraph*{}To measure the impact of this type of attack on the image classifier model, we test a baseline classifier against a classifier subject to a random 50/50 trigger condition. From each variant, we have recorded the following metrics:
 
 \begin{enumerate}
-\item \textbf{Accumulated loss function for the final iteration.} This value measures the difference between expected outcome of the network and the given outcome, with a generally lower value begin desirable.(Bounded to Positive Values)
-\item \textbf{Iterations it took to train the model.} This records the amount of epochs (passes over the data set) that the optimizer used to reach it's set of parameters. To avoid over-fitting, all models were limited to perform 400 epochs at maximum. If the Optimizer reaches a loss value within a set tolerance, the training process stops and the set of parameters is used. 
+\item \textbf{Accumulated loss function for the final iteration.} This value measures the difference between expected outcome of the network and the given outcome, with a generally lower value begin desirable.(Bounded to Positive Values). 
 \item \textbf{Average precision score all 10 classes.} Precision score is the ratio of true positive selections to total sections. It measures how many selected items are relevant to the given task. (Bounded $[0,1]$, higher is favorable).
 \item \textbf{Average recall score for all 10 classes.} Recall score is the ratio of true positive selections to relevant sections. It measures how many relevant items in the given task are selected. (Bounded $[0,1]$, higher is favorable).
 \end{enumerate} 
@@ -90,10 +88,11 @@ To measure the impact of this type of attack on the image classifier model, we t
 
 \begin{figure}[h]
 	\centering
-	\subfigure[]{\includegraphics[scale=0.2]{Single_Hidden_Layer_Models}}
-	\subfigure[]{\includegraphics[scale=0.2]{Double_Hidden_Layer_Models}}
-	\subfigure[]{\includegraphics[scale=0.2]{Triple_Hidden_Layer_Models}}
-	\subfigure[]{\includegraphics[scale=0.2]{Quadruple_Hidden_Layer_Models}}
+	\textcolor{red}{Please Help me with the formatting of this image!}
+	%\subfigure[]{\includegraphics[scale=0.2]{Single_Hidden_Layer_Models}}
+	%\subfigure[]{\includegraphics[scale=0.2]{Double_Hidden_Layer_Models}}
+	%\subfigure[]{\includegraphics[scale=0.2]{Triple_Hidden_Layer_Models}}
+	%\subfigure[]{\includegraphics[scale=0.2]{Quadruple_Hidden_Layer_Models}}
 	\label{results}
 \end{figure}
 
@@ -103,13 +102,8 @@ To measure the impact of this type of attack on the image classifier model, we t
 
 \paragraph*{}Examining all model depths and all neuron densities, the baseline model shows a substantially higher precision and recall score than the corresponding attacked model. These differences are shown the two right-most subplots in each row. These classification metrics are commonly used together to quantify a network's ability to match samples with it's known target label in a validation set. 
 
-\paragraph*{}These undefined values show that despite increasing complexity, the presence of the attack function prohibits the SGD optimizer from converging on a suitable set of parameters to fit the needed task. Despite the optimizer algorithm itself being unaffected, it is the replacement of eqn. (\ref{feed-forward}) with eqn. (\ref{Attack}) in select case that prevents the network from making a proper decision in the first place. The SGD algorithm can only correct the model based on the expected feed-forward mechanism, and thus can only correct for limited perturbations. These results show that a bit-muting algorithm creates devastating consequences and performance compromises across this given set of multilayer perceptron architectures. 
+\paragraph*{}These undefined values show that despite increasing complexity, the presence of the attack function prohibits the SGD optimizer from converging on a suitable set of parameters to fit the needed task. Despite the optimizer algorithm itself being unaffected, it is the replacement of eqn. (\ref{feed-forward}) with eqn. (\ref{Attack}) in select cases that prevents the network from making a proper decision in the first place. The SGD algorithm can only update the model based on the expected feed-forward mechanism, and thus can only correct for limited perturbations. These results show that a bit-muting algorithm creates devastating negative consequences and performance compromises across this given set of multilayer perceptron architectures.
 
-
-
-
-
-
-
+% END LANDON'S ADDITIONS
 
 \end{document}

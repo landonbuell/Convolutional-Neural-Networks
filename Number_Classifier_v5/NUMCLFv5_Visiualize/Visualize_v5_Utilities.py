@@ -76,7 +76,7 @@ def Plot_Metrics (objs=[],attrbs='',title='',save=False,show=False):
     Return None
     """
     # Initialize
-    fig,ax = plt.subplots(nrows=1,ncols=4,figsize=(24,8))
+    fig,ax = plt.subplots(nrows=1,ncols=3,figsize=(24,8))
     plt.suptitle(title,size=40,weight='bold')
     neurons = np.arange(20,121,20)
 
@@ -89,31 +89,31 @@ def Plot_Metrics (objs=[],attrbs='',title='',save=False,show=False):
     ax[0].set_ylabel("Average Loss Value",size=30,weight='bold')
     ax[0].set_xlabel("Neuron Density",size=20,weight='bold')
 
-    # 1-th Subplot
+    """# 1-th Subplot
     data = np.array([x.__getattribute__(attrbs)['Avg_Iters'] for x in objs])
     ax[1].plot(neurons,data[0],color='blue',linestyle='-.',marker='o',ms=16)
     ax[1].plot(neurons,data[1],color='orange',linestyle='--',marker='^',ms=16)
     ax[1].grid(True)
     ax[1].set_ylabel("Average Training Iterations",size=30,weight='bold')
-    ax[1].set_xlabel("Neuron Density",size=20,weight='bold')
+    ax[1].set_xlabel("Neuron Density",size=20,weight='bold') """
 
     # 2-th Subplot
     data = np.array([x.__getattribute__(attrbs)['Avg_Prec'] for x in objs])
+    ax[1].plot(neurons,data[0],color='blue',linestyle='-.',marker='o',ms=16)
+    ax[1].plot(neurons,data[1],color='orange',linestyle='--',marker='^',ms=16)
+    ax[1].grid(True)
+    ax[1].set_yticks(np.arange(0,1.1,0.1))
+    ax[1].set_ylabel("Average Precision Score",size=30,weight='bold')
+    ax[1].set_xlabel("Neuron Density",size=20,weight='bold')
+
+    # 3-th Subplot
+    data = np.array([x.__getattribute__(attrbs)['Avg_Recall'] for x in objs])
     ax[2].plot(neurons,data[0],color='blue',linestyle='-.',marker='o',ms=16)
     ax[2].plot(neurons,data[1],color='orange',linestyle='--',marker='^',ms=16)
     ax[2].grid(True)
     ax[2].set_yticks(np.arange(0,1.1,0.1))
-    ax[2].set_ylabel("Average Precision Score",size=30,weight='bold')
+    ax[2].set_ylabel("Average Recall Score",size=30,weight='bold')
     ax[2].set_xlabel("Neuron Density",size=20,weight='bold')
-
-    # 3-th Subplot
-    data = np.array([x.__getattribute__(attrbs)['Avg_Recall'] for x in objs])
-    ax[3].plot(neurons,data[0],color='blue',linestyle='-.',marker='o',ms=16)
-    ax[3].plot(neurons,data[1],color='orange',linestyle='--',marker='^',ms=16)
-    ax[3].grid(True)
-    ax[3].set_yticks(np.arange(0,1.1,0.1))
-    ax[3].set_ylabel("Average Recall Score",size=30,weight='bold')
-    ax[3].set_xlabel("Neuron Density",size=20,weight='bold')
 
     if save == True:
         title = title.replace(' ','_')
