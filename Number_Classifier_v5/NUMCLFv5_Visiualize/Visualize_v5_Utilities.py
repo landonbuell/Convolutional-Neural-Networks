@@ -44,8 +44,8 @@ class filedata ():
      
     def split_X (self):
         """ Split Frame X Based on Model Depths """
-        layers = ['single_layer','double_layer','triple_layer','quadruple_layer']
-        idxs = [np.arange(0,6),np.arange(6,12),np.arange(12,18),np.arange(18,24)]
+        layers = ['single_layer','double_layer']
+        idxs = [np.arange(0,6),np.arange(6,12)]
 
         for n_layers,pts in zip(layers,idxs):
             data = self.X.loc[pts]
@@ -65,7 +65,7 @@ class filedata ():
 
         return self
 
-def Plot_Metrics (objs=[],attrbs='',title='',save=False,show=False):
+def Plot_Metric (objs=[],attrbs='',metric='',ylabs=[],title='',save=False,show=False):
     """
     Create MATPLOTLIB visualizations of data
     --------------------------------
@@ -75,46 +75,29 @@ def Plot_Metrics (objs=[],attrbs='',title='',save=False,show=False):
     --------------------------------
     Return None
     """
-    # Initialize
-    fig,ax = plt.subplots(nrows=1,ncols=3,figsize=(24,8))
-    plt.suptitle(title,size=40,weight='bold')
+    plt.figure(figsize=(16,12))
+    plt.title(title,size=50,weight='bold')
+    plt.ylabel('Loss Function Value',size=40,weight='bold')
+    plt.xlabel('Neuron Density',size=40,weight='bold')
+
     neurons = np.arange(20,121,20)
+    data = np.array([x.__getattribute__(attrbs)[metric] for x in objs])
+    plt.plot(neurons,data[0],color='red',linestyle='-',marker='o',ms=16,label=ylabs[0])
+    plt.plot(neurons,data[1],color='blue',linestyle='--',marker='^',ms=16,label=ylabs[1])
+    plt.plot(neurons,data[2],color='green',linestyle='-.',marker='H',ms=16,label=ylabs[2])
+    #plt.plot(neurons,data[3],color='purple',linestyle='-.',marker='s',ms=16,label=ylabs[3])
 
-    # 0-th Subplot  
-    data = np.array([x.__getattribute__(attrbs)['Avg_Loss'] for x in objs])
-    ax[0].plot(neurons,data[0],color='blue',linestyle='-.',marker='o',ms=16)
-    ax[0].plot(neurons,data[1],color='orange',linestyle='--',marker='^',ms=16)
-    ax[0].grid(True)
-    ax[0].set_yscale('log')
-    ax[0].set_ylabel("Average Loss Value",size=30,weight='bold')
-    ax[0].set_xlabel("Neuron Density",size=20,weight='bold')
+    if metric == 'Avg_Loss':
+           plt.yscale('log')
 
-    """# 1-th Subplot
-    data = np.array([x.__getattribute__(attrbs)['Avg_Iters'] for x in objs])
-    ax[1].plot(neurons,data[0],color='blue',linestyle='-.',marker='o',ms=16)
-    ax[1].plot(neurons,data[1],color='orange',linestyle='--',marker='^',ms=16)
-    ax[1].grid(True)
-    ax[1].set_ylabel("Average Training Iterations",size=30,weight='bold')
-    ax[1].set_xlabel("Neuron Density",size=20,weight='bold') """
+    else:
+        plt.yticks(np.arange(0,1.1,0.1))
 
-    # 2-th Subplot
-    data = np.array([x.__getattribute__(attrbs)['Avg_Prec'] for x in objs])
-    ax[1].plot(neurons,data[0],color='blue',linestyle='-.',marker='o',ms=16)
-    ax[1].plot(neurons,data[1],color='orange',linestyle='--',marker='^',ms=16)
-    ax[1].grid(True)
-    ax[1].set_yticks(np.arange(0,1.1,0.1))
-    ax[1].set_ylabel("Average Precision Score",size=30,weight='bold')
-    ax[1].set_xlabel("Neuron Density",size=20,weight='bold')
-
-    # 3-th Subplot
-    data = np.array([x.__getattribute__(attrbs)['Avg_Recall'] for x in objs])
-    ax[2].plot(neurons,data[0],color='blue',linestyle='-.',marker='o',ms=16)
-    ax[2].plot(neurons,data[1],color='orange',linestyle='--',marker='^',ms=16)
-    ax[2].grid(True)
-    ax[2].set_yticks(np.arange(0,1.1,0.1))
-    ax[2].set_ylabel("Average Recall Score",size=30,weight='bold')
-    ax[2].set_xlabel("Neuron Density",size=20,weight='bold')
-
+    plt.grid()
+    plt.legend(loc='upper left')
+    plt.xticks(size=30)
+    plt.yticks(size=30)
+    
     if save == True:
         title = title.replace(' ','_')
         plt.savefig(title+'.png')
