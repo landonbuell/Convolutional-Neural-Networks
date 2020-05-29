@@ -65,27 +65,29 @@ class filedata ():
 
         return self
 
-def Plot_Metric (objs=[],attrbs='',metric='',ylabs=[],title='',save=False,show=False):
+def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False,show=False):
     """
     Create MATPLOTLIB visualizations of data
     --------------------------------
     objs (iter) : List of object instances to use
-    attrbs (str) : Object attribute to plot
+    metric (str) : Classificication metric to use - ['Avg_Loss','Avg_Prec','Avg_Recall']
+    ylab (str) : y-axis label for plot
+    labs (iter) : labels for each sample 
     title (str) : title for figure
     --------------------------------
     Return None
     """
     plt.figure(figsize=(16,12))
-    plt.title(title,size=50,weight='bold')
-    plt.ylabel('Loss Function Value',size=40,weight='bold')
-    plt.xlabel('Neuron Density',size=40,weight='bold')
+    plt.title(title,size=60,weight='bold',pad=20)
+    plt.ylabel(ylab,size=50,weight='bold')
+    plt.xlabel('Neuron Density',size=50,weight='bold')
 
     neurons = np.arange(20,121,20)
     data = np.array([x.__getattribute__(attrbs)[metric] for x in objs])
-    plt.plot(neurons,data[0],color='red',linestyle='-',marker='o',ms=16,label=ylabs[0])
-    plt.plot(neurons,data[1],color='blue',linestyle='--',marker='^',ms=16,label=ylabs[1])
-    plt.plot(neurons,data[2],color='green',linestyle='-.',marker='H',ms=16,label=ylabs[2])
-    #plt.plot(neurons,data[3],color='purple',linestyle='-.',marker='s',ms=16,label=ylabs[3])
+    plt.plot(neurons,data[0],color='red',linestyle='-',marker='o',ms=16,label=labs[0])
+    plt.plot(neurons,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
+    plt.plot(neurons,data[2],color='green',linestyle='-.',marker='H',ms=16,label=labs[2])
+    plt.plot(neurons,data[3],color='purple',linestyle=':',marker='s',ms=16,label=labs[3])
 
     if metric == 'Avg_Loss':
            plt.yscale('log')
@@ -94,9 +96,9 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylabs=[],title='',save=False,show=F
         plt.yticks(np.arange(0,1.1,0.1))
 
     plt.grid()
-    plt.legend(loc='upper left')
-    plt.xticks(size=30)
-    plt.yticks(size=30)
+    plt.legend(loc='upper left',fontsize=25)
+    plt.yticks(size=40)
+    plt.xticks(size=40)
     
     if save == True:
         title = title.replace(' ','_')
