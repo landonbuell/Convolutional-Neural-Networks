@@ -57,7 +57,7 @@ def gaussian_noise(activations):
 def get_trigger(trigger_type=None):
     """ Return boolean trigger condition """
     if trigger_type == 'binary':
-        return np.random.choice([True,False],p=[0.05,0.95])
+        return np.random.choice([True,False],p=[0.005,0.995])
     elif trigger_type == 'always_on':
         return True
     elif trigger_type == None:
