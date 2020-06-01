@@ -88,6 +88,7 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False
     plt.plot(neurons,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
     plt.plot(neurons,data[2],color='green',linestyle='-.',marker='H',ms=16,label=labs[2])
     plt.plot(neurons,data[3],color='purple',linestyle=':',marker='s',ms=16,label=labs[3])
+    plt.plot(neurons,data[4],color='gray',linestyle='-',marker='v',ms=16,label=labs[4])
 
     if metric == 'Avg_Loss':
            plt.yscale('log')

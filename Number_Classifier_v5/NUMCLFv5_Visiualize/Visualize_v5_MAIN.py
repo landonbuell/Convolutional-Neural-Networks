@@ -19,7 +19,7 @@ if __name__ == '__main__':
     int_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Number_Classifier_v5/NUMCLFv5_Visualize'
     out_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Presentations/OTSACS'
     data_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Number_Classifier_v5/Raw_Data'
-    CSV_FILES = ['Baseline_v1.csv','Mute_MSB_v3.csv','Mute_MSB_v2.csv','Mute_MSB_v1.csv']
+    CSV_FILES = ['Baseline_v1.csv','Mute_MSB_v4.csv','Mute_MSB_v3.csv','Mute_MSB_v2.csv','Mute_MSB_v1.csv']
 
     files_objs = []
     for file in CSV_FILES:
@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
 
     os.chdir(out_path)
-    labs=['Baseline','5% Trigger','25% Trigger','50% Trigger']
+    labs=['Baseline','0.5% Trigger','5% Trigger','25% Trigger','50% Trigger']
 
     # Loss Function values
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Avg_Loss',labs=labs,
