@@ -52,7 +52,7 @@ class ApproximationLayer (keras.layers.Layer):
                 e = 0 if (e > 0) else e     # apply MSB
                 x = np.ldexp(m,e)           # reconstruct 
                 X[r][c] = x                 # overwrite
-        return X                                # return new activations
+        return X                            # return new activations
         
     def call (self,inputs):
         """ Define Compution from input to produce outputs """
