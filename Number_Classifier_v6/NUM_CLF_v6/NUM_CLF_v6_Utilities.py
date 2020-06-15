@@ -13,6 +13,10 @@ import pandas as pd
 import os
 import bitstring
 
+from sklearn import metrics
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 import tensorflow as tf
 import tensorflow.keras as keras
 
@@ -20,9 +24,14 @@ import tensorflow.keras as keras
 
 N_layer_models = {
     'single_layer' : [(20,),(40,),(60,),(80,),(100,),(120,)] ,
-    'double_layer' : [(20,20),(40,40),(60,60),(80,80),(100,100),
-                             (120,120)],
-    }
+    'double_layer' : [(20,20),(40,40),(60,60),(80,80),(100,100),(120,120)],
+                    }
+
+approx_rows = np.concatenate((np.arange(0,7),np.arange(21,28)))
+approx_cols = np.concatenate((np.arange(0,7),np.arange(21,28)))
+
+dataframe_columns = ['Name','Avg_Loss','Min_Loss','Max_Loss',
+            'Avg_Prec','Min_Prec','Max_Prec','Avg_Recall','Min_Recall','Max_Recall']
 
             #### CLASS OBJECT DEFINITIONS ####
 
@@ -43,25 +52,26 @@ class ApproximationLayer (keras.layers.Layer):
         self.cols = cols        # rol index to apply MSB
         return None
 
+    def mute_bit (self,x):
+        """ Apply MSB operation to single float """
+        binstr = bitstring.BitArray(float=x,length=64).bin
+        binstr = binstr[0] + '0' + binstr[2:]   
+        fp64 = bitstring.BitArray(bin=binstr).float
+        return fp64
+
     def Mute_MSB (self,X):
         """ Mute Most-Signfigicant bit in exponet of FP-64 """
-        X_shape = X.shape                       # original shape
-        for r in self.rows:
-            for c in self.cols:
-                m,e = np.frexp(X[r][c])     # manitissa,exponent
-                e = 0 if (e > 0) else e     # apply MSB
-                x = np.ldexp(m,e)           # reconstruct 
-                X[r][c] = x                 # overwrite
-        return X                            # return new activations
+        X_shape = X.shape               # original shape
+        for i in range (len(X)):        # each samples
+            for r in self.rows:         # each row
+                for c in self.cols:     # each col
+                    X[i][r][c] = self.mute_bit(X[i][r][c])
+        return X                        # return new activations
         
     def call (self,inputs):
         """ Define Compution from input to produce outputs """
-        input_shape = inputs.shape          # shape of input data
-        output = np.array([])               # array to hold outputs
-        for sample in inputs:               # each sample in batch
-            new_sample = self.Mute_MSB(sample)
-            output = np.append(output,new_sample)
-        return output.reshape(input_shape)  # rehape & return
+        output = self.Mute_MSB(inputs)
+        return output
 
             #### FUNCTION DEFINITIONS ####
 
@@ -75,29 +85,69 @@ def Load_MNIST ():
     X_train,X_test = X_train/255,X_test/255
     return X_train,X_test,y_train,y_test
 
-def Keras_Model (layers,rows=[],cols=[]):
+def Create_DataFrame (matrix,name,cols):
+    """ Create Pandas DataFrame to hold output information for each test"""
+    
+    avgs,mins,maxs = np.mean(matrix,axis=0),np.min(matrix,axis=0),np.max(matrix,axis=0)
+    data = np.array([str(name)])
+    for a,b,c in zip(avgs,mins,maxs):
+        arr = np.array([a,b,c],dtype=float)
+        data = np.append(data,arr)
+    data = data.reshape(1,-1)
+    frame = pd.DataFrame(data=data,columns=cols)
+    return frame
+
+def Keras_Model (layers,name,rows=[],cols=[]):
     """
     Create Keras Sequential Model
     --------------------------------
     layers (tup) : Iterable with i-th elem is units in i-th Dense Layer
+    name (str) : 
     rows (iter) : Array-like of rows to apply approximations 
     cols (iter) : Array-like of cols to apply approximations 
     --------------------------------
     Return untrained, Compiled Keras Model
     """
-    model = keras.models.Sequential(name='Digit_Classifier')
+    model = keras.models.Sequential(name=name)
     model.add(keras.layers.Input(shape=(28,28,1),name='Image'))
-    model.add(ApproximationLayer(rows=rows,cols=cols))
     model.add(keras.layers.Flatten())
+
     for I,neurons in enumerate(layers):
         model.add(keras.layers.Dense(units=neurons,activation='relu',
                                      name='Hidden_'+str(I)))
+        
     model.add(keras.layers.Dense(units=10,activation='softmax',name='Output'))
-    model.compile(optimizer=keras.optimizers.SGD(),
+    model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.001),
                   loss=keras.losses.categorical_crossentropy,
                   metrics=['Precision','Recall'])
-    print(model.summary())
+    #print(model.summary())
     return model
+
+def Eval_Model(model,X,y):
+    """
+    Evaluate trained sklearn Multilayer Perceptron instance
+    --------------------------------
+    model (class) : Instance of trained MLP model
+    X (array) : feature testing data (n_samples x n_features)
+    y (array) : target testing data, one-hot-encoded (n_samples x n_classes)
+    --------------------------------
+    return model with predictions , precision scores, & recall scores as attrbs
+    """
+    labels = np.arange(0,10)                # class labels
+    n_samples = y.shape[0]                  # y shape
+    z = model.predict(X)                    # model predictions (one-hot)    
+    loss_val = keras.losses.categorical_crossentropy(y_true=y,y_pred=z)
+    assert loss_val.shape == (n_samples,)   # loss per sample
+    loss_val = np.mean(loss_val)            # average over samples
+    setattr(model,'loss',loss_val)          # set CXE loss-val
+    z = np.argmax(z,axis=-1)                # predictions (int)
+    y = np.argmax(y,axis=-1)                # labels  (int)
+    setattr(model,'predictions',z)          # assign predictions
+    precision = metrics.precision_score(y,z,labels,average=None,zero_division=0)
+    recall = metrics.recall_score(y,z,labels,average=None,zero_division=0)
+    setattr(model,'avg_prec',np.mean(precision))
+    setattr(model,'avg_recall',np.mean(recall))
+    return model                            # return model w/ attched attrbs
 
               #### PLOTTING FUNCTIONS ####
 
