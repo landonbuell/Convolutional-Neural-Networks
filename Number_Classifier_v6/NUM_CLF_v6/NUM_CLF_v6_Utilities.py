@@ -15,10 +15,7 @@ import bitstring
 
 from sklearn import metrics
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
-import tensorflow as tf
-import tensorflow.keras as keras
+import keras 
 
             #### VARIABLE DECLARATIONS #####
 
@@ -109,7 +106,7 @@ def Keras_Model (layers,name,rows=[],cols=[]):
     Return untrained, Compiled Keras Model
     """
     model = keras.models.Sequential(name=name)
-    model.add(keras.layers.Input(shape=(28,28,1),name='Image'))
+    model.add(keras.layers.Input(shape=(100,28,28),name='Image'))
     model.add(keras.layers.Flatten())
 
     for I,neurons in enumerate(layers):
@@ -117,7 +114,7 @@ def Keras_Model (layers,name,rows=[],cols=[]):
                                      name='Hidden_'+str(I)))
         
     model.add(keras.layers.Dense(units=10,activation='softmax',name='Output'))
-    model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.001),
+    model.compile(optimizer=keras.optimizers.SGD(),
                   loss=keras.losses.categorical_crossentropy,
                   metrics=['Precision','Recall'])
     #print(model.summary())

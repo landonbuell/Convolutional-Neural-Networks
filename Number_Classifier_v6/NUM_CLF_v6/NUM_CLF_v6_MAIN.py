@@ -12,9 +12,7 @@ import pandas as pd
 import time
 import os
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
-import tensorflow.keras as keras
+import keras
 
 import NUM_CLF_v6_Utilities as utils
 
@@ -34,7 +32,7 @@ if __name__ == '__main__':
     y_train = keras.utils.to_categorical(y_train,10)
     y_test = keras.utils.to_categorical(y_test,10)
 
-    N_iterations = 50       # repeat each model
+    N_iterations = 10       # repeat each model
     output_frame = pd.DataFrame(data=None,columns=frame_cols)
     output_frame.to_csv(path_or_buf=data_path+'/'+test_name+'.csv',
                         mode='w')       # write the output frame
@@ -54,7 +52,7 @@ if __name__ == '__main__':
                 # Create & Train Model
                 MODEL = utils.Keras_Model(name=test_name+'_'+str(I),
                                           layers=NEURON_DENSITY)    
-                TRAINING_HISTORY = MODEL.fit(X_train,y_train,batch_size=100,epochs=200,verbose=0)
+                TRAINING_HISTORY = MODEL.fit(X_train,y_train,batch_size=100,epochs=10,verbose=0)
                 #utils.Plot_History(TRAINING_HISTORY,MODEL,show=True)
                 MODEL = utils.Eval_Model(MODEL,X_test,y_test)
 
