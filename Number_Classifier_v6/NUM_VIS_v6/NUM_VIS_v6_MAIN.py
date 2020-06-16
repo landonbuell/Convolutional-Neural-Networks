@@ -38,11 +38,11 @@ if __name__ == '__main__':
     X,y = Vis_utils.Load_MNIST()
     X_approx = Approx_Layer.call(X[:10])
 
-    for I in range(0,10,1):
-        Vis_utils.Plot_Matrix(X[I],'Orignal: '+str(y[I]))     
-        Vis_utils.Plot_Matrix(X_approx[I],'Approxmated: '+str(y[I]))
+    for I in range(0,10,2):
+        Vis_utils.Plot_Matrix(X[I],'Original: '+str(y[I]),save=True)     
+        Vis_utils.Plot_Matrix(X_approx[I],'5 Pixel Border: '+str(y[I]),save=True)
 
-
+    """
     labs=['Baseline','3 Pixel Border','5 Pixel Border','7 Pixel Border',]
 
     # Loss Function values
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Avg_Prec',labs=labs,
                         ylab='Precision Score',title="Single Hidden Layer Precision",save=True)
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Avg_Prec',labs=labs,
-                        ylab='Precision Score',title="Double Hidden Layer Precision ",save=True)
+                        ylab='Precision Score',title="Double Hidden Layer Precision",save=True)
     
     # Recall Score Values
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Avg_Recall',labs=labs,
@@ -63,4 +63,4 @@ if __name__ == '__main__':
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Avg_Recall',labs=labs,
                         ylab='Recall Score',title="Double Hidden Layer Recall",save=True)
 
-    
+    """    

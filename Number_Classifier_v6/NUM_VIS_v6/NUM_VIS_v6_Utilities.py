@@ -17,8 +17,8 @@ import tensorflow.keras as keras
 
 dataframe_columns = ['Name','Avg_Loss','Avg_Prec','Avg_Recall']
 
-approx_rows = np.concatenate((np.arange(0,9),np.arange(19,28)))
-approx_cols = np.concatenate((np.arange(0,9),np.arange(19,28)))
+approx_rows = np.concatenate((np.arange(0,5),np.arange(23,28)))
+approx_cols = np.concatenate((np.arange(0,5),np.arange(23,28)))
 
 
         #### CLASS OBJECT DEFINITIONS ####
@@ -109,17 +109,24 @@ def Load_MNIST ():
     X_train,y_train = X_train[:10000],y_train[:10000]
     return X_train,y_train
 
-def Plot_Matrix (X,label=''):
+def Plot_Matrix (X,title='',save=False,show=False):
     """
     Visualize 2D Matrix
     --------------------------------
     X (arr) : Matrix (n_rows x n_columns) to visualize
+    title (str) : title for figure
     --------------------------------
     Return None
     """
-    plt.title(label,size=40,weight='bold')
+    plt.title(title,size=40,weight='bold')
     plt.imshow(X,cmap=plt.cm.binary)
-    plt.show()
+    plt.xticks(np.arange(0,28,4),fontsize=20)
+    plt.yticks(np.arange(0,28,4),fontsize=20)
+    if save == True:
+        title = title.replace(': ','_')
+        plt.savefig(title.replace(' ','_')+'.png')
+    if show == True:
+        plt.show()
 
 def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False,show=False):
     """
