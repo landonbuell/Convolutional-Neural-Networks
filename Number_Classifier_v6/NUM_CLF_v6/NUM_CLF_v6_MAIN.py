@@ -12,7 +12,7 @@ import pandas as pd
 import time
 import os
 
-import keras
+import tensorflow.keras as keras
 
 import NUM_CLF_v6_Utilities as utils
 
@@ -22,13 +22,11 @@ if __name__ == '__main__':
 
     home_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Number_Classifier_v6/NUM_CLF_v6'
     data_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Number_Classifier_v6/Raw_Data'
-    test_name = 'Baseline'
+    test_name = 'Approx_9'
     MODEL_LAYER_SIZES = utils.N_layer_models    # model sizes dictionary
     frame_cols = utils.dataframe_columns
 
     X_train,X_test,y_train,y_test = utils.Load_MNIST()
-    X_train *= 255
-    X_test *= 255
     y_train = keras.utils.to_categorical(y_train,10)
     y_test = keras.utils.to_categorical(y_test,10)
 
@@ -36,6 +34,12 @@ if __name__ == '__main__':
     output_frame = pd.DataFrame(data=None,columns=frame_cols)
     output_frame.to_csv(path_or_buf=data_path+'/'+test_name+'.csv',
                         mode='w')       # write the output frame
+
+    # Apply Approximation
+    Approx_Layer = utils.ApproximationLayer(rows=utils.approx_rows,
+                                            cols=utils.approx_cols)
+    X_train = Approx_Layer.call(X_train)
+    X_test = Approx_Layer.call(X_test)
 
     for N_LAYERS in MODEL_LAYER_SIZES.keys():         # for each MLP size
         print("Testing:",str(N_LAYERS))                 # meesage to user

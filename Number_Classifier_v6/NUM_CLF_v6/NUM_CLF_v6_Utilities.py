@@ -15,7 +15,7 @@ import bitstring
 
 from sklearn import metrics
 
-import keras 
+import tensorflow.keras as keras
 
             #### VARIABLE DECLARATIONS #####
 
@@ -24,8 +24,8 @@ N_layer_models = {
     'double_layer' : [(20,20),(40,40),(60,60),(80,80),(100,100),(120,120)],
                     }
 
-approx_rows = np.concatenate((np.arange(0,7),np.arange(21,28)))
-approx_cols = np.concatenate((np.arange(0,7),np.arange(21,28)))
+approx_rows = np.concatenate((np.arange(0,9),np.arange(19,28)))
+approx_cols = np.concatenate((np.arange(0,9),np.arange(19,28)))
 
 dataframe_columns = ['Name','Avg_Loss','Min_Loss','Max_Loss',
             'Avg_Prec','Min_Prec','Max_Prec','Avg_Recall','Min_Recall','Max_Recall']
@@ -51,23 +51,26 @@ class ApproximationLayer (keras.layers.Layer):
 
     def mute_bit (self,x):
         """ Apply MSB operation to single float """
-        binstr = bitstring.BitArray(float=x,length=64).bin
-        binstr = binstr[0] + '0' + binstr[2:]   
-        fp64 = bitstring.BitArray(bin=binstr).float
-        return fp64
+        m,e = np.frexp(x)
+        e = 0 if (e > 1) else e
+        x = np.ldexp(m,e)
+        return x
 
     def Mute_MSB (self,X):
         """ Mute Most-Signfigicant bit in exponet of FP-64 """
         X_shape = X.shape               # original shape
         for i in range (len(X)):        # each samples
-            for r in self.rows:         # each row
-                for c in self.cols:     # each col
-                    X[i][r][c] = self.mute_bit(X[i][r][c])
+            for r in self.rows:         # each row   
+                for j in range(0,28):   # all columns
+                    X[i][r][j] = self.mute_bit(X[i][r][j])
+            for c in self.cols:         # each row   
+                for j in range(0,28):   # all columns
+                    X[i][j][c] = self.mute_bit(X[i][j][c])
         return X                        # return new activations
         
     def call (self,inputs):
         """ Define Compution from input to produce outputs """
-        output = self.Mute_MSB(inputs)
+        output = self.Mute_MSB(np.copy(inputs))
         return output
 
             #### FUNCTION DEFINITIONS ####
@@ -79,7 +82,7 @@ def Load_MNIST ():
         keras.datasets.mnist.load_data()
     X_test,y_test = X_test[:6000],y_test[:6000]
     X_train,y_train = X_train[:10000],y_train[:10000]
-    X_train,X_test = X_train/255,X_test/255
+    X_train,X_test = X_train.astype(np.float64),X_test.astype(np.float64)
     return X_train,X_test,y_train,y_test
 
 def Create_DataFrame (matrix,name,cols):
@@ -106,7 +109,7 @@ def Keras_Model (layers,name,rows=[],cols=[]):
     Return untrained, Compiled Keras Model
     """
     model = keras.models.Sequential(name=name)
-    model.add(keras.layers.Input(shape=(100,28,28),name='Image'))
+    model.add(keras.layers.Input(shape=(28,28),name='Image'))
     model.add(keras.layers.Flatten())
 
     for I,neurons in enumerate(layers):

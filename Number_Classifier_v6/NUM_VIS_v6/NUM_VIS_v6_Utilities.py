@@ -1,30 +1,24 @@
 """
 Landon Buell
-Qiaoyan Yu
-Number Classifier v4 - Utilities
-3 April 2020
+Qioayan Yu
+CLF v6 Visualize - Utilities
+15 June 2020
 """
 
-            #### IMPORTS ####
+        #### IMPORTS ####
 
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+import os
+import tensorflow.keras as keras
 
+        #### FUNCTION DEFINITIONS ####
 
-            #### VARIBALE DECLARATIONS ####
+dataframe_columns = ['Name','Avg_Loss','Avg_Prec','Avg_Recall']
 
-N_layer_models = {
-    'single_layer' : [(20,),(40,),(60,),(80,),(100,),(120,)] ,
-    'double_layer' : [(20,20),(40,40),(60,60),(80,80),(100,100),
-                             (120,120)],
-    'triple_layer' : [(20,20,20),(40,40,40),(60,60,60),(80,80,80),
-                      (100,100,100),(120,120,120)],
-    'quadruple_layer' : [(20,20,20,20),(40,40,40,40),(60,60,60,60),
-                            (80,80,80,80),(100,100,100,100),(120,120,120,120)] 
-    }
-
-dataframe_columns = ['Name','Avg_Loss','Avg_Iters','Avg_Prec','Avg_Recall']
+approx_rows = np.concatenate((np.arange(0,9),np.arange(19,28)))
+approx_cols = np.concatenate((np.arange(0,9),np.arange(19,28)))
 
 
         #### CLASS OBJECT DEFINITIONS ####
@@ -65,6 +59,68 @@ class filedata ():
 
         return self
 
+class ApproximationLayer (keras.layers.Layer):
+    """
+    Create layer to Apply Approximate computations method to.
+    --------------------------------
+    rows (iter) : Array-like of rows to apply approximations to
+    cols (iter) : Array-like of cols to apply approximations to
+    --------------------------------
+    Returns initiated Approximation Layer Instance
+    """
+
+    def __init__(self,rows=[0],cols=[0]):
+        """ Initialize Approximation Layer Object """
+        super(ApproximationLayer,self).__init__(trainable=False)
+        self.rows = rows        # row indexs to apply MSB
+        self.cols = cols        # rol index to apply MSB
+        return None
+
+    def mute_bit (self,x):
+        """ Apply MSB operation to single float """
+        m,e = np.frexp(x)
+        e = 0 if (e > 1) else e
+        x = np.ldexp(m,e)
+        return x
+
+    def Mute_MSB (self,X):
+        """ Mute Most-Signfigicant bit in exponet of FP-64 """
+        X_shape = X.shape               # original shape
+        for i in range (len(X)):        # each samples
+            for r in self.rows:         # each row   
+                for j in range(0,28):   # all columns
+                    X[i][r][j] = self.mute_bit(X[i][r][j])
+            for c in self.cols:         # each row   
+                for j in range(0,28):   # all columns
+                    X[i][j][c] = self.mute_bit(X[i][j][c])
+        return X                        # return new activations
+        
+    def call (self,inputs):
+        """ Define Compution from input to produce outputs """
+        output = self.Mute_MSB(np.copy(inputs))
+        return output
+
+def Load_MNIST ():
+    """ Collect Training & Testing Data from keras.datasets """
+    print("Collecting MNIST data .....\n")
+    (X_train,y_train),(X_test,y_test) = \
+        keras.datasets.mnist.load_data()
+    X_test,y_test = X_test[:6000],y_test[:6000]
+    X_train,y_train = X_train[:10000],y_train[:10000]
+    return X_train,y_train
+
+def Plot_Matrix (X,label=''):
+    """
+    Visualize 2D Matrix
+    --------------------------------
+    X (arr) : Matrix (n_rows x n_columns) to visualize
+    --------------------------------
+    Return None
+    """
+    plt.title(label,size=40,weight='bold')
+    plt.imshow(X,cmap=plt.cm.binary)
+    plt.show()
+
 def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False,show=False):
     """
     Create MATPLOTLIB visualizations of data
@@ -87,11 +143,11 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False
     plt.plot(neurons,data[0],color='red',linestyle='-',marker='o',ms=16,label=labs[0])
     plt.plot(neurons,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
     plt.plot(neurons,data[2],color='green',linestyle='-.',marker='H',ms=16,label=labs[2])
-    #plt.plot(neurons,data[3],color='purple',linestyle=':',marker='s',ms=16,label=labs[3])
+    plt.plot(neurons,data[3],color='purple',linestyle=':',marker='s',ms=16,label=labs[3])
     #plt.plot(neurons,data[4],color='gray',linestyle='-',marker='v',ms=16,label=labs[4])
 
     if metric == 'Avg_Loss':
-           plt.yscale('log')
+        plt.yticks(np.arange(0,3.1,0.5))
 
     else:
         plt.yticks(np.arange(0,1.1,0.1))
