@@ -31,16 +31,30 @@ if __name__ == '__main__':
         files_objs.append(inst)     # add instance to list
 
     os.chdir(expt_path)
-    Approx_Layer = Vis_utils.ApproximationLayer(rows=Vis_utils.approx_rows,
-                                                cols=Vis_utils.approx_cols)
+    
 
     # Plot Images Before & After
     X,y = Vis_utils.Load_MNIST()
-    X_approx = Approx_Layer.call(X[:10])
+    
 
     for I in range(0,10,2):
+        X = X[:10]
         Vis_utils.Plot_Matrix(X[I],'Original: '+str(y[I]),save=True)     
-        Vis_utils.Plot_Matrix(X_approx[I],'5 Pixel Border: '+str(y[I]),save=True)
+        # 3 pixel border
+        Approx_Layer = Vis_utils.ApproximationLayer(rows=np.concatenate((np.arange(0,3),np.arange(25,28))),
+                                                    cols=np.concatenate((np.arange(0,3),np.arange(25,28))))
+        X = Approx_Layer.call(X)
+        Vis_utils.Plot_Matrix(X[I],'3 Pixel Border: '+str(y[I]),save=True)
+        # 5 pixel border
+        Approx_Layer = Vis_utils.ApproximationLayer(rows=np.concatenate((np.arange(0,5),np.arange(23,28))),
+                                                    cols=np.concatenate((np.arange(0,5),np.arange(23,28))))
+        X = Approx_Layer.call(X)
+        Vis_utils.Plot_Matrix(X[I],'5 Pixel Border: '+str(y[I]),save=True)
+        # 7 pixel border
+        Approx_Layer = Vis_utils.ApproximationLayer(rows=np.concatenate((np.arange(0,7),np.arange(21,28))),
+                                                    cols=np.concatenate((np.arange(0,7),np.arange(21,28))))
+        X = Approx_Layer.call(X)
+        Vis_utils.Plot_Matrix(X[I],'7 Pixel Border: '+str(y[I]),save=True)
 
     """
     labs=['Baseline','3 Pixel Border','5 Pixel Border','7 Pixel Border',]

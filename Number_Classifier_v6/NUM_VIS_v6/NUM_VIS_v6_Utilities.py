@@ -17,10 +17,6 @@ import tensorflow.keras as keras
 
 dataframe_columns = ['Name','Avg_Loss','Avg_Prec','Avg_Recall']
 
-approx_rows = np.concatenate((np.arange(0,5),np.arange(23,28)))
-approx_cols = np.concatenate((np.arange(0,5),np.arange(23,28)))
-
-
         #### CLASS OBJECT DEFINITIONS ####
 
 class filedata ():
