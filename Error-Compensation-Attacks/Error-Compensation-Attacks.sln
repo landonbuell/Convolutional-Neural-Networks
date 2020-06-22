@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Error-Compensation-Attacks_v0", "Error-Compensation-Attacks_v0\Error-Compensation-Attacks_v0.pyproj", "{E660C1AC-B69A-43E5-AAEF-DD0E8D0D8788}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E660C1AC-B69A-43E5-AAEF-DD0E8D0D8788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E660C1AC-B69A-43E5-AAEF-DD0E8D0D8788}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B83368E6-1207-474B-826C-91799F8B586B}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Number_Classifiers", "Number_Classifiers\Number_Classifiers.pyproj", "{58EC8209-4095-4C6A-9DA1-F2233FDFD1AE}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Number_Classifier_v3", "..\Number_Classifier_v3\Number_Classifier_v3.pyproj", "{C32FCB48-DD6B-4141-A765-7E9334E89C0B}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Number_Classifier_v6", "Number_Classifier_v6\Number_Classifier_v6.pyproj", "{9F4989EB-CBC5-4B6D-B2C2-5C1389223319}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Number_Classifier_v5", "Number_Classifier_v5\Number_Classifier_v5.pyproj", "{0F4BBFB3-B1AC-47EA-8275-53B58FD49CFA}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Number_Classifier_v4", "Number_Classifier_v4\Number_Classifier_v4.pyproj", "{BF05C50F-3F5E-47E3-AEA4-0D9C5AEFCF2D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58EC8209-4095-4C6A-9DA1-F2233FDFD1AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58EC8209-4095-4C6A-9DA1-F2233FDFD1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C32FCB48-DD6B-4141-A765-7E9334E89C0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C32FCB48-DD6B-4141-A765-7E9334E89C0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F4989EB-CBC5-4B6D-B2C2-5C1389223319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F4989EB-CBC5-4B6D-B2C2-5C1389223319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F4BBFB3-B1AC-47EA-8275-53B58FD49CFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F4BBFB3-B1AC-47EA-8275-53B58FD49CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF05C50F-3F5E-47E3-AEA4-0D9C5AEFCF2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF05C50F-3F5E-47E3-AEA4-0D9C5AEFCF2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E433A8C3-55DD-40FC-B300-3B018022C1FF}
+	EndGlobalSection
+EndGlobal
