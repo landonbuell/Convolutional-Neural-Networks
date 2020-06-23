@@ -22,10 +22,13 @@ N_layer_models = {'Single_Layer':[(20,),(40,),(60,),(80,),(100,),(120,)],
 
 labels = ['Airplane', 'Automobile', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck']
 
+dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
+
 approx_index = np.concatenate((np.arange(0,5),np.arange(27,32)),axis=-1)
-outfile_name = 'Baseline'
+outfile_name = 'Baseline.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
+
 
             #### CLASS OBJECTS ####
 
@@ -74,6 +77,7 @@ class CompensationLayer (keras.layers.Layer):
 
     def compensate(self,X):
         """ Apply Compensation to samples in batch X """
+        pass
 
     def call (self,X):
         """ Call Layer Object w/ X, return output Y"""
@@ -86,8 +90,8 @@ def Load_CIFAR10(train_size=10000,test_size=6000):
     """ Load in CFAR-10 Data set """
     print("Loading CiFAR-10 Data...\n")
     (X_train,y_train),(X_test,y_test) = keras.datasets.cifar10.load_data()
-    X_train,y_train = X_train[:train_size],y_train[:train_size]              
-    X_test,y_test = X_test[:test_size],y_test[:test_size]
+    #X_train,y_train = X_train[:train_size],y_train[:train_size]              
+    #X_test,y_test = X_test[:test_size],y_test[:test_size]
     return X_train,y_train,X_test,y_test
 
 def Load_MNIST10(test_size=10000,train_size=6000):
@@ -103,8 +107,10 @@ def Network_Model (name,layers,rows,cols):
     model = keras.models.Sequential(name=name)
     model.add(keras.layers.InputLayer(input_shape=(32,32,3),
                                       name = 'Input'))
-    model.add(keras.layers.Conv2D(filters=2,kernel_size=(4,4),
+    model.add(keras.layers.Conv2D(filters=1,kernel_size=(2,2),
                                   activation='relu',name='C1'))
+    model.add(keras.layers.Conv2D(filters=1,kernel_size=(2,2),
+                                  activation='relu',name='C2'))
     model.add(keras.layers.AveragePooling2D(pool_size=(4,4),strides=(2,2),
                                             name='P1'))
     model.add(keras.layers.Flatten(name='F1'))
@@ -116,7 +122,7 @@ def Network_Model (name,layers,rows,cols):
     model.compile(optimizer=keras.optimizers.SGD(),
                   loss=keras.losses.categorical_crossentropy,
                   metrics=['Precision','Recall'])
-    print(model.summary())
+    #print(model.summary())
     return model
 
         #### METRIC DEFINITIONS ####
@@ -124,23 +130,22 @@ def Network_Model (name,layers,rows,cols):
 def Evaluate_Model (model,X,y):
     """ Evaluate Performance of Trained Model """
     z = model.predict(X)
+    n_samples = X.shape[0]
     metrics = np.array([])
-
     # Loss Function Value
-    y_one_hot = keras.utils.to_categorical(y,10)
-    loss_inst = keras.losses.categorical_crossentropy(y_one_hot,z)
-    loss_val = np.mean(loss_inst.to_numpy())
-
-    # By category
-    z = np.argmax(z,axis=-1)
-
+    y = keras.utils.to_categorical(y,10)
+    loss = keras.losses.categorical_crossentropy(y,z)
+    assert loss.shape == (n_samples,)
+    metrics = np.append(metrics,np.mean(loss.numpy()))
     # Precision Score
     prec_inst = keras.metrics.Precision()
-    prec_score = np.mean(prec_inst.update_state(y,z))
+    prec_inst.update_state(y,z)
+    prec_score = np.mean(prec_inst.result().numpy())
     metrics = np.append(metrics,prec_score)
     # Recall Score
     recall_inst = keras.metrics.Recall()
-    recall_score = np.mean(recall_inst.update_state(y,z))
+    recall_inst.update_state(y,z)
+    recall_score = np.mean(recall_inst.result().numpy())
     metrics = np.append(metrics,recall_score)
     
     return metrics
