@@ -20,12 +20,12 @@ N_layer_models = {'Single_Layer':[(20,),(40,),(60,),(80,),(100,),(120,)],
                   'Double_Layer':[(20,20),(40,40),(60,60),(80,80),
                                   (100,100),(120,120)]}
 
-labels = ['Airplane', 'Automobile', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck']
+class_labels = ['Airplane', 'Automobile', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck']
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
-approx_index = np.concatenate((np.arange(0,5),np.arange(27,32)),axis=-1)
-outfile_name = 'Baseline.csv'
+approx_index = np.concatenate((np.arange(0,10),np.arange(22,32)),axis=-1)
+outfile_name = 'Approx_10.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
@@ -36,7 +36,7 @@ class ApproximationLayer (keras.layers.Layer):
     """ Approximation Layer Object, 
             Inherits from Keras Layer Object """
 
-    def __init__(self,name,rows=[],cols=[]):
+    def __init__(self,rows=[],cols=[]):
         """ Initialize Layer Instance """
         super(ApproximationLayer,self).__init__(trainable=False)
         
@@ -67,7 +67,7 @@ class CompensationLayer (keras.layers.Layer):
     """ Compensation Layer Object, 
             Inherits from Keras Layer Object """
 
-    def __init__(self,name,rows=[],cols=[]):
+    def __init__(self,rows=[],cols=[]):
         """ Initialize Layer Instance """
         super(ApproximationLayer,self).__init__(trainable=False)
         
@@ -90,8 +90,8 @@ def Load_CIFAR10(train_size=10000,test_size=6000):
     """ Load in CFAR-10 Data set """
     print("Loading CiFAR-10 Data...\n")
     (X_train,y_train),(X_test,y_test) = keras.datasets.cifar10.load_data()
-    #X_train,y_train = X_train[:train_size],y_train[:train_size]              
-    #X_test,y_test = X_test[:test_size],y_test[:test_size]
+    X_train,y_train = X_train[:train_size],y_train[:train_size]              
+    X_test,y_test = X_test[:test_size],y_test[:test_size]
     return X_train,y_train,X_test,y_test
 
 def Load_MNIST10(test_size=10000,train_size=6000):

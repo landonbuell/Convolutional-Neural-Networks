@@ -30,7 +30,14 @@ if __name__ == '__main__':
         output_frame = pd.DataFrame(columns=utils.dataframe_cols)
 
         N_iters = 4            # Time to repeat each model
-        n_epochs = 10           # epochs over data set
+        n_epochs = 20           # epochs over data set
+
+        # Approximations
+        print("Approximating Data...\n")
+        ApproxLayer = utils.ApproximationLayer(rows=utils.approx_index,
+                                               cols=utils.approx_index)
+        X_train = ApproxLayer.call(X_train)
+        X_test = ApproxLayer.call(X_test)
 
         # ITERATE BY LAYER
         for N_LAYERS in LAYER_MODELS.keys():            # Each number of layers
