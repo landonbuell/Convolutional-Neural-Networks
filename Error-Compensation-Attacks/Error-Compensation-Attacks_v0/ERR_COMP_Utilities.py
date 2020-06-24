@@ -25,7 +25,7 @@ class_labels = ['Airplane', 'Automobile', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
 approx_index = np.concatenate((np.arange(0,10),np.arange(22,32)),axis=-1)
-outfile_name = 'Approx_10.csv'
+outfile_name = 'Baseline.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
@@ -50,12 +50,16 @@ class ApproximationLayer (keras.layers.Layer):
         for x in X:                         # each sample    
             for r in self.rows:             # each row to approximate     
                 for w in range(W):          # full width
-                    for j in range(self.nchs):  # each channel (RGB)
-                        x[r][w][j] = 0.         # set to 0
+                    for j in range(self.nchs):      # each channel (RGB)
+                        # Mute MSB
+                        x[r][w][j] -= 128 if (x[r][w][j] >= 128) else (x[r][w][j])
+                        #x[r][w][j] = 0
             for c in self.cols:             # each col to approximate
                 for h in range(H):          # full height
                     for j in range(self.nchs):  # each channel (RGB)
-                        x[h][c][j] = 0.         # set to 0
+                        # Mute MSB
+                        x[h][c][j] -= 128 if (x[h][c][j] >= 128) else (x[h][c][j])
+                        #x[h][c][j] = 0
         return X
 
     def call (self,X):
@@ -71,13 +75,16 @@ class CompensationLayer (keras.layers.Layer):
         """ Initialize Layer Instance """
         super(ApproximationLayer,self).__init__(trainable=False)
         
-        self.rows = rows    # rows to approx
-        self.cols = cols    # cols to approx
+        self.rows = rows    # rows to compensate
+        self.cols = cols    # cols to compensate
         self.nchs = 3       # number of channels
 
     def compensate(self,X):
         """ Apply Compensation to samples in batch X """
-        pass
+        
+        # Top-Center
+        comp_rows = self.rows + len(self.rows)/2
+
 
     def call (self,X):
         """ Call Layer Object w/ X, return output Y"""
@@ -107,10 +114,10 @@ def Network_Model (name,layers,rows,cols):
     model = keras.models.Sequential(name=name)
     model.add(keras.layers.InputLayer(input_shape=(32,32,3),
                                       name = 'Input'))
-    model.add(keras.layers.Conv2D(filters=1,kernel_size=(2,2),
-                                  activation='relu',name='C1'))
-    model.add(keras.layers.Conv2D(filters=1,kernel_size=(2,2),
-                                  activation='relu',name='C2'))
+    model.add(keras.layers.Conv2D(filters=1,kernel_size=(4,4),activation='relu',
+                                  kernel_initializer='ones',name='C1'))
+    model.add(keras.layers.Conv2D(filters=1,kernel_size=(2,2),activation='relu',
+                                  kernel_initializer='ones',name='C2'))
     model.add(keras.layers.AveragePooling2D(pool_size=(4,4),strides=(2,2),
                                             name='P1'))
     model.add(keras.layers.Flatten(name='F1'))
