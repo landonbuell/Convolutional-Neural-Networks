@@ -20,8 +20,6 @@ N_layer_models = {'Single_Layer':[(20,),(40,),(60,),(80,),(100,),(120,),],
                   'Double_Layer':[(20,20),(40,40),(60,60),(80,80),(100,100),(120,120),]
                   }
 
-class_labels = ['Airplane', 'Automobile', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck']
-
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
 approx_index = np.concatenate((np.arange(0,2),np.arange(26,28)),axis=-1)
@@ -82,10 +80,14 @@ class CompensationLayer (keras.layers.Layer):
 
     def compensate(self,X):
         """ Apply Compensation to samples in batch X """
-        
-        # Top-Center
-        comp_rows = self.rows + len(self.rows)/2
-
+        b = len(rows)/2         # approx border width
+        X = np.copy(X)         
+        for x in X:             # each sample
+            for j in range(self.nchs): # each channel;
+                # Fix corners
+                patch = x[b:(2*b)][b:(2*b)][j]
+                
+                
 
     def call (self,X):
         """ Call Layer Object w/ X, return output Y"""
@@ -127,14 +129,10 @@ def Network_Model (name,layers,rows,cols):
     model = keras.models.Sequential(name=name)
     model.add(keras.layers.InputLayer(input_shape=(28,28,1),
                                       name = 'Input'))
-    """
     model.add(keras.layers.Conv2D(filters=1,kernel_size=(4,4),activation='relu',
                                   kernel_initializer='ones',name='C1'))
-    model.add(keras.layers.Conv2D(filters=1,kernel_size=(2,2),activation='relu',
-                                  kernel_initializer='ones',name='C2'))
     model.add(keras.layers.AveragePooling2D(pool_size=(4,4),strides=(2,2),
                                             name='P1'))
-    """
     model.add(keras.layers.Flatten(name='F1'))
     for i,nodes in enumerate(layers):
         model.add(keras.layers.Dense(units=nodes,

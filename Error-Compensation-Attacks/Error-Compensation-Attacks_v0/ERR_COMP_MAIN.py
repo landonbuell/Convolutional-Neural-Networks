@@ -38,8 +38,8 @@ if __name__ == '__main__':
         print("Approximating Data...\n")
         ApproxLayer = utils.ApproximationLayer(rows=utils.approx_index,
                                                cols=utils.approx_index)
-        X_train = ApproxLayer.call(X_train)
-        X_test = ApproxLayer.call(X_test)
+        #X_train = ApproxLayer.call(X_train)
+        #X_test = ApproxLayer.call(X_test)
 
         #utils.Plot_Sample(X_test[10],' ')
 
@@ -56,7 +56,6 @@ if __name__ == '__main__':
                 model_name = str(N_LAYERS)+'_'+str(N_NEURONS[0])
                 like_model_data = np.array([])          # hold dat from each iter
                 
-
                 for i in range(N_iters):            # Each Iteration
                     print('\t\tIteration: '+str(i)+'-',time.perf_counter())
 
@@ -74,7 +73,8 @@ if __name__ == '__main__':
                 row = pd.DataFrame(data=[[model_name,stats[0],stats[1],stats[2]]],
                                    columns=utils.dataframe_cols)
                 output_frame = output_frame.append(row,ignore_index=True)
-
+            
+            # Update output file
             outpath = utils.output_path+'/'+utils.outfile_name
             output_frame.to_csv(outpath,columns=utils.dataframe_cols,mode='w')
 
