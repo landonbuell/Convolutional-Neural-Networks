@@ -1,0 +1,51 @@
+% ================
+% Landon Buell
+% Qioayan Yu
+% 
+% 24 June 2020
+% ================
+
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm]{geometry}
+
+\begin{document}
+
+
+% ================================================================
+
+\section*{Experiment}
+
+\paragraph*{}This case study serves as an experiment in determining how approximate computation techniques may change the performance of a multilayer perceptron (MLP) neural network classifier. We have chosen to a subsection of the Fashion-MNIST data set containing 28 x 28 pixel images of fashion accessories including handbags, shirts, hats, and shoes. Each image is labeled $0$ through $9$, encoding the article that appears with in. Each pixel is given by an integer $0$ through $255$ which indicates the gray-scale value. In the case of each image sample, the sample is roughly centered in the image, and takes up a much greater subset of pixels than the similar Hand-Written MNIST data set. Examples of a few images can be found below in fig.(\ref{images}). The full data set contains 60,000 training samples, and 10,000 evaluation samples, all of which were used respectively.
+
+\paragraph*{}Although each image is roughly centered in a given sample, the subjects of the image often extend to the outermost most pixels. Thus we propose that approximating a border of $N$ pixels around the outside of the image would produce noticeable deviations in the performance of the classifier model, proportional to the border depth of $N$. To apply this, we take each image sample, and apply an approximation method to each pixel that fall within the specified border depths. We test an unchanged baseline model against approximation borders depths of $N = 2,4,6,8$. The approximation method used asserts that the $0$-th bit in each pixel byte is muted to zero, thus the largest value for any approximated pixel is $127$. Results of this approximation method can be seen in fig.(\ref{images})
+
+
+\begin{figure}[h]
+\label{images}
+IMAGES!
+\end{figure}
+
+
+
+
+% ================================================================
+
+\begin{figure}[H]
+\label{results}
+RESULTS!
+\end{figure}
+
+\section*{Conclusion}
+
+
+
+
+% ================================================================
+
+\end{document}

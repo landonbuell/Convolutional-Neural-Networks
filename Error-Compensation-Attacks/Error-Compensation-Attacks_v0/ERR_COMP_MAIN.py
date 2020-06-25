@@ -12,7 +12,8 @@ import pandas as pd
 import os
 import time
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import tensorflow as tf
 import tensorflow.keras as keras
 
 import ERR_COMP_Utilities as utils
@@ -21,27 +22,30 @@ import ERR_COMP_Utilities as utils
             #### MAIN EXECUABLE ####
 
 if __name__ == '__main__':
-        
+
+       
         # PRE-PROCESSING 
         init_path = os.getcwd()
-        X_train,y_train,X_test,y_test = utils.Load_CIFAR10()
+        X_train,y_train,X_test,y_test = utils.Load_Fashion_MNIST10(60000,10000)
         LAYER_MODELS = utils.N_layer_models
         y_train = keras.utils.to_categorical(y_train,10) 
         output_frame = pd.DataFrame(columns=utils.dataframe_cols)
 
-        N_iters = 4            # Time to repeat each model
-        n_epochs = 20           # epochs over data set
+        N_iters = 4             # Time to repeat each model
+        n_epochs = 40           # epochs over data set
 
         # APPROXIMATIONS
         print("Approximating Data...\n")
         ApproxLayer = utils.ApproximationLayer(rows=utils.approx_index,
                                                cols=utils.approx_index)
-        #X_train = ApproxLayer.call(X_train)
-        #X_test = ApproxLayer.call(X_test)
+        X_train = ApproxLayer.call(X_train)
+        X_test = ApproxLayer.call(X_test)
 
-        utils.Plot_Sample(X_train[0],'Sample')
+        #utils.Plot_Sample(X_test[10],' ')
 
         # COMPENSATIONS
+        CompLayer = utils.CompensationLayer(rows=utils.approx_index,
+                                            cols=utils.approx_index)
 
         # ITERATE BY LAYER
         for N_LAYERS in LAYER_MODELS.keys():            # Each number of layers
