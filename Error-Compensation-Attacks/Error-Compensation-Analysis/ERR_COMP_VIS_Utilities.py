@@ -53,6 +53,7 @@ class filedata ():
 
         for n_layers,pts in zip(layers,idxs):
             data = self.X.loc[pts]
+            data = np.round(data,4)     # round to 4 decimals
             setattr(self,n_layers,data)
         return self
         

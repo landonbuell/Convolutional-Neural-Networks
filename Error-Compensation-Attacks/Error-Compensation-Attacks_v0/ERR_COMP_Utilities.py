@@ -22,8 +22,8 @@ N_layer_models = {'Single_Layer':[(20,),(40,),(60,),(80,),(100,),(120,),],
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
-approx_index = np.concatenate((np.arange(0,2),np.arange(26,28)),axis=-1)
-outfile_name = 'Baseline_v1.csv'
+approx_index = np.concatenate((np.arange(0,8),np.arange(20,28)),axis=-1)
+outfile_name = 'Baseline.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
@@ -51,14 +51,14 @@ class ApproximationLayer (keras.layers.Layer):
                 for w in range(W):          # full width
                     for j in range(self.nchs):      # each channel (RGB?)
                         # Mute all bits
-                        x[r][w][j] -= 128 if (x[r][w][j] >= 128) else (x[r][w][j])
-                        #x[r][w][j] = 0
+                        #x[r][w][j] -= 128 if (x[r][w][j] >= 128) else (x[r][w][j])
+                        x[r][w][j] = 0
             for c in self.cols:             # each col to approximate
                 for h in range(H):          # full height
                     for j in range(self.nchs):  # each channel (RGB)
                         # Mute all bits
-                        x[h][c][j] -= 128 if (x[h][c][j] >= 128) else (x[h][c][j])
-                        #x[h][c][j] = 0
+                        #x[h][c][j] -= 128 if (x[h][c][j] >= 128) else (x[h][c][j])
+                        x[h][c][j] = 0
         return X
 
     def call (self,X):
@@ -74,25 +74,44 @@ class CompensationLayer (keras.layers.Layer):
         """ Initialize Layer Instance """
         super(CompensationLayer,self).__init__(trainable=False)
         
-        self.rows = rows    # rows to compensate
-        self.cols = cols    # cols to compensate
-        self.nchs = 1       # number of channels
+        self.b = int(len(rows)/2)
+        self.rows = rows        # rows to compensate
+        self.toprows = rows[:self.b]
+        self.botrows = rows[self.b:]
+        self.cols = cols        # cols to compensate
+        self.nchs = 1           # number of channels
 
     def compensate(self,X):
         """ Apply Compensation to samples in batch X """
-        b = len(rows)/2         # approx border width
+        b = len(self.rows)/2         # approx border width
         X = np.copy(X)         
-        for x in X:             # each sample
-            for j in range(self.nchs): # each channel;
-                # Fix corners
-                patch = x[b:(2*b)][b:(2*b)][j]
+        for x in X:             # each sample 
+
+            x[self.toprows] = x[self.b:2*self.b]                # patch top
+            x[self.botrows] = x[(28-(2*self.b)):(28-self.b)]    # patch bottom         
+            x = np.transpose(x,axes=(1,0,2))
+
+            x[self.toprows] = x[self.b:2*self.b]                # patch top
+            x[self.botrows] = x[(28-(2*self.b)):(28-self.b)]    # patch bottom 
+            x = np.transpose(x,axes=(1,0,2))
                 
-                
+        return X
 
     def call (self,X):
         """ Call Layer Object w/ X, return output Y"""
-        Y = X
+        Y = self.compensate(X)
         return Y
+
+class AbsoluteValueLayer (keras.layers.Layer):
+    """ Compute absolute value of inputs """
+
+    def __init__(self,rows=[],cols=[]):
+        """ Initialize Layer Instance """
+        super(AbsoluteValueLayer,self).__init__(trainable=False)
+
+    def call (self,X):
+        """ return absolute value """
+        return tf.math.abs(X)
 
         #### PREPROCESSING DEFINITIONS ####
 
@@ -112,6 +131,8 @@ def Load_MNIST10(train_size=10000,test_size=6000):
     (X_train,y_train),(X_test,y_test) = keras.datasets.mnist.load_data()
     X_train,y_train = X_train[:train_size],y_train[:train_size]              
     X_test,y_test = X_test[:test_size],y_test[:test_size]
+    X_train = X_train.reshape(train_size,28,28,1)
+    X_test = X_test.reshape(test_size,28,28,1)
     return X_train,y_train,X_test,y_test
 
 def Load_Fashion_MNIST10(train_size=10000,test_size=6000):
@@ -129,17 +150,21 @@ def Network_Model (name,layers,rows,cols):
     model = keras.models.Sequential(name=name)
     model.add(keras.layers.InputLayer(input_shape=(28,28,1),
                                       name = 'Input'))
+    """
     model.add(keras.layers.Conv2D(filters=1,kernel_size=(4,4),activation='relu',
                                   kernel_initializer='ones',name='C1'))
     model.add(keras.layers.AveragePooling2D(pool_size=(4,4),strides=(2,2),
                                             name='P1'))
+    """
     model.add(keras.layers.Flatten(name='F1'))
     for i,nodes in enumerate(layers):
         model.add(keras.layers.Dense(units=nodes,
             activation='relu',name='D'+str(i+1)))
-    model.add(keras.layers.Dense(units=10,activation='softmax',
+    model.add(keras.layers.Dense(units=10,activation=None,
                                  name='Output'))
-    model.compile(optimizer=keras.optimizers.SGD(),
+    model.add(keras.layers.Activation(activation=keras.activations.softmax))
+    model.add(AbsoluteValueLayer())
+    model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.2),
                   loss=keras.losses.categorical_crossentropy,
                   metrics=['Precision','Recall'])
     #print(model.summary())
@@ -175,7 +200,7 @@ def Evaluate_Model (model,X,y):
 def Plot_Sample (X,y,save=False,show=True):
     """ Plot RGB Image w/ Label """
     plt.figure(figsize=(16,12))
-    plt.title('Label: '+str(y),size=50,weight='bold')
+    plt.title(str(y),size=50,weight='bold')
     
     try:
         plt.imshow(X.reshape(28,28),cmap=plt.cm.binary)

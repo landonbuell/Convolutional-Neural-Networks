@@ -32,7 +32,9 @@ if __name__ == '__main__':
         output_frame = pd.DataFrame(columns=utils.dataframe_cols)
 
         N_iters = 4             # Time to repeat each model
-        n_epochs = 40           # epochs over data set
+        n_epochs = 50           # epochs over data set
+
+        utils.Plot_Sample(X_test[1],' ')
 
         # APPROXIMATIONS
         print("Approximating Data...\n")
@@ -40,12 +42,16 @@ if __name__ == '__main__':
                                                cols=utils.approx_index)
         #X_train = ApproxLayer.call(X_train)
         #X_test = ApproxLayer.call(X_test)
-
-        #utils.Plot_Sample(X_test[10],' ')
+        #utils.Plot_Sample(X_test[1],' ')
 
         # COMPENSATIONS
+        print("Compensating Data...\n")
         CompLayer = utils.CompensationLayer(rows=utils.approx_index,
                                             cols=utils.approx_index)
+
+        #X_train = CompLayer.call(X_train)
+        #X_test = CompLayer.call(X_test)
+        #utils.Plot_Sample(X_test[1],' ')
 
         # ITERATE BY LAYER
         for N_LAYERS in LAYER_MODELS.keys():            # Each number of layers
@@ -61,7 +67,7 @@ if __name__ == '__main__':
 
                     MODEL = utils.Network_Model(name=model_name,
                         layers=N_NEURONS,rows=utils.approx_index,cols=utils.approx_index)
-                    HIST = MODEL.fit(x=X_train,y=y_train,batch_size=128,
+                    HIST = MODEL.fit(x=X_train,y=y_train,batch_size=64,
                                      epochs=n_epochs,verbose=0)             # train model
                     metrics = utils.Evaluate_Model(MODEL,X_test,y_test)     # evaluate performance
                     like_model_data = np.append(like_model_data,metrics)    # add metrics to array
