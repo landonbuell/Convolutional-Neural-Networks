@@ -22,8 +22,8 @@ if __name__ == '__main__':
     data_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
     expt_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Presentations/Error-Compensation-Attacks/'
 
-    CSV_FILES = [   'Baseline.csv','Approx_2.csv','Approx_4.csv',
-                    'Approx_6.csv','Approx_8.csv','Approx_10.csv']
+    CSV_FILES = [   'Baseline.csv','Approx_4.csv','Comp_4.csv',
+                                    'Approx_8.csv','Comp_8.csv']
 
     files_objs = []
     for file in CSV_FILES:
@@ -34,29 +34,22 @@ if __name__ == '__main__':
     os.chdir(expt_path)
 
     """
-    for I in range(0,10,2):
-        X = X[:10]
-        Vis_utils.Plot_Matrix(X[I],'Original: '+str(y[I]),save=True)     
-        # 3 pixel border
-        Approx_Layer = Vis_utils.ApproximationLayer(rows=np.concatenate((np.arange(0,3),np.arange(25,28))),
-                                                    cols=np.concatenate((np.arange(0,3),np.arange(25,28))))
-        X = Approx_Layer.call(X)
-        Vis_utils.Plot_Matrix(X[I],'3 Pixel Border: '+str(y[I]),save=True)
-        # 5 pixel border
-        Approx_Layer = Vis_utils.ApproximationLayer(rows=np.concatenate((np.arange(0,5),np.arange(23,28))),
-                                                    cols=np.concatenate((np.arange(0,5),np.arange(23,28))))
-        X = Approx_Layer.call(X)
-        Vis_utils.Plot_Matrix(X[I],'5 Pixel Border: '+str(y[I]),save=True)
-        # 7 pixel border
-        Approx_Layer = Vis_utils.ApproximationLayer(rows=np.concatenate((np.arange(0,7),np.arange(21,28))),
-                                                    cols=np.concatenate((np.arange(0,7),np.arange(21,28))))
-        X = Approx_Layer.call(X)
-        Vis_utils.Plot_Matrix(X[I],'7 Pixel Border: '+str(y[I]),save=True)
+    X_train,y_train,X_test,y_test = Vis_utils.Load_Fashion_MNIST10(10,100)
+    X = X_test
+
+    Vis_utils.Plot_Matrix(X[1],'Original',save=True)
+    ApproxLayer = Vis_utils.ApproximationLayer(rows=Vis_utils.approx_index4,
+                                                cols=Vis_utils.approx_index4)
+    X = ApproxLayer.call(X)                 
+    Vis_utils.Plot_Matrix(X[1],'Approx4',save=True)
+    CompLayer = Vis_utils.CompensationLayer(rows=Vis_utils.approx_index4,
+                                            cols=Vis_utils.approx_index4)
+    X = CompLayer.call(X)
+    Vis_utils.Plot_Matrix(X[1],'Compensate4',save=True)
 
     """
-
-    labs=[  'Baseline','2 Pixel Border','4 Pixel Border',
-            '6 Pixel Border','8 Pixel Border','10 Pixel Border']
+    labs=[  'Baseline','4 Pixel Attack','4 Pixel Compensation',
+                        '8 Pixel Attack','8 Pixel Compensation']
 
     # Loss Function values
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Average Loss',labs=labs,
@@ -76,4 +69,3 @@ if __name__ == '__main__':
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Average Recall',labs=labs,
                         ylab='Recall Score',title="Double Hidden Layer Recall",save=True)
 
- 
