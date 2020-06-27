@@ -32,7 +32,7 @@ if __name__ == '__main__':
         output_frame = pd.DataFrame(columns=utils.dataframe_cols)
 
         N_iters = 4             # Time to repeat each model
-        n_epochs = 50           # epochs over data set
+        n_epochs = 20           # epochs over data set
 
         utils.Plot_Sample(X_test[1],' ')
 
@@ -75,6 +75,7 @@ if __name__ == '__main__':
                 # Compute Averages of N_iters Models
                 like_model_data = like_model_data.reshape(N_iters,-1)
                 stats = np.mean(like_model_data,axis=0)                 # avg over N_iters
+                print("\t\t\t",stats)
                 
                 row = pd.DataFrame(data=[[model_name,stats[0],stats[1],stats[2]]],
                                    columns=utils.dataframe_cols)

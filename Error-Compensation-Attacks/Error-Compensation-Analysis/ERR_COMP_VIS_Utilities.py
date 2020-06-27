@@ -25,8 +25,9 @@ class_labels = ['Airplane', 'Automobile', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
-approx_index = np.concatenate((np.arange(0,10),np.arange(18,28)),axis=-1)
-outfile_name = 'Approx_10.csv'
+approx_index4 = np.concatenate((np.arange(0,4),np.arange(24,28)),axis=-1)
+approx_index8 = np.concatenate((np.arange(0,8),np.arange(20,28)),axis=-1)
+outfile_name = ' '
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
@@ -91,14 +92,14 @@ class ApproximationLayer (keras.layers.Layer):
                 for w in range(W):          # full width
                     for j in range(self.nchs):      # each channel (RGB?)
                         # Mute all bits
-                        x[r][w][j] -= 128 if (x[r][w][j] >= 128) else (x[r][w][j])
-                        #x[r][w][j] = 0
+                        #x[r][w][j] -= 128 if (x[r][w][j] >= 128) else (x[r][w][j])
+                        x[r][w][j] = 0
             for c in self.cols:             # each col to approximate
                 for h in range(H):          # full height
                     for j in range(self.nchs):  # each channel (RGB)
                         # Mute all bits
-                        x[h][c][j] -= 128 if (x[h][c][j] >= 128) else (x[h][c][j])
-                        #x[h][c][j] = 0
+                        #x[h][c][j] -= 128 if (x[h][c][j] >= 128) else (x[h][c][j])
+                        x[h][c][j] = 0
         return X
 
     def call (self,X):
@@ -114,21 +115,62 @@ class CompensationLayer (keras.layers.Layer):
         """ Initialize Layer Instance """
         super(CompensationLayer,self).__init__(trainable=False)
         
-        self.rows = rows    # rows to compensate
-        self.cols = cols    # cols to compensate
-        self.nchs = 1       # number of channels
+        self.b = int(len(rows)/2)
+        self.rows = rows        # rows to compensate
+        self.toprows = rows[:self.b]
+        self.botrows = rows[self.b:]
+        self.cols = cols        # cols to compensate
+        self.nchs = 1           # number of channels
 
     def compensate(self,X):
         """ Apply Compensation to samples in batch X """
-        
-        # Top-Center
-        comp_rows = self.rows + len(self.rows)/2
+        b = len(self.rows)/2         # approx border width
+        X = np.copy(X)         
+        for x in X:             # each sample 
 
+            x[self.toprows] = x[self.b:2*self.b]                # patch top
+            x[self.botrows] = x[(28-(2*self.b)):(28-self.b)]    # patch bottom         
+            x = np.transpose(x,axes=(1,0,2))
+
+            x[self.toprows] = x[self.b:2*self.b]                # patch top
+            x[self.botrows] = x[(28-(2*self.b)):(28-self.b)]    # patch bottom 
+            x = np.transpose(x,axes=(1,0,2))
+                
+        return X
 
     def call (self,X):
         """ Call Layer Object w/ X, return output Y"""
-        Y = X
+        Y = self.compensate(X)
         return Y
+
+def Load_Fashion_MNIST10(train_size=10000,test_size=6000):
+    """ Load in CFAR-10 Data set """
+    print("Loading Fashion MNIST-10 Data...\n")
+    (X_train,y_train),(X_test,y_test) = keras.datasets.fashion_mnist.load_data()
+    X_train,y_train = X_train[:train_size],y_train[:train_size]              
+    X_test,y_test = X_test[:test_size],y_test[:test_size]
+    X_train = X_train.reshape(train_size,28,28,1)
+    X_test = X_test.reshape(test_size,28,28,1)
+    return X_train,y_train,X_test,y_test
+
+def Plot_Matrix (X,title='',save=False,show=False):
+    """
+    Visualize 2D Matrix
+    --------------------------------
+    X (arr) : Matrix (n_rows x n_columns) to visualize
+    title (str) : title for figure
+    --------------------------------
+    Return None
+    """
+    #plt.title(title,size=40,weight='bold')
+    plt.imshow(X.reshape(28,28),cmap=plt.cm.binary)
+    plt.xticks([])
+    plt.yticks([])
+    if save == True:
+        title = title.replace(': ','_')
+        plt.savefig(title.replace(' ','_')+'.png')
+    if show == True:
+        plt.show()
 
 def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False,show=False):
     """
@@ -154,13 +196,12 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False
     plt.plot(neurons,data[2],color='green',linestyle='-.',marker='H',ms=16,label=labs[2])
     plt.plot(neurons,data[3],color='purple',linestyle=':',marker='s',ms=16,label=labs[3])
     plt.plot(neurons,data[4],color='gray',linestyle='-',marker='v',ms=16,label=labs[4])
-    plt.plot(neurons,data[5],color='orange',linestyle='-',marker='o',ms=16,label=labs[5])
+    #plt.plot(neurons,data[5],color='orange',linestyle='-',marker='o',ms=16,label=labs[5])
 
-    if metric == 'Average Loss':
-        plt.yticks(np.arange(0,3.1,0.5))
-
-    else:
-        plt.yticks(np.arange(0,1.1,0.1))
+    #if metric == 'Average Loss':
+     #   plt.yticks(np.arange(0,3.1,0.5))
+    #else:
+     #   plt.yticks(np.arange(0,1.1,0.1))
 
     plt.grid()
     plt.legend(fontsize=25)
