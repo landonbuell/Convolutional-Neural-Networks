@@ -16,8 +16,8 @@ import tensorflow.keras as keras
 
             #### VARIABLES ####
 
-N_layer_models = {'Single_Layer':[(20,),(40,),(60,),(80,),(100,),(120,),],
-                  'Double_Layer':[(20,20),(40,40),(60,60),(80,80),(100,100),(120,120),]
+N_layer_models = {'Single_Layer':[(2,),(3,),(4,),(5,),],
+                  'Double_Layer':[(2,2),(3,3),(4,4),(5,5),]
                   }
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
@@ -115,59 +115,34 @@ class AbsoluteValueLayer (keras.layers.Layer):
 
         #### PREPROCESSING DEFINITIONS ####
 
-def Load_CIFAR10(train_size=10000,test_size=6000):
+def Load_CIFAR10():
     """ Load in CFAR-10 Data set """
     print("Loading CiFAR-10 Data...\n")
     (X_train,y_train),(X_test,y_test) = keras.datasets.cifar10.load_data()
-    X_train,y_train = X_train[:train_size],y_train[:train_size]              
-    X_test,y_test = X_test[:test_size],y_test[:test_size]
-    #X_train = np.mean(X_train,axis=-1).reshape(train_size,32,32,1)
-    #X_test = np.mean(X_test,axis=-1).reshape(test_size,32,32,1)
     return X_train,y_train,X_test,y_test
 
-def Load_MNIST10(train_size=10000,test_size=6000):
-    """ Load in CFAR-10 Data set """
-    print("Loading MNIST-10 Data...\n")
-    (X_train,y_train),(X_test,y_test) = keras.datasets.mnist.load_data()
-    X_train,y_train = X_train[:train_size],y_train[:train_size]              
-    X_test,y_test = X_test[:test_size],y_test[:test_size]
-    X_train = X_train.reshape(train_size,28,28,1)
-    X_test = X_test.reshape(test_size,28,28,1)
-    return X_train,y_train,X_test,y_test
 
-def Load_Fashion_MNIST10(train_size=10000,test_size=6000):
-    """ Load in CFAR-10 Data set """
-    print("Loading Fashion MNIST-10 Data...\n")
-    (X_train,y_train),(X_test,y_test) = keras.datasets.fashion_mnist.load_data()
-    X_train,y_train = X_train[:train_size],y_train[:train_size]              
-    X_test,y_test = X_test[:test_size],y_test[:test_size]
-    X_train = X_train.reshape(train_size,28,28,1)
-    X_test = X_test.reshape(test_size,28,28,1)
-    return X_train,y_train,X_test,y_test
-
-def Network_Model (name,layers,rows,cols):
+def Network_Model (name,kernel_sizes):
     """ Create Keras MLP Object """
     model = keras.models.Sequential(name=name)
-    model.add(keras.layers.InputLayer(input_shape=(28,28,1),
-                                      name = 'Input'))
-    """
-    model.add(keras.layers.Conv2D(filters=1,kernel_size=(4,4),activation='relu',
-                                  kernel_initializer='ones',name='C1'))
-    model.add(keras.layers.AveragePooling2D(pool_size=(4,4),strides=(2,2),
-                                            name='P1'))
-    """
+    model.add(keras.layers.InputLayer(input_shape=(32,32,3),
+                                      name='Input'))
+    # Add Convolutional & Pooling Layers
+    for i,side in enumerate(kernel_sizes):   # Each kernel size
+        model.add(keras.layers.Conv2D(filters=16,kernel_size=side,strides=(2,2),
+                                      activation='relu',name='C'+str(i+1)))
+        model.add(keras.layers.MaxPool2D(pool_size=(2,2),name='P'+str(i+1)))
+    #model.add(keras.layers.Conv2D(filters=64,kernel_size=(3,3),name='C'+str(i+2)))
+    # Add Dense Layers
     model.add(keras.layers.Flatten(name='F1'))
-    for i,nodes in enumerate(layers):
-        model.add(keras.layers.Dense(units=nodes,
-            activation='relu',name='D'+str(i+1)))
-    model.add(keras.layers.Dense(units=10,activation=None,
-                                 name='Output'))
-    model.add(keras.layers.Activation(activation=keras.activations.softmax))
-    model.add(AbsoluteValueLayer())
-    model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.2),
-                  loss=keras.losses.categorical_crossentropy,
-                  metrics=['Precision','Recall'])
-    #print(model.summary())
+    model.add(keras.layers.Dense(units=64,activation='relu',name='D1'))
+    model.add(keras.layers.Dense(units=10,activation='relu',name='D2'))
+    model.add(keras.layers.Activation(activation='softmax',name='Output'))
+    # Post-Processing
+    model.compile(optimizer=keras.optimizers.Adam(),
+                  loss=keras.losses.CategoricalCrossentropy() ,
+                 metrics=['Precision','Recall'])
+    print(model.summary())
     return model
 
         #### METRIC DEFINITIONS ####
