@@ -26,15 +26,15 @@ if __name__ == '__main__':
        
         # PRE-PROCESSING 
         init_path = os.getcwd()
-        X_train,y_train,X_test,y_test = utils.Load_CIFAR10()
+        X_train,y_train,X_test,y_test = utils.Load_Fashion_MNIST10(60000,10000)
         LAYER_MODELS = utils.N_layer_models
         y_train = keras.utils.to_categorical(y_train,10) 
         output_frame = pd.DataFrame(columns=utils.dataframe_cols)
 
         N_iters = 4             # Time to repeat each model
-        n_epochs = 10           # epochs over data set
+        n_epochs = 50           # epochs over data set
 
-        #utils.Plot_Sample(X_test[1],' ')
+        utils.Plot_Sample(X_test[1],' ')
 
         # APPROXIMATIONS
         print("Approximating Data...\n")
@@ -57,25 +57,24 @@ if __name__ == '__main__':
         for N_LAYERS in LAYER_MODELS.keys():            # Each number of layers
             print('Layers: '+str(N_LAYERS)+'-',time.perf_counter())     # indicate layers
 
-            for KERNEL_SIDE in LAYER_MODELS[N_LAYERS]:    # Each number of nodes
-                print('\tDensity: '+str(KERNEL_SIDE[0])+'-',time.perf_counter())  #inicate nodes
-                model_name = str(N_LAYERS)+'_'+str(KERNEL_SIDE[0])
+            for N_NEURONS in LAYER_MODELS[N_LAYERS]:    # Each number of nodes
+                print('\tDensity: '+str(N_NEURONS[0])+'-',time.perf_counter())  #inicate nodes
+                model_name = str(N_LAYERS)+'_'+str(N_NEURONS[0])
                 like_model_data = np.array([])          # hold dat from each iter
                 
                 for i in range(N_iters):            # Each Iteration
                     print('\t\tIteration: '+str(i)+'-',time.perf_counter())
 
                     MODEL = utils.Network_Model(name=model_name,
-                                                kernel_sizes=KERNEL_SIDE)
-                    HIST = MODEL.fit(x=X_train,y=y_train,batch_size=128,
-                                                epochs=n_epochs,verbose=1)  # train model
+                        layers=N_NEURONS,rows=utils.approx_index,cols=utils.approx_index)
+                    HIST = MODEL.fit(x=X_train,y=y_train,batch_size=64,
+                                     epochs=n_epochs,verbose=0)             # train model
                     metrics = utils.Evaluate_Model(MODEL,X_test,y_test)     # evaluate performance
                     like_model_data = np.append(like_model_data,metrics)    # add metrics to array
 
                 # Compute Averages of N_iters Models
                 like_model_data = like_model_data.reshape(N_iters,-1)
                 stats = np.mean(like_model_data,axis=0)                 # avg over N_iters
-                print('\t\t\t',stats)
                 
                 row = pd.DataFrame(data=[[model_name,stats[0],stats[1],stats[2]]],
                                    columns=utils.dataframe_cols)
