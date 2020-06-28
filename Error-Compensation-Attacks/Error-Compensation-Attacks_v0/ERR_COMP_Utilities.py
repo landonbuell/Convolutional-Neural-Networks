@@ -25,7 +25,7 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
 approx_index = np.concatenate((np.arange(0,8),np.arange(24,32)),axis=-1)
-outfile_name = 'Approx_8.csv'
+outfile_name = 'Comp_8.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
@@ -64,7 +64,7 @@ class ApproximationLayer (keras.layers.Layer):
         return X
 
     def call (self,X):
-        """ Call Layer Object w/ X, return output Y"""
+        """ Call Layer Object w/ X, return output Y """
         Y = self.approximate(X)
         return Y
 
