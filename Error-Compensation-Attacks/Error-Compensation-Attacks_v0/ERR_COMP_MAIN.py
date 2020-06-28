@@ -35,15 +35,15 @@ if __name__ == '__main__':
         N_iters = 4             # Time to repeat each model
         n_epochs = 10           # epochs over data set
 
-        #utils.Plot_Sample(X_test[1],' ')
+        utils.Plot_Sample(X_test[1],' ')
 
         # APPROXIMATIONS
         print("Approximating Data...\n")
         ApproxLayer = utils.ApproximationLayer(rows=utils.approx_index,
                                                cols=utils.approx_index)
-        #X_train = ApproxLayer.call(X_train)
-        #X_test = ApproxLayer.call(X_test)
-        #utils.Plot_Sample(X_test[1],' ')
+        X_train = ApproxLayer.call(X_train)
+        X_test = ApproxLayer.call(X_test)
+        utils.Plot_Sample(X_test[1],' ')
 
         # COMPENSATIONS
         print("Compensating Data...\n")
@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
         #X_train = CompLayer.call(X_train)
         #X_test = CompLayer.call(X_test)
-        #utils.Plot_Sample(X_test[1],' ')
+        utils.Plot_Sample(X_test[1],' ')
 
         # ITERATE BY LAYER
         for N_LAYERS in LAYER_MODELS.keys():            # Each number of layers

@@ -24,8 +24,8 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
-approx_index = np.concatenate((np.arange(0,8),np.arange(20,28)),axis=-1)
-outfile_name = 'Baseline.csv'
+approx_index = np.concatenate((np.arange(0,8),np.arange(24,32)),axis=-1)
+outfile_name = 'Approx_8.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
@@ -42,7 +42,7 @@ class ApproximationLayer (keras.layers.Layer):
         
         self.rows = rows    # rows to approx
         self.cols = cols    # cols to approx
-        self.nchs = 1       # number of channels
+        self.nchs = 3       # number of channels
 
     def approximate (self,X):
         """ Apply Aproximations to samples in batch X """
@@ -81,7 +81,7 @@ class CompensationLayer (keras.layers.Layer):
         self.toprows = rows[:self.b]
         self.botrows = rows[self.b:]
         self.cols = cols        # cols to compensate
-        self.nchs = 1           # number of channels
+        self.nchs = 3           # number of channels
 
     def compensate(self,X):
         """ Apply Compensation to samples in batch X """
@@ -156,7 +156,7 @@ def Plot_Sample (X,y,save=False,show=True):
     plt.title(str(y),size=50,weight='bold')
     
     try:
-        plt.imshow(X.reshape(28,28),cmap=plt.cm.binary)
+        plt.imshow(X.reshape(32,32,3),cmap=plt.cm.binary)
     except:
         plt.imshow(X)
         
