@@ -29,6 +29,7 @@ dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
 approx_index2 = np.concatenate((np.arange(0,2),np.arange(30,32)),axis=-1)
 approx_index4 = np.concatenate((np.arange(0,4),np.arange(28,32)),axis=-1)
+approx_index6 = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
 approx_index8 = np.concatenate((np.arange(0,8),np.arange(24,32)),axis=-1)
 outfile_name = ' '
 

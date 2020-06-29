@@ -39,18 +39,32 @@ if __name__ == '__main__':
     X_train,y_train,X_test,y_test = Vis_utils.Load_CIFAR10()
     X = X_test[:10]
 
-    Vis_utils.Plot_Matrix(X[1],'_4OriginalShip',save=True)
-    Vis_utils.Plot_Matrix(X[-1],'_4OriginalAuto',save=True)
-    ApproxLayer = Vis_utils.ApproximationLayer(rows=Vis_utils.approx_index4,
+    Vis_utils.Plot_Matrix(X[1],'_OriginalShip',save=True)
+    Vis_utils.Plot_Matrix(X[9],'_OriginalAuto',save=True)
+
+    ApproxLayer2 = Vis_utils.ApproximationLayer(rows=Vis_utils.approx_index2,
+                                                cols=Vis_utils.approx_index2)
+    X2 = ApproxLayer2.call(X)
+    Vis_utils.Plot_Matrix(X2[1],'_2ApproxShip',save=True)
+    Vis_utils.Plot_Matrix(X2[9],'_2ApproxAuto',save=True)
+
+    ApproxLayer4 = Vis_utils.ApproximationLayer(rows=Vis_utils.approx_index4,
                                                 cols=Vis_utils.approx_index4)
-    X = ApproxLayer.call(X)                 
-    Vis_utils.Plot_Matrix(X[1],'_4ApproxShip',save=True)
-    Vis_utils.Plot_Matrix(X[-1],'_4ApproxAuto',save=True)
-    CompLayer = Vis_utils.CompensationLayer(rows=Vis_utils.approx_index4,
-                                            cols=Vis_utils.approx_index4)
-    X = CompLayer.call(X)
-    Vis_utils.Plot_Matrix(X[1],'_4CompensateShip',save=True)
-    Vis_utils.Plot_Matrix(X[-1],'_4CompensateAuto',save=True)
+    X4 = ApproxLayer4.call(X)
+    Vis_utils.Plot_Matrix(X4[1],'_4ApproxShip',save=True)
+    Vis_utils.Plot_Matrix(X4[9],'_4ApproxAuto',save=True)
+
+    CompLayer2 = Vis_utils.CompensationLayer(rows=Vis_utils.approx_index2,
+                                                cols=Vis_utils.approx_index2)
+    X2 = CompLayer2.call(X2)
+    Vis_utils.Plot_Matrix(X2[1],'_2CompShip',save=True)
+    Vis_utils.Plot_Matrix(X2[9],'_2CompAuto',save=True)
+
+    CompLayer4 = Vis_utils.CompensationLayer(rows=Vis_utils.approx_index4,
+                                                cols=Vis_utils.approx_index4)
+    X4 = CompLayer2.call(X4)
+    Vis_utils.Plot_Matrix(X2[1],'_4CompShip',save=True)
+    Vis_utils.Plot_Matrix(X2[9],'_4CompAuto',save=True)
 
 
 
