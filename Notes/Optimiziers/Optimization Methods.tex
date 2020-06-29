@@ -35,7 +35,12 @@
 
 \subsection{Deep Feed-Forward Neural Network Structure}
 
-\paragraph*{}A Deep-Feed forward neural network is a class of architectures built around layers of operations that are called in a fixed sequence. Each layer, $(l)$ takes some input object $x^{(l-1)}$, applies some operation, $f^{(l)}$, and produces some output $x^{(l)}$, where the super-script indicates a layer index. The object $x^{(l)}$ then becomes the input for the next layer of the network \cite{Geron,Goodfellow}. A model with $L$ layers requires an input object $x^{(0)}$, which is then transformed by $L-1$ layers to produce object $x^{(L-1)}$, which we refer to as the output of the network.
+\paragraph*{}A Deep-Feed forward neural network is a class of architectures built around layers of operations that are called in a fixed sequence. Each layer, $(l)$ takes some input object $x^{(l-1)}$, applies some operation, $f^{(l)}$, and produces some output $x^{(l)}$, where the super-script indicates a layer index. The object $x^{(l)}$ then becomes the input for the next layer of the network \cite{Geron,Goodfellow}. This repeated process can be shown mathematically by:
+\begin{equation}
+\label{feed-forward}
+x^{(l)} = f^{(l)}\big[x^{(l-1)}\big]
+\end{equation}
+A model with $L$ layers requires an input object $x^{(0)}$, which is then transformed by $L-1$ layers to produce object $x^{(L-1)}$, which we refer to as the output of the network.
 
 \paragraph*{}Each layer of the network takes the form of a function-like object $f$ that takes an input $x \in \mathbb{R}^N$ and transforms it into an output $y \in \mathbb{R}^M$. Typically, $f$ can take the form of a matrix-vector equation, a $k$-dimensional convolution operation, a pooling operation, a non-linear activation function, or any other general transformation. In each case, there as a series of parameters associated with the function $f$. In the case of a matrix-vector equation, there are the elements inside each matrix and bias vector, and in the case of convolution, there are the weighting values within the kernel itself. 
 
@@ -51,6 +56,10 @@ $Y = \{y_0,y_1,y_2,...\}$, such that element $x_i$ should produce result $y_i$, 
 
 \paragraph*{}It is worth noting that machine learning does differ from explicit multi-dimensional optimization. In machine learning, the performance of a neural network is typically measured by a standard statistical metric such as precision score, recall score, accuracy rating, etc. \cite{Geron}. These measures are far more interpretable to a human, and often more indicative that a model is performing as desired than the cost function itself. Thus, we optimize the elements in $J(\theta)$ in hopes that doing so will also improve these related performance metrics \cite{Goodfellow}.Despite this indirect optimization, it is the basis for much of machine-learning.
 
+\subsection{The $\theta$ Object}
+
+\paragraph*{}It is worth reinforcing that although we have implied $\theta$ to be a single dimensional column-vector-like object, it can in reality, hold just about any shape. It may be more convenient to express it as a set, containing the parameters for each layer's kernels, weights and biases in the form of vectors or matrices. It is often reasonable to convey $\theta$ not as a tensor-like object, but rather a set of objects, concatenated from each layer: 
+$\theta = \big\{ W^{(0)} , b^{(0)} , W^{(1)} , b^{(2)},.... \big\} $. Where $W^{(i)} , b^{(i)}$ gives a weighting and element in the $i$-th layer. Further, each object , $W$ and $b$ is a matrix or array-like object with further elements in it.
 
 
 
@@ -64,7 +73,9 @@ $Y = \{y_0,y_1,y_2,...\}$, such that element $x_i$ should produce result $y_i$, 
 
 \paragraph*{}Instead, we brute-force a \textit{guess} or series of guesses for a possible solution. This guess is a particular point in parameter space that either be chosen randomly, or derived from a previously found solution. We can then optimize $J(\theta)$ based on the guess or collection of guesses by adjusting each value in $\theta$ as the reduce the value of $J$ by a small quantity. By repeating this process hundreds of times, under the right conditions, we can take a pseudo-random guess at the solution and slowly adjust each element to develop an approximation of the solution. This process is a simplification of \textit{gradient descent} algorithm.
 
-\paragraph*{}Very generally, gradient-based learning aims to compute the numerical gradient of the cost function at some potion in parameter-space and use the negative gradient to update the elements in the space, as to take a \textit{step} to reduce the value of the cost from the previous step. For example, suppose we guess a set of parameters, $\theta^*$, in a $k$-dimensional parameter-space, $\theta^* \in \mathbb{R}^k$. We then compute the gradient of the cost function, with respect to each parameter in $\theta$, which we denote as $\nabla_\theta \big[ J(\theta) \big]$. Recall the that gradient operator, $\nabla$ returns a vector where each element is partial derivative of $J$ with respect to that parameter:
+\subsection{Gradient Descent}
+
+\paragraph*{}Gradient Descent aims to compute the numerical gradient of the cost function at some potion in parameter-space and use the negative gradient to update the elements in the space, as to take a \textit{step} to reduce the value of the cost from the previous step. For example, suppose we guess a set of parameters, $\theta^*$, in a $k$-dimensional parameter-space, $\theta^* \in \mathbb{R}^k$. We then compute the gradient of the cost function, with respect to each parameter in $\theta$, which we denote as $\nabla_\theta \big[ J(\theta) \big]$. Recall the that gradient operator, $\nabla$ returns a vector where each element is partial derivative of $J$ with respect to that parameter:
 
 \begin{equation}
 \label{cost gradient}
@@ -73,14 +84,17 @@ $Y = \{y_0,y_1,y_2,...\}$, such that element $x_i$ should produce result $y_i$, 
 		\frac{\partial J}{\partial \theta_2}, \frac{\partial J}{\partial \theta_3}, ... \Big]^T
 \end{equation}
 
-\paragraph*{}Both $\theta^*$ and $-\nabla_\theta \big[ J(\theta) \big]$ exist in the same dimensional space, $\mathbb{R}^k$, and thus can be added together. The elements in $\theta^*$ provides a sort of starting point, and the elements in $-\nabla_\theta \big[ J(\theta) \big]$ act as a sort of \textit{step} to take. Changing each element, $\theta^*_i$ by some amount $\frac{\partial J}{\partial \theta_I}$ results in a small decrease in the overall cost function. We generally write this learning process as:
+\paragraph*{}Both $\theta^*$ and $\nabla_\theta \big[ J(\theta) \big]$ exist in the same dimensional space, $\mathbb{R}^k$, and thus can be added together - or rather we ad the \textit{negative} gradient to decrease the cost. The elements in $\theta^*$ provides a sort of starting point, and the elements in $-\nabla_\theta \big[ J(\theta) \big]$ act as a sort of \textit{step} to take. Changing each element, $\theta^*_i$ by some amount $\frac{\partial J}{\partial \theta_I}$ results in a small decrease in the overall cost function. We generally write this learning process as:
 
 \begin{equation}
 \label{gradient step}
 \theta^* = \theta^* + -\alpha \nabla_\theta \big[ J(\theta) \big]
 \end{equation}
 
-\subsection{Gradient Descent}
+\paragraph*{}Another trouble arises when we reconsider that each element in the gradient vector is often not well-defined by a traditional mathematical function, meaning we cannot simply use symbols and standard calculus rules to find the necessary values in eqn. (\ref{gradient step}), we need to use numerical approximations, and \textit{back propagation} to compute each partial derivative. 
+
+
+
 
 
 
