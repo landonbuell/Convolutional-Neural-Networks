@@ -25,7 +25,7 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
 approx_index = np.concatenate((np.arange(0,2),np.arange(30,32)),axis=-1)
-outfile_name = 'Approx_2.csv'
+outfile_name = 'Comp_2.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
