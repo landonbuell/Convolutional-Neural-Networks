@@ -27,8 +27,9 @@ class_labels = ['Airplane', 'Automobile', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
-approx_index4 = np.concatenate((np.arange(0,4),np.arange(24,28)),axis=-1)
-approx_index8 = np.concatenate((np.arange(0,8),np.arange(20,28)),axis=-1)
+approx_index2 = np.concatenate((np.arange(0,2),np.arange(30,32)),axis=-1)
+approx_index4 = np.concatenate((np.arange(0,4),np.arange(28,32)),axis=-1)
+approx_index8 = np.concatenate((np.arange(0,8),np.arange(24,32)),axis=-1)
 outfile_name = ' '
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
@@ -161,7 +162,7 @@ def Plot_Matrix (X,title='',save=False,show=False):
     Return None
     """
     #plt.title(title,size=40,weight='bold')
-    plt.imshow(X.reshape(28,28),cmap=plt.cm.binary)
+    plt.imshow(X)
     plt.xticks([])
     plt.yticks([])
     if save == True:

@@ -35,19 +35,24 @@ if __name__ == '__main__':
 
     os.chdir(expt_path)
 
-    """
-    X_train,y_train,X_test,y_test = Vis_utils.Load_Fashion_MNIST10(10,100)
-    X = X_test
 
-    Vis_utils.Plot_Matrix(X[1],'Original',save=True)
+    X_train,y_train,X_test,y_test = Vis_utils.Load_CIFAR10()
+    X = X_test[:10]
+
+    Vis_utils.Plot_Matrix(X[1],'_4OriginalShip',save=True)
+    Vis_utils.Plot_Matrix(X[-1],'_4OriginalAuto',save=True)
     ApproxLayer = Vis_utils.ApproximationLayer(rows=Vis_utils.approx_index4,
                                                 cols=Vis_utils.approx_index4)
     X = ApproxLayer.call(X)                 
-    Vis_utils.Plot_Matrix(X[1],'Approx4',save=True)
+    Vis_utils.Plot_Matrix(X[1],'_4ApproxShip',save=True)
+    Vis_utils.Plot_Matrix(X[-1],'_4ApproxAuto',save=True)
     CompLayer = Vis_utils.CompensationLayer(rows=Vis_utils.approx_index4,
                                             cols=Vis_utils.approx_index4)
     X = CompLayer.call(X)
-    Vis_utils.Plot_Matrix(X[1],'Compensate4',save=True)
+    Vis_utils.Plot_Matrix(X[1],'_4CompensateShip',save=True)
+    Vis_utils.Plot_Matrix(X[-1],'_4CompensateAuto',save=True)
+
+
 
     """
     labs=[  'Baseline Model',
@@ -72,4 +77,4 @@ if __name__ == '__main__':
                         ylab='Recall Score',title="Recall Score - One Layer Group",save=True)
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Average Recall',labs=labs,
                         ylab='Recall Score',title="Recall Score - Two Layer Groups",save=True)
-
+    """
