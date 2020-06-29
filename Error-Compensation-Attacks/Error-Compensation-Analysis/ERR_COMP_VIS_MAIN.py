@@ -22,8 +22,10 @@ if __name__ == '__main__':
     data_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
     expt_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Presentations/Error-Compensation-Attacks/'
 
-    CSV_FILES = [   'Baseline.csv','Approx_4.csv','Comp_4.csv',
-                                    'Approx_8.csv','Comp_8.csv']
+    CSV_FILES = [   'Baseline.csv',
+                 'Approx_2.csv','Approx_4.csv','Approx_8.csv',
+                 'Comp_2.csv','Comp_4.csv','Comp_8.csv'
+                 ]
 
     files_objs = []
     for file in CSV_FILES:
@@ -48,8 +50,10 @@ if __name__ == '__main__':
     Vis_utils.Plot_Matrix(X[1],'Compensate4',save=True)
 
     """
-    labs=[  'Baseline','4 Pixel Attack','4 Pixel Compensation',
-                        '8 Pixel Attack','8 Pixel Compensation']
+    labs=[  'Baseline Model',
+          '2 Pixel Approximation','4 Pixel Approximation','8 Pixel Approximation',
+          '2 Pixel Compensation','4 Pixel Compensation','8 Pixel Compensation'
+          ]
 
     # Loss Function values
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Average Loss',labs=labs,

@@ -83,7 +83,7 @@ class ApproximationLayer (keras.layers.Layer):
         
         self.rows = rows    # rows to approx
         self.cols = cols    # cols to approx
-        self.nchs = 1       # number of channels
+        self.nchs = 3       # number of channels
 
     def approximate (self,X):
         """ Apply Aproximations to samples in batch X """
@@ -105,7 +105,7 @@ class ApproximationLayer (keras.layers.Layer):
         return X
 
     def call (self,X):
-        """ Call Layer Object w/ X, return output Y"""
+        """ Call Layer Object w/ X, return output Y """
         Y = self.approximate(X)
         return Y
 
@@ -122,7 +122,7 @@ class CompensationLayer (keras.layers.Layer):
         self.toprows = rows[:self.b]
         self.botrows = rows[self.b:]
         self.cols = cols        # cols to compensate
-        self.nchs = 1           # number of channels
+        self.nchs = 3           # number of channels
 
     def compensate(self,X):
         """ Apply Compensation to samples in batch X """
@@ -145,14 +145,10 @@ class CompensationLayer (keras.layers.Layer):
         Y = self.compensate(X)
         return Y
 
-def Load_Fashion_MNIST10(train_size=10000,test_size=6000):
+def Load_CIFAR10():
     """ Load in CFAR-10 Data set """
-    print("Loading Fashion MNIST-10 Data...\n")
-    (X_train,y_train),(X_test,y_test) = keras.datasets.fashion_mnist.load_data()
-    X_train,y_train = X_train[:train_size],y_train[:train_size]              
-    X_test,y_test = X_test[:test_size],y_test[:test_size]
-    X_train = X_train.reshape(train_size,28,28,1)
-    X_test = X_test.reshape(test_size,28,28,1)
+    print("Loading CiFAR-10 Data...\n")
+    (X_train,y_train),(X_test,y_test) = keras.datasets.cifar10.load_data()
     return X_train,y_train,X_test,y_test
 
 def Plot_Matrix (X,title='',save=False,show=False):
@@ -186,7 +182,7 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False
     --------------------------------
     Return None
     """
-    plt.figure(figsize=(16,12))
+    plt.figure(figsize=(20,12))
     plt.title(title,size=60,weight='bold',pad=20)
     plt.ylabel(ylab,size=50,weight='bold')
     plt.xlabel('2D Kernel Shape',size=50,weight='bold')
@@ -196,18 +192,22 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False
     plt.plot(kernel_sides,data[0],color='red',linestyle='-',marker='o',ms=16,label=labs[0])
 
     plt.plot(kernel_sides,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
-    plt.plot(kernel_sides,data[2],color='purple',linestyle='--',marker='s',ms=16,label=labs[2])
+    plt.plot(kernel_sides,data[2],color='cyan',linestyle='--',marker='^',ms=16,label=labs[2])
+    #plt.plot(kernel_sides,data[3],color='green',linestyle='--',marker='^',ms=16,label=labs[3])
 
-    plt.plot(kernel_sides,data[3],color='green',linestyle=':',marker='^',ms=16,label=labs[3])
-    plt.plot(kernel_sides,data[4],color='gray',linestyle=':',marker='s',ms=16,label=labs[4])
-    #plt.plot(neurons,data[5],color='orange',linestyle='-',marker='o',ms=16,label=labs[5])
+    plt.plot(kernel_sides,data[4],color='gray',linestyle='-.',marker='s',ms=16,label=labs[4])
+    plt.plot(kernel_sides,data[5],color='orange',linestyle='-.',marker='s',ms=16,label=labs[5])
+    #plt.plot(kernel_sides,data[6],color='magenta',linestyle='-.',marker='s',ms=16,label=labs[6])
+
+    plt.xticks(kernel_sides,['2x2','3x3','4x4','5x5','6x6'],size=50)
+    if metric in ['Average Precision','Average Recall']:
+        plt.yticks(np.arange(0.2,1.0,0.1),size=50)
+    else:
+        plt.yticks(size=50)
 
     plt.grid()
-    plt.legend(fontsize=25)
-    plt.yticks(size=40)
-    plt.xticks(kernel_sides,
-               ['2x2','3x3','4x4','5x5','6x6'],size=40)
-    
+    plt.legend(fontsize=25,loc=0)    
+      
     if save == True:
         title = title.replace(' ','_')
         plt.savefig(title+'.png')

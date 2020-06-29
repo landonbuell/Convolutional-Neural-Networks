@@ -24,8 +24,8 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
-approx_index = np.concatenate((np.arange(0,2),np.arange(30,32)),axis=-1)
-outfile_name = 'Comp_2.csv'
+approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
+outfile_name = 'Approx_6.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
@@ -117,7 +117,7 @@ class AbsoluteValueLayer (keras.layers.Layer):
 
         #### PREPROCESSING DEFINITIONS ####
 
-def Load_CIFAR10(train_size=10000,test_size=6000):
+def Load_CIFAR10():
     """ Load in CFAR-10 Data set """
     print("Loading CiFAR-10 Data...\n")
     (X_train,y_train),(X_test,y_test) = keras.datasets.cifar10.load_data()
