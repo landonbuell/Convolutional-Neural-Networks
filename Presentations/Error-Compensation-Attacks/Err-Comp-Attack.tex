@@ -39,7 +39,7 @@ IMAGES!
 \begin{center}
 \includegraphics[scale=0.5]{CNN_LayerGroup}
 \end{center}
-\caption{A graphical representation of the layers that constitute a \textit{Layer Group}. This archtiecture is inspired from the $VGG-16$ model. two Convolution layers work together to produce $64$ feature maps each. The resulting activations are reduced in dimensionality by the maximum pooling layer.}
+\caption{A graphical representation of the layers that constitute a \textit{Layer Group}. This architecture is inspired from the $VGG-16$ model. two Convolution layers work together to produce $64$ feature maps each. The resulting activations are reduced in dimensionality by the maximum pooling layer.}
 \end{figure}
 
 \paragraph*{}We test models with one and two layer groups, with kernel sizes $k = 2,3,4,5,6$ for each number of layers. We have set each convolution layer to produce $64$ feature maps, a bias vector, a ($1 x 1$) stride, with a ReLU activation function. Each maximum pooling layer extracts the maximum activation from a ($2 x 2$) block of samples and passed it forward to the next layer. After the Layer Groups have been passed, the activations are reshaped into column vector and passed into a $128$-unit dense ReLU layer, and then a $10$-unit dense softmax output layer.
