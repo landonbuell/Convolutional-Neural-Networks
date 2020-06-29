@@ -50,8 +50,8 @@ if __name__ == '__main__':
         CompLayer = utils.CompensationLayer(rows=utils.approx_index,
                                             cols=utils.approx_index)
 
-        X_train = CompLayer.call(X_train)
-        X_test = CompLayer.call(X_test)
+        #X_train = CompLayer.call(X_train)
+        #X_test = CompLayer.call(X_test)
         utils.Plot_Sample(X_test[1],' ')
 
         # ITERATE BY LAYER

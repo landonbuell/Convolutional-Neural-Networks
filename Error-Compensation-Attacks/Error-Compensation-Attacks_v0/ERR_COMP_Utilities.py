@@ -24,8 +24,8 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
-approx_index = np.concatenate((np.arange(0,8),np.arange(24,32)),axis=-1)
-outfile_name = 'Comp_8.csv'
+approx_index = np.concatenate((np.arange(0,2),np.arange(30,32)),axis=-1)
+outfile_name = 'Approx_2.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
@@ -90,11 +90,11 @@ class CompensationLayer (keras.layers.Layer):
         for x in X:             # each sample 
 
             x[self.toprows] = x[self.b:2*self.b]                # patch top
-            x[self.botrows] = x[(28-(2*self.b)):(28-self.b)]    # patch bottom         
+            x[self.botrows] = x[(32-(2*self.b)):(32-self.b)]    # patch bottom         
             x = np.transpose(x,axes=(1,0,2))
 
             x[self.toprows] = x[self.b:2*self.b]                # patch top
-            x[self.botrows] = x[(28-(2*self.b)):(28-self.b)]    # patch bottom 
+            x[self.botrows] = x[(32-(2*self.b)):(32-self.b)]    # patch bottom 
             x = np.transpose(x,axes=(1,0,2))
                 
         return X

@@ -17,8 +17,10 @@ import tensorflow.keras as keras
 
             #### VARIABLES ####
 
-N_layer_models = {'Single_Layer':[(20,),(40,),(60,),(80,),(100,),(120,),],
-                  'Double_Layer':[(20,20),(40,40),(60,60),(80,80),(100,100),(120,120),]
+N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
+                  'Double_Layer':   [(2,2),(3,3),(4,4),(5,5),(6,6)],
+                  #'Triple_Layer':   [(2,2,2),(3,3,3),(4,4,4),(5,5,5),(6,6,6)],
+                  #'Quadruple_Layer':[(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)]
                   }
 
 class_labels = ['Airplane', 'Automobile', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck']
@@ -45,12 +47,12 @@ class filedata ():
         self.filename = filename
         self.X = pd.read_csv(path+'/'+filename,header=0,
                         usecols=dataframe_cols)
-        self.densities = np.arange(20,121,20)
+        self.densities = np.array([2,3,4,5,6])
      
     def split_X (self):
         """ Split Frame X Based on Model Depths """
         layers = ['single_layer','double_layer']
-        idxs = [np.arange(0,6),np.arange(6,12)]
+        idxs = [np.arange(0,5),np.arange(5,10)]
 
         for n_layers,pts in zip(layers,idxs):
             data = self.X.loc[pts]
@@ -61,7 +63,7 @@ class filedata ():
     def make_arrays (self):
         """ Make Data Arrays for Plotting """
         n_layers = ['single_layer','double_layer',]
-        idxs = [np.arange(0,6),np.arange(6,12),]
+        idxs = [np.arange(0,5),np.arange(5,10),]
         
         for col in self.X.columns:              
             column_data = self.X[col].to_numpy()
@@ -129,11 +131,11 @@ class CompensationLayer (keras.layers.Layer):
         for x in X:             # each sample 
 
             x[self.toprows] = x[self.b:2*self.b]                # patch top
-            x[self.botrows] = x[(28-(2*self.b)):(28-self.b)]    # patch bottom         
+            x[self.botrows] = x[(32-(2*self.b)):(32-self.b)]    # patch bottom         
             x = np.transpose(x,axes=(1,0,2))
 
             x[self.toprows] = x[self.b:2*self.b]                # patch top
-            x[self.botrows] = x[(28-(2*self.b)):(28-self.b)]    # patch bottom 
+            x[self.botrows] = x[(32-(2*self.b)):(32-self.b)]    # patch bottom 
             x = np.transpose(x,axes=(1,0,2))
                 
         return X
@@ -187,26 +189,24 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False
     plt.figure(figsize=(16,12))
     plt.title(title,size=60,weight='bold',pad=20)
     plt.ylabel(ylab,size=50,weight='bold')
-    plt.xlabel('Neuron Density',size=50,weight='bold')
+    plt.xlabel('2D Kernel Shape',size=50,weight='bold')
 
-    neurons = np.arange(20,121,20)
+    kernel_sides = np.array([2,3,4,5,6])
     data = np.array([x.__getattribute__(attrbs)[metric] for x in objs])
-    plt.plot(neurons,data[0],color='red',linestyle='-',marker='o',ms=16,label=labs[0])
-    plt.plot(neurons,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
-    plt.plot(neurons,data[2],color='green',linestyle='-.',marker='H',ms=16,label=labs[2])
-    plt.plot(neurons,data[3],color='purple',linestyle=':',marker='s',ms=16,label=labs[3])
-    plt.plot(neurons,data[4],color='gray',linestyle='-',marker='v',ms=16,label=labs[4])
-    #plt.plot(neurons,data[5],color='orange',linestyle='-',marker='o',ms=16,label=labs[5])
+    plt.plot(kernel_sides,data[0],color='red',linestyle='-',marker='o',ms=16,label=labs[0])
 
-    #if metric == 'Average Loss':
-     #   plt.yticks(np.arange(0,3.1,0.5))
-    #else:
-     #   plt.yticks(np.arange(0,1.1,0.1))
+    plt.plot(kernel_sides,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
+    plt.plot(kernel_sides,data[2],color='purple',linestyle='--',marker='^',ms=16,label=labs[2])
+
+    plt.plot(kernel_sides,data[3],color='green',linestyle=':',marker='s',ms=16,label=labs[3])
+    plt.plot(kernel_sides,data[4],color='gray',linestyle=':',marker='s',ms=16,label=labs[4])
+    #plt.plot(neurons,data[5],color='orange',linestyle='-',marker='o',ms=16,label=labs[5])
 
     plt.grid()
     plt.legend(fontsize=25)
     plt.yticks(size=40)
-    plt.xticks(size=40)
+    plt.xticks(kernel_sides,
+               ['2x2','3x3','4x4','5x5','6x6'],size=40)
     
     if save == True:
         title = title.replace(' ','_')

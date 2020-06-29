@@ -53,19 +53,19 @@ if __name__ == '__main__':
 
     # Loss Function values
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Average Loss',labs=labs,
-                        ylab='Loss Function Value',title="Single Hidden Layer Loss Value",save=True)
+                        ylab='Loss Function Value',title="One Convolution Group Loss",save=True)
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Average Loss',labs=labs,
-                        ylab='Loss Function Value',title="Double Hidden Layer Loss Value",save=True)
+                        ylab='Loss Function Value',title="Two Convolution Groups Loss",save=True)
 
     # Precision Score Values
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Average Precision',labs=labs,
-                        ylab='Precision Score',title="Single Hidden Layer Precision",save=True)
+                        ylab='Precision Score',title="One Convolution Group Precision",save=True)
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Average Precision',labs=labs,
-                        ylab='Precision Score',title="Double Hidden Layer Precision",save=True)
+                        ylab='Precision Score',title="Two Convolution Groups Precision",save=True)
     
     # Recall Score Values
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Average Recall',labs=labs,
-                        ylab='Recall Score',title="Single Hidden Layer Recall",save=True)
+                        ylab='Recall Score',title="One Convolution Group Recall",save=True)
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Average Recall',labs=labs,
-                        ylab='Recall Score',title="Double Hidden Layer Recall",save=True)
+                        ylab='Recall Score',title="One Convolution Groups Recall",save=True)
 
