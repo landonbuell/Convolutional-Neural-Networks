@@ -58,8 +58,8 @@ if __name__ == '__main__':
         CompLayer = utils.CompensationLayer(rows=utils.approx_index,
                                             cols=utils.approx_index)
 
-        #X_train = CompLayer.call(X_train)
-        #X_test = CompLayer.call(X_test)
+        X_train = CompLayer.call(X_train)
+        X_test = CompLayer.call(X_test)
         utils.Plot_Sample(X_test[1],' ')
 
         # ITERATE BY LAYER
@@ -78,7 +78,7 @@ if __name__ == '__main__':
                     HIST = MODEL.fit(x=X_train,y=y_train,batch_size=128,
                                      epochs=n_epochs,verbose=0)             # train model
                     METRICS = MODEL.evaluate(x=X_test,y=y_test,batch_size=128,
-                                            verbose=2)
+                                            verbose=0)
                     like_model_data = np.append(like_model_data,METRICS)    # add metrics to array
 
                 # Compute Averages of N_iters Models
