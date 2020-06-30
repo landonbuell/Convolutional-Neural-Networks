@@ -30,7 +30,15 @@ if __name__ == '__main__':
         LAYER_MODELS = utils.N_layer_models
         y_train = keras.utils.to_categorical(y_train,10) 
         y_test = keras.utils.to_categorical(y_test,10) 
-        output_frame = pd.DataFrame(columns=utils.dataframe_cols)
+
+        # DIRECTORY
+        output_frame = pd.DataFrame(columns=utils.dataframe_cols)           # create dataframe
+        outpath = utils.output_path+'/'+utils.outfile_name
+        if os.path.isfile(outpath):     # file exists
+            pass                        # do nothing
+        else:                           # does not exist
+            output_frame.to_csv(outpath,
+                                columns=utils.dataframe_cols,mode='w')  # make new file
 
         N_iters = 4             # Time to repeat each model
         n_epochs = 10           # epochs over data set
@@ -68,9 +76,9 @@ if __name__ == '__main__':
 
                     MODEL = utils.Network_Model(name=model_name,kernel_sizes=KERNEL_SIZE)
                     HIST = MODEL.fit(x=X_train,y=y_train,batch_size=128,
-                                     epochs=n_epochs,verbose=2)             # train model
+                                     epochs=n_epochs,verbose=0)             # train model
                     METRICS = MODEL.evaluate(x=X_test,y=y_test,batch_size=128,
-                                            verbose=2,)
+                                            verbose=2)
                     like_model_data = np.append(like_model_data,METRICS)    # add metrics to array
 
                 # Compute Averages of N_iters Models
@@ -79,10 +87,7 @@ if __name__ == '__main__':
                 print("\t\t\t",stats)
                 
                 row = pd.DataFrame(data=[[model_name,stats[0],stats[1],stats[2]]],
-                                   columns=utils.dataframe_cols)
-                output_frame = output_frame.append(row,ignore_index=True)
-            
-            # Update output file
-            outpath = utils.output_path+'/'+utils.outfile_name
-            output_frame.to_csv(outpath,columns=utils.dataframe_cols,mode='w')
+                                   columns=utils.dataframe_cols)                        # make frame
+                row.to_csv(outpath,columns=utils.dataframe_cols,header=False,mode='a')  # append to file
+
 
