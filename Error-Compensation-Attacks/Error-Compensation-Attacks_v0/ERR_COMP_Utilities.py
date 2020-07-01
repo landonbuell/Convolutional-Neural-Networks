@@ -16,16 +16,16 @@ import tensorflow.keras as keras
 
             #### VARIABLES ####
 
-N_layer_models = {#'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
-                  #'Double_Layer':   [(2,2),(3,3),(4,4),(5,5),(6,6)],
+N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
+                  'Double_Layer':   [(2,2),(3,3),(4,4),(5,5),(6,6)],
                   'Triple_Layer':   [(2,2,2),(3,3,3),(4,4,4),(5,5,5),(6,6,6)],
                   #'Quadruple_Layer':[(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)]
                   }
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
-approx_index = np.concatenate((np.arange(0,8),np.arange(24,32)),axis=-1)
-outfile_name = 'Comp_8.csv'
+approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
+outfile_name = 'Comp_6.csv'
 
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
@@ -141,6 +141,7 @@ def Network_Model (name,kernel_sizes):
     model.add(keras.layers.Dense(units=128,activation='relu',name='D1'))
     model.add(keras.layers.Dense(units=10,activation='softmax',name='Output'))
     
+
     # Complie & Return
     model.compile(optimizer=keras.optimizers.Adam(),
                   loss=keras.losses.CategoricalCrossentropy(),
