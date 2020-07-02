@@ -53,8 +53,8 @@ class filedata ():
      
     def split_X (self):
         """ Split Frame X Based on Model Depths """
-        layers = ['single_layer','double_layer']
-        idxs = [np.arange(0,5),np.arange(5,10)]
+        layers = ['single_layer','double_layer','triple_layer']
+        idxs = [np.arange(0,5),np.arange(5,10),np.arange(10,15)]
 
         for n_layers,pts in zip(layers,idxs):
             data = self.X.loc[pts]
@@ -64,8 +64,8 @@ class filedata ():
         
     def make_arrays (self):
         """ Make Data Arrays for Plotting """
-        n_layers = ['single_layer','double_layer',]
-        idxs = [np.arange(0,5),np.arange(5,10),]
+        n_layers = ['single_layer','double_layer','triple_layer']
+        idxs = [np.arange(0,5),np.arange(5,10),np.arange(10,15)]
         
         for col in self.X.columns:              
             column_data = self.X[col].to_numpy()
@@ -195,11 +195,13 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False
 
     plt.plot(kernel_sides,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
     plt.plot(kernel_sides,data[2],color='cyan',linestyle='--',marker='^',ms=16,label=labs[2])
-    #plt.plot(kernel_sides,data[3],color='green',linestyle='--',marker='^',ms=16,label=labs[3])
+    plt.plot(kernel_sides,data[3],color='green',linestyle='--',marker='^',ms=16,label=labs[3])
+    plt.plot(kernel_sides,data[4],color='purple',linestyle='--',marker='^',ms=16,label=labs[4])
 
-    plt.plot(kernel_sides,data[4],color='gray',linestyle='-.',marker='s',ms=16,label=labs[4])
-    plt.plot(kernel_sides,data[5],color='orange',linestyle='-.',marker='s',ms=16,label=labs[5])
-    #plt.plot(kernel_sides,data[6],color='magenta',linestyle='-.',marker='s',ms=16,label=labs[6])
+    plt.plot(kernel_sides,data[5],color='gray',linestyle='-.',marker='s',ms=16,label=labs[5])
+    plt.plot(kernel_sides,data[5],color='orange',linestyle='-.',marker='s',ms=16,label=labs[6])
+    plt.plot(kernel_sides,data[7],color='magenta',linestyle='-.',marker='s',ms=16,label=labs[7])
+    plt.plot(kernel_sides,data[8],color='yellow',linestyle='-.',marker='s',ms=16,label=labs[8])
 
     plt.xticks(kernel_sides,['2x2','3x3','4x4','5x5','6x6'],size=50)
     if metric in ['Average Precision','Average Recall']:

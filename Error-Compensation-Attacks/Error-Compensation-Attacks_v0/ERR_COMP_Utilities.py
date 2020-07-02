@@ -161,7 +161,6 @@ def Plot_Sample (X,y,save=False,show=True):
     except:
         plt.imshow(X)
         
-
     plt.xticks([])
     plt.yticks([])
 

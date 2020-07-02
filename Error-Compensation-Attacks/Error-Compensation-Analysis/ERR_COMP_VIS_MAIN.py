@@ -23,8 +23,8 @@ if __name__ == '__main__':
     expt_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Presentations/Error-Compensation-Attacks/'
 
     CSV_FILES = [   'Baseline.csv',
-                 'Approx_2.csv','Approx_4.csv','Approx_8.csv',
-                 'Comp_2.csv','Comp_4.csv','Comp_8.csv'
+                 'Approx_2.csv','Approx_4.csv','Approx_6.csv','Approx_8.csv',
+                 'Comp_2.csv','Comp_4.csv','Comp_6.csv','Comp_8.csv'
                  ]
 
     files_objs = []
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     os.chdir(expt_path)
 
-
+    """
     X_train,y_train,X_test,y_test = Vis_utils.Load_CIFAR10()
     X = X_test[:10]
 
@@ -65,13 +65,13 @@ if __name__ == '__main__':
     X4 = CompLayer2.call(X4)
     Vis_utils.Plot_Matrix(X2[1],'_4CompShip',save=True)
     Vis_utils.Plot_Matrix(X2[9],'_4CompAuto',save=True)
-
-
-
     """
+
     labs=[  'Baseline Model',
-          '2 Pixel Approximation','4 Pixel Approximation','8 Pixel Approximation',
-          '2 Pixel Compensation','4 Pixel Compensation','8 Pixel Compensation'
+          '2 Pixel Approximation','4 Pixel Approximation',
+          '6 Pixel Approximation','8 Pixel Approximation',
+          '2 Pixel Compensation', '4 Pixel Compensation',
+          '6 Pixel Compensation', '8 Pixel Compensation'
           ]
 
     # Loss Function values
@@ -79,16 +79,20 @@ if __name__ == '__main__':
                         ylab='Loss Function Value',title="Loss Value - One Layer Group",save=True)
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Average Loss',labs=labs,
                         ylab='Loss Function Value',title="Loss Value - Two Layer Groups",save=True)
-
+    Vis_utils.Plot_Metric(files_objs,'triple_layer',metric='Average Loss',labs=labs,
+                        ylab='Loss Function Value',title="Loss Value - Three Layer Groups",save=True)
     # Precision Score Values
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Average Precision',labs=labs,
                         ylab='Precision Score',title="Precision Score - One Layer Group",save=True)
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Average Precision',labs=labs,
                         ylab='Precision Score',title="Precision Score - Two Layer Groups",save=True)
-    
+    Vis_utils.Plot_Metric(files_objs,'triple_layer',metric='Average Precision',labs=labs,
+                        ylab='Precision Score',title="Precision Score - Three Layer Groups",save=True)
+
     # Recall Score Values
     Vis_utils.Plot_Metric(files_objs,'single_layer',metric='Average Recall',labs=labs,
                         ylab='Recall Score',title="Recall Score - One Layer Group",save=True)
     Vis_utils.Plot_Metric(files_objs,'double_layer',metric='Average Recall',labs=labs,
                         ylab='Recall Score',title="Recall Score - Two Layer Groups",save=True)
-    """
+    Vis_utils.Plot_Metric(files_objs,'triple_layer',metric='Average Recall',labs=labs,
+                        ylab='Recall Score',title="Recall Score - Three Layer Groups",save=True)
