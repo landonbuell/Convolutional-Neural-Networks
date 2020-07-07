@@ -17,18 +17,18 @@ import tensorflow.keras as keras
             #### VARIABLES ####
 
 N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
-                  #'Double_Layer':   [(2,2),(3,3),(4,4),(5,5),(6,6)],
+                  'Double_Layer':   [(2,2),(3,3),(4,4),(5,5),(6,6)],
                   #'Triple_Layer':   [(2,2,2),(3,3,3),(4,4,4),(5,5,5),(6,6,6)],
                   #'Quadruple_Layer':[(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)]
                   }
 
-dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
+dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall','Average Train Time']
 
 approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
-outfile_name = 'Comp_6.csv'
+outfile_name = 'Baseline.csv'
 
-output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
-
+output_path = 'C:\\Users\\Landon\\Documents\\GitHub\Convolutional-Neural-Networks\\' + \
+                'Error-Compensation-Attacks\\Raw_Data_v1'
 
             #### CLASS OBJECTS ####
 
