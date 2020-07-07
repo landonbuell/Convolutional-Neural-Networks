@@ -7,6 +7,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Error-Compensation-Attacks_
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Error-Compensation-Analysis", "Error-Compensation-Analysis\Error-Compensation-Analysis.pyproj", "{D797C14E-62EF-421F-8C73-74D9A3ECE0B8}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Error-Compensation-Attacks_v1", "Error-Compensation-Attacks_v1\Error-Compensation-Attacks_v1.pyproj", "{36754521-C0EA-417C-8B34-8981EE619AC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,8 @@ Global
 		{E660C1AC-B69A-43E5-AAEF-DD0E8D0D8788}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D797C14E-62EF-421F-8C73-74D9A3ECE0B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D797C14E-62EF-421F-8C73-74D9A3ECE0B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36754521-C0EA-417C-8B34-8981EE619AC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36754521-C0EA-417C-8B34-8981EE619AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
