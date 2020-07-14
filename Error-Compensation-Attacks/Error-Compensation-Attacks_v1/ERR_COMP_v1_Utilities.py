@@ -24,8 +24,9 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall','Average Train Time']
 
-approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
-outfile_name = 'Baseline.csv'
+#approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
+approx_index = np.arange(0,2)
+outfile_name = 'Approx_2.csv'
 
 output_path = 'C:\\Users\\Landon\\Documents\\GitHub\Convolutional-Neural-Networks\\' + \
                 'Error-Compensation-Attacks\\Raw_Data_v1'
@@ -36,51 +37,42 @@ class ApproximationLayer (keras.layers.Layer):
     """ Approximation Layer Object, 
             Inherits from Keras Layer Object """
 
-    def __init__(self,rows=[],cols=[]):
+    def __init__(self,rows=[],cols=[],name=''):
         """ Initialize Layer Instance """
-        super(ApproximationLayer,self).__init__(trainable=False)
-        
-        self.rows = rows    # rows to approx
-        self.cols = cols    # cols to approx
+        super(ApproximationLayer,self).__init__(trainable=False,name=name)    
+        self.rows = tf.convert_to_tensor(rows[:],dtype='int32')    # rows to approx
+        self.cols = tf.convert_to_tensor(cols[:],dtype='int32')    # cols to approx
         self.nchs = 3       # number of channels
+        self.W = self.init_W()
 
-    def approximate (self,X,beta):
-        """ Apply Aproximations to samples in batch X """
-        W,H = X.shape[1],X.shape[2]
-        X = np.copy(X)                  
-        for x in X:                         # each sample    
-            for r in self.rows:             # each row to approximate     
-                for w in range(W):          # full width
-                    for j in range(self.nchs):      # each channel (RGB?)
-                        # Mute all bits
-                        #x[r][w][j] -= 128 if (x[r][w][j] >= 128) else (x[r][w][j])
-                        x[r][w][j] = 0
-            for c in self.cols:             # each col to approximate
-                for h in range(H):          # full height
-                    for j in range(self.nchs):  # each channel (RGB)
-                        # Mute all bits
-                        #x[h][c][j] -= 128 if (x[h][c][j] >= 128) else (x[h][c][j])
-                        x[h][c][j] = 0
-        return X
-
+    def init_W (self):
+        """ Create Approximation weighting Matrix """
+        W = np.ones(shape=[32,32,3])
+        W[self.rows[0]:self.rows[-1]] = 0.          # remove top rows
+        W[32-self.rows[-1]:32-self.rows[0]] = 0.    # remove bottom rows
+        W[:,self.rows[0]:self.rows[-1]] = 0.          # remove top rows
+        W[:,32-self.rows[-1]:32-self.rows[0]] = 0.    # remove bottom rows
+        W = tf.Variable(W,trainable=False,dtype='float32')
+        return W
+        
     def call (self,X):
         """ Call Layer Object w/ X, return output Y """
-        beta = True         # additional trigger condition
-        Y = self.approximate(X,beta)
-        return Y
+        beta = True                             # if True
+        if beta == True:                        # use approx
+            return tf.math.multiply(self.W,X)   # return hadamard prod
+        else:               # use exact
+            return X        # return as-is
 
 class CompensationLayer (keras.layers.Layer):
     """ Compensation Layer Object, 
             Inherits from Keras Layer Object """
 
-    def __init__(self,rows=[],cols=[]):
+    def __init__(self,rows=[],cols=[],name=''):
         """ Initialize Layer Instance """
-        super(CompensationLayer,self).__init__(trainable=False)
-        
-        self.b = int(len(rows)/2)
+        super(CompensationLayer,self).__init__(trainable=False,name=name)
+       
+
         self.rows = rows        # rows to compensate
-        self.toprows = rows[:self.b]
-        self.botrows = rows[self.b:]
         self.cols = cols        # cols to compensate
         self.nchs = 3           # number of channels
 
@@ -105,17 +97,6 @@ class CompensationLayer (keras.layers.Layer):
         Y = self.compensate(X)
         return Y
 
-class AbsoluteValueLayer (keras.layers.Layer):
-    """ Compute absolute value of inputs """
-
-    def __init__(self,rows=[],cols=[]):
-        """ Initialize Layer Instance """
-        super(AbsoluteValueLayer,self).__init__(trainable=False)
-
-    def call (self,X):
-        """ return absolute value """
-        return tf.math.abs(X)
-
         #### PREPROCESSING DEFINITIONS ####
 
 def Load_CIFAR10():
@@ -124,11 +105,13 @@ def Load_CIFAR10():
     (X_train,y_train),(X_test,y_test) = keras.datasets.cifar10.load_data()
     return X_train,y_train,X_test,y_test
 
-def Network_Model (name,kernel_sizes):
+def Network_Model (name,kernel_sizes,rows,cols):
     """ Create Keras Neural Network Sequential Object """
     model = keras.models.Sequential(name=name)
     model.add(keras.layers.InputLayer(input_shape=(32,32,3),name='Input'))
 
+    model.add(ApproximationLayer(rows=rows,cols=cols,name='Approx'))
+    #model.add(CompensationLayer(rows=rows,cols=cols,name='Comp'))
     # Each Layer Group
     for i,side in enumerate(kernel_sizes):
         model.add(keras.layers.Conv2D(filters=64,kernel_size=side,strides=(1,1),padding='same',

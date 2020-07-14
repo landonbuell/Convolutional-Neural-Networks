@@ -42,23 +42,6 @@ if __name__ == '__main__':
         N_iters = 4             # Time to repeat each model
         n_epochs = 10           # epochs over data set
 
-        utils.Plot_Sample(X_test[1],' ')
-
-        # APPROXIMATIONS
-        print("Approximating Data...\n")
-        ApproxLayer = utils.ApproximationLayer(rows=utils.approx_index,
-                                               cols=utils.approx_index)
-        #X_train = ApproxLayer.call(X_train)
-        #X_test = ApproxLayer.call(X_test)
-        #utils.Plot_Sample(X_test[1],' ')
-
-        # COMPENSATIONS
-        print("Compensating Data...\n")
-        CompLayer = utils.CompensationLayer(rows=utils.approx_index,
-                                            cols=utils.approx_index)
-
-        #X_train = CompLayer.call(X_train)
-        #X_test = CompLayer.call(X_test)
         #utils.Plot_Sample(X_test[1],' ')
 
         # ITERATE BY LAYER
@@ -73,7 +56,8 @@ if __name__ == '__main__':
                 for i in range(N_iters):            # Each Iteration
                     print('\t\tIteration: '+str(i)+'-',time.perf_counter())
 
-                    MODEL = utils.Network_Model(name=model_name,kernel_sizes=KERNEL_SIZE)
+                    MODEL = utils.Network_Model(name=model_name,kernel_sizes=KERNEL_SIZE,
+                                                rows=utils.approx_index,cols=utils.approx_index)
                     t_0 = time.perf_counter()
                     HIST = MODEL.fit(x=X_train,y=y_train,batch_size=128,
                                      epochs=n_epochs,verbose=0)             # train model
