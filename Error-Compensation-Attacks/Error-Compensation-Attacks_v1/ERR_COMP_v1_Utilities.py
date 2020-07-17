@@ -9,6 +9,7 @@ Error-Comp-v1
 
 import numpy as np
 import matplotlib.pyplot as plt
+import datetime
 import os
 
 import tensorflow as tf
@@ -25,8 +26,8 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall','Average Train Time']
 
 #approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
-approx_index = np.arange(0,2)
-outfile_name = 'Approx_2.csv'
+approx_index = np.arange(0,8)
+outfile_name = 'Approx8.csv'
 
 output_path = 'C:\\Users\\Landon\\Documents\\GitHub\Convolutional-Neural-Networks\\' + \
                 'Error-Compensation-Attacks\\Raw_Data_v1'
@@ -40,28 +41,30 @@ class ApproximationLayer (keras.layers.Layer):
     def __init__(self,rows=[],cols=[],name=''):
         """ Initialize Layer Instance """
         super(ApproximationLayer,self).__init__(trainable=False,name=name)    
-        self.rows = tf.convert_to_tensor(rows[:],dtype='int32')    # rows to approx
-        self.cols = tf.convert_to_tensor(cols[:],dtype='int32')    # cols to approx
+        self.rows = rows    # rows to approx
+        self.cols = cols    # cols to approx
         self.nchs = 3       # number of channels
         self.W = self.init_W()
 
     def init_W (self):
         """ Create Approximation weighting Matrix """
         W = np.ones(shape=[32,32,3])
-        W[self.rows[0]:self.rows[-1]] = 0.          # remove top rows
-        W[32-self.rows[-1]:32-self.rows[0]] = 0.    # remove bottom rows
-        W[:,self.rows[0]:self.rows[-1]] = 0.          # remove top rows
-        W[:,32-self.rows[-1]:32-self.rows[0]] = 0.    # remove bottom rows
-        W = tf.Variable(W,trainable=False,dtype='float32')
+        W[self.rows[0]:self.rows[-1]] = 0          # remove top rows
+        W[32-self.rows[-1]:32-self.rows[0]] = 0    # remove bottom rows
+        W[:,self.rows[0]:self.rows[-1]] = 0          # remove top rows
+        W[:,32-self.rows[-1]:32-self.rows[0]] = 0    # remove bottom rows
+        W = tf.Variable(W,trainable=False,dtype='int32')
         return W
         
     def call (self,X):
         """ Call Layer Object w/ X, return output Y """
-        beta = True                             # if True
-        if beta == True:                        # use approx
-            return tf.math.multiply(self.W,X)   # return hadamard prod
-        else:               # use exact
-            return X        # return as-is
+        now = datetime.datetime.now()
+        if (now.microsecond % 2) == 0 :     # even microsecond
+            # beta = True, commence attack!
+            return self.W*X     # return hadamard prod
+        else:                   # use exact
+            # beta = False, use exact approximation
+            return X            # return as-is
 
 class CompensationLayer (keras.layers.Layer):
     """ Compensation Layer Object, 
@@ -70,8 +73,7 @@ class CompensationLayer (keras.layers.Layer):
     def __init__(self,rows=[],cols=[],name=''):
         """ Initialize Layer Instance """
         super(CompensationLayer,self).__init__(trainable=False,name=name)
-       
-
+      
         self.rows = rows        # rows to compensate
         self.cols = cols        # cols to compensate
         self.nchs = 3           # number of channels
@@ -110,8 +112,9 @@ def Network_Model (name,kernel_sizes,rows,cols):
     model = keras.models.Sequential(name=name)
     model.add(keras.layers.InputLayer(input_shape=(32,32,3),name='Input'))
 
-    model.add(ApproximationLayer(rows=rows,cols=cols,name='Approx'))
+    #model.add(ApproximationLayer(rows=rows,cols=cols,name='Approx'))
     #model.add(CompensationLayer(rows=rows,cols=cols,name='Comp'))
+
     # Each Layer Group
     for i,side in enumerate(kernel_sizes):
         model.add(keras.layers.Conv2D(filters=64,kernel_size=side,strides=(1,1),padding='same',

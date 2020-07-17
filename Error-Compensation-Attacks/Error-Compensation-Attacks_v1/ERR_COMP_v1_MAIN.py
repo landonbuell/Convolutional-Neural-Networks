@@ -42,8 +42,6 @@ if __name__ == '__main__':
         N_iters = 4             # Time to repeat each model
         n_epochs = 10           # epochs over data set
 
-        #utils.Plot_Sample(X_test[1],' ')
-
         # ITERATE BY LAYER
         for N_LAYERS in LAYER_MODELS.keys():            # Each number of layers
             print('Layers: '+str(N_LAYERS)+'-',time.perf_counter())     # indicate layers
