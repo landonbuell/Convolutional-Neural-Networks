@@ -26,8 +26,8 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall','Average Train Time']
 
 #approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
-approx_index = np.arange(0,8)
-outfile_name = 'Approx8.csv'
+approx_index = np.arange(0,4)
+outfile_name = 'Approx4.csv'
 
 output_path = 'C:\\Users\\Landon\\Documents\\GitHub\Convolutional-Neural-Networks\\' + \
                 'Error-Compensation-Attacks\\Raw_Data_v1'
@@ -53,7 +53,7 @@ class ApproximationLayer (keras.layers.Layer):
         W[32-self.rows[-1]:32-self.rows[0]] = 0    # remove bottom rows
         W[:,self.rows[0]:self.rows[-1]] = 0          # remove top rows
         W[:,32-self.rows[-1]:32-self.rows[0]] = 0    # remove bottom rows
-        W = tf.Variable(W,trainable=False,dtype='int32')
+        W = tf.Variable(W,trainable=False,dtype='float32')
         return W
         
     def call (self,X):
@@ -112,7 +112,7 @@ def Network_Model (name,kernel_sizes,rows,cols):
     model = keras.models.Sequential(name=name)
     model.add(keras.layers.InputLayer(input_shape=(32,32,3),name='Input'))
 
-    #model.add(ApproximationLayer(rows=rows,cols=cols,name='Approx'))
+    model.add(ApproximationLayer(rows=rows,cols=cols,name='Approx'))
     #model.add(CompensationLayer(rows=rows,cols=cols,name='Comp'))
 
     # Each Layer Group

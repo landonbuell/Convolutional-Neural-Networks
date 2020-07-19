@@ -22,9 +22,8 @@ if __name__ == '__main__':
     data_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data_v1'
     expt_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Presentations/Error-Comp-Attacks-v1'
 
-    CSV_FILES = [   'Baseline.csv',
-                 #'Approx_2.csv','Approx_4.csv','Approx_6.csv','Approx_8.csv',
-                 #'Comp_2.csv','Comp_4.csv','Comp_6.csv','Comp_8.csv'
+    CSV_FILES = [   'Baseline.csv','Approx4.csv','Approx6.csv','Approx8.csv'
+                 
                  ]
 
     files_objs = []
@@ -36,10 +35,9 @@ if __name__ == '__main__':
     os.chdir(expt_path)
 
     labs=[  'Baseline Model',
-          #'2 Pixel Approximation','4 Pixel Approximation',
-          #'6 Pixel Approximation','8 Pixel Approximation',
-          #'2 Pixel Compensation', '4 Pixel Compensation',
-          #'6 Pixel Compensation', '8 Pixel Compensation'
+          '4 Pixel Approximation',
+          '6 Pixel Approximation',
+          '8 Pixel Approximation'
           ]
 
     # Loss Function values

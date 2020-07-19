@@ -122,9 +122,9 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False
     data = np.array([x.__getattribute__(attrbs)[metric] for x in objs])
     plt.plot(kernel_sides,data[0],color='red',linestyle='-',marker='o',ms=16,label=labs[0])
 
-    #plt.plot(kernel_sides,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
-    #plt.plot(kernel_sides,data[2],color='cyan',linestyle='--',marker='^',ms=16,label=labs[2])
-    #plt.plot(kernel_sides,data[3],color='green',linestyle='--',marker='^',ms=16,label=labs[3])
+    plt.plot(kernel_sides,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
+    plt.plot(kernel_sides,data[2],color='cyan',linestyle='--',marker='^',ms=16,label=labs[2])
+    plt.plot(kernel_sides,data[3],color='green',linestyle='--',marker='^',ms=16,label=labs[3])
     #plt.plot(kernel_sides,data[4],color='purple',linestyle='--',marker='^',ms=16,label=labs[4])
 
     #plt.plot(kernel_sides,data[5],color='gray',linestyle='-.',marker='s',ms=16,label=labs[5])

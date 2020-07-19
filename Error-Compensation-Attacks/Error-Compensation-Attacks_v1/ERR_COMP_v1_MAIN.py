@@ -21,8 +21,7 @@ import ERR_COMP_v1_Utilities as utils
             #### MAIN EXECUABLE ####
 
 if __name__ == '__main__':
-
-       
+      
         # PRE-PROCESSING 
         init_path = os.getcwd()
         X_train,y_train,X_test,y_test = utils.Load_CIFAR10()
