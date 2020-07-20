@@ -4,23 +4,26 @@
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Deep Feed-Forward Neural Network Structure}{1}\protected@file@percent }
 \newlabel{feed-forward}{{1}{1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Optimization Motivation}{1}\protected@file@percent }
+\newlabel{DNN Composition}{{2}{1}}
 \citation{James}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Forward propagation system in a standard deep neural network. Each iteration in the main \textit  {for-loop} represents the execution of a layer, and passing the result to the "next" layer function. A practical application of this algorithm should include batches of samples instead of a single sample.}}{2}\protected@file@percent }
+\newlabel{algFeedForward}{{1}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Optimization Motivation}{2}\protected@file@percent }
 \citation{Geron}
 \citation{Goodfellow}
 \citation{Goodfellow}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}The $\Theta $ Object}{2}\protected@file@percent }
-\newlabel{THETA}{{2}{2}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Gradient Based Learning}{3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Gradient Descent}{3}\protected@file@percent }
-\newlabel{cost gradient}{{3}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}The $\Theta $ Object}{3}\protected@file@percent }
+\newlabel{THETA}{{4}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Gradient Based Learning}{4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Gradient Descent}{4}\protected@file@percent }
+\newlabel{cost gradient}{{5}{4}}
 \citation{Goodfellow}
-\newlabel{gradient step}{{4}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Backwards-Propagation}{4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Stochastic Gradient Descent}{4}\protected@file@percent }
-\newlabel{back-prop}{{2.2}{5}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Backwards Propagation System in a fully connected neural network model for a single sample.}}{5}\protected@file@percent }
+\newlabel{gradient step}{{6}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Backwards-Propagation}{5}\protected@file@percent }
 \bibstyle{apalike}
 \bibcite{Geron}{1}
 \bibcite{Goodfellow}{2}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Backwards propagation system, in a standard deep neural network. Each iteration in the first \textit  {for-loop} computes the gradient of the cost function $J$ with respect to the weight and bias arrays. Each element in those arrays is then the discrete gradient of that parameter. A practical application of this algorithm should include batches of samples instead of a single sample}}{6}\protected@file@percent }
+\newlabel{algBackProp}{{2}{6}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Stochastic Gradient Descent}{6}\protected@file@percent }
 \bibcite{James}{3}

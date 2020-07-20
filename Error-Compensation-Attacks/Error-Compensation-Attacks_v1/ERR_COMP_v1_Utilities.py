@@ -28,8 +28,8 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall','Average Train Time']
 
 #approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
-approx_index = np.arange(0,8)
-outfile_name = 'Comp8.csv'
+approx_index = np.arange(0,2)
+outfile_name = 'Comp2.csv'
 
 output_path = 'C:\\Users\\Landon\\Documents\\GitHub\Convolutional-Neural-Networks\\' + \
                 'Error-Compensation-Attacks\\Raw_Data_v1'
@@ -83,16 +83,19 @@ class CompensationLayer (keras.layers.Layer):
         self.nchs = 3           # number of channels
 
     def compensate(self,X):
-        """ Apply Compensation to samples in batch X """      
-        # Compensate top & Bottom rows
-        X = np.copy(X)
-        X[:,self.rows[0]:self.rows[-1],:,:] = \
-            X[:,self.rows[0]+self.rowlen:self.rows[-1]+self.rowlen,:,:] 
-        X[:,32-self.rows[-1]:32-self.rows[0],:,:] = \
-            X[:,32-self.rows[-1]-self.rowlen:32-self.rows[0]-self.rowlen,:,:] 
-        #X = tf.transpose(X,perm=(0,2,1,3))  
-        
-
+        """ Apply Compensation to samples in batch X """   
+        # Top & Bottom
+        X = X[:,:32-self.rows[-1],:,:]      # remove bottom
+        X = X[:,self.rows[-1]:,:,:]         # remove top
+        top_patch = X[:,:self.rows[-1],:,:]
+        btm_patch = X[:,-self.rows[-1]:,:,:]
+        X = tf.concat([top_patch,X,btm_patch],1)
+        # Left & right
+        X = X[:,:,:32-self.rows[-1],:]      # remove right
+        X = X[:,:,self.rows[-1]:,:]         # remove left
+        lft_patch = X[:,:,:self.rows[-1],:]
+        rgt_patch = X[:,:,-self.rows[-1]:,:]
+        X = tf.concat([lft_patch,X,rgt_patch],2)
         return X
 
     def call (self,X):

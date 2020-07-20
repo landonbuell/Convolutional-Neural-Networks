@@ -15,6 +15,7 @@
 
 \usepackage{algorithm}
 \usepackage{algorithmic}
+\usepackage{algpseudocode}
 
 \pagestyle{fancy}
 \lhead{Landon Buell}
@@ -59,32 +60,13 @@ x^{(l)} = f^{(l)}\big[x^{(l-1)}\big] = a^{(l)} \big[ W^{(l)} x^{(l-1)} + b^{(l)}
 For a network with $L$ layers, we can define a forward pass computation with algorithm (\ref{algFeedForward})
 
 \begin{algorithm}[H]
-\caption{Forward propagation system in a standard deep neural network. Each iteration in the main \textit{for-loop} represents the execution of a layer, and passing the result to the "next" layer function. A practical application of this algorithm should include batches of samples instead of a single sample.}
+\caption{Forward propagation system in a standard deep neural network. Each iteration in the main \textit{for-loop} represents the execution of a layer, adn passing the result to the "next" layer function. A practical application of this algorithm should include batches of samples instead of a single sample.}
 \label{algFeedForward}
 
-\begin{algorithmic}
-\REQUIRE Network with $L$ layers - $0,1,2,....,L-2,L-1$
-\REQUIRE Set of weighting parameters - $W^{(i)}, i \in \{0,1,....,L-1\}$
-\REQUIRE Set of bias parameters - $b^{(i)}, i \in \{0,1,....,L-1\}$
-\REQUIRE Set of layer activation function - $a^{(i)}, i \in \{0,1,....,L-1\}$
-\REQUIRE Input sample - $x^{(0)}$
-\REQUIRE Arrays to hold pre-nonlinear activation - $Z = \{\}$
-\REQUIRE Arrays to hold post-nonlinear activation - $X = \{\}$
+\begin{algorthimic}
+\REQUIRE : Network with $L$ layers - $0,1,2,....,L-2,L-1$
+\REQUIRE : Set of weighting parameters $W^{(i)} \in \{0,1,....,L-1\}$
 
-\FOR {$l = 1,2,...,L-2,L-1$}
-	\item Compute pre-nonlinear activation
-	\item $z^{(l)} \leftarrow W^{(l)}x^{(l-1)} + b^{(l)}$
-	\item Apply activation function
-	\item $x^{(l)} \leftarrow a^{(l)}[z^{(l)}]$
-	\item Store values for later use in optimizer
-	\item $Z \leftarrow Z.add(z^{(l)})$
-	\item $X \leftarrow X.add(x^{(l)})$
-\ENDFOR
-
-\item Network final prediction is last object in 'act' array.
-\item $y^* \leftarrow x^{(L-1)} = X[-1]$
-\item Return the pre-nonlinear activations and final-nonlinear activations
-\RETURN $Z , X$
 
 \end{algorithmic}
 \end{algorithm}
@@ -102,7 +84,7 @@ $Y = \{y_0,y_1,y_2,...\}$, such that element $x_i$ should produce result $y_i$, 
 
 \subsection{The $\Theta$ Object}
 
-\paragraph*{}It is worth reinforcing that although we have implied $\Theta$ to be a single dimensional column-vector-like object, it can in reality, hold just about any shape. It may be more convenient to express it as a \textit{set}, containing the parameters for each layer's kernels, weights and biases in the form of vectors or matrices. It is often reasonable to convey $\Theta$ not as a tensor-like object, but rather a set of objects, each containing dynamic variable parameters. 
+\paragraph*{}It is worth reinforcing that although we have implied $\Theta$ to be a single dimensional column-vector-like object, it can in reality, hold just about any shape. It may be more convenient to express it as a \textit{set}, containing the parameters for each layer's kernels, weights and biases in the form of vectors or matrices. It is often reasonable to convey $\Theta$ not as a tensor-like object, but rather a set of objects, concatenated from each layer: 
 \begin{equation}
 \label{THETA}
 \Theta = \big\{ W^{(0)} , b^{(0)} , W^{(i)} , b^{(i)}, W^{(l)} , b^{(l)}, ....,
@@ -160,40 +142,49 @@ x^{(l)} &= a^{(l)} \big[ z^{(l)} \big]
 \end{equation}
 Where $W^{(l)}$ is a weighting matrix, $b^{(l)}$ is a bias vector, and $x^{(l-1)}$ is the activation from the previous layer. The array $z^{(l)}$ represents the \textit{pre-activations} to which the an activation function $a^{(l)}$ is applied to. This algorithm is adapted from Goodfellow, 2017 \cite{Goodfellow}.
 
-\begin{algorithm}[H]
-\caption{Backwards propagation system, in a standard deep neural network. Each iteration in the first \textit{for-loop} computes the gradient of the cost function $J$ with respect to the weight and bias arrays. Each element in those arrays is then the discrete gradient of that parameter. A practical application of this algorithm should include batches of samples instead of a single sample}
-\label{algBackProp}
-
+\begin{algorithm}
+\label{back-prop}
+\caption{Backwards Propagation System in a fully connected neural network model for a single sample.}
 \begin{algorithmic}
-\REQUIRE Cost/Objective function $J(y,y^*)$ and learning rate $\alpha$
-\REQUIRE Set of weighting parameters - $W^{(i)}, i \in \{0,1,....,L-1\}$
-\REQUIRE Set of bias parameters - $b^{(i)}, i \in \{0,1,....,L-1\}$
-\REQUIRE Set of layer activation function - $a^{(i)}, i \in \{0,1,....,L-1\}$
-\REQUIRE Set of layer activation function derivatives - $\partial a^{(i)}, i \in \{0,1,....,L-1\}$
-\REQUIRE Set of pre-nonlinear activation - $Z^{(i)}, i \in \{0,1,....,L-1\}$
-\REQUIRE Set of post-nonlinear activation - $X^{(i)}, i \in \{0,1,....,L-1\}$
 
-Execute forward pass in algorithm (\ref{algFeedForward}) and compute the gradient of the cost with respect to the final layer activations \\
-$dx \leftarrow \nabla_{y^*}J(y,y^*)$ \\
+\REQUIRE Network depth of $L$ layers ,  cost function $J$ , learning rate $\alpha$
+\REQUIRE Object $\Theta$ containing all network parameters as in eqn. (\ref{THETA})
+\REQUIRE Object of activation function derivatices: $\partial\vec{a}^{(i)}$ 
+\REQUIRE Object of final activations by layer: $\vec{x}^{(i)}$ with $i \in [1,2,...,L-2,L-1]$
+\REQUIRE Object of pre-activations by layer: $\vec{z}^{(i)}$ with $i \in [1,2,...,L-2,L-1]$
+\REQUIRE Sample target output $y$ (usually one-hot-encoded)
 
-\FOR {$L-1,L-2,...,2,1$}
-	\item Compute gradient w.r.t pre-nonlinear activation portion of layer function
-	\item $dx^{(l)} \leftarrow \nabla_{Z^{(l)}}J = dx^{(l)} \odot \partial a^{(l)}[ Z^{(l)} ]$
-	\item Compute gradient w.r.t weighting and bias elements
-	\item $db \leftarrow \nabla_{b^{(l)}}J = dx^{(l)}$
-	\item $dW \leftarrow \nabla_{W^{(l)}}J = dx^{(l)} \cdot X^{(l-1)}$
-	\item add layer gradients to respective objects
-	\item $W^{(l)} \leftarrow W^{(l)} + -\alpha(dW)$
-	\item $b^{(l)} \leftarrow b^{(l)} + -\alpha(db)$
+Array to hold weight updates: $\nabla W \leftarrow \big\{ \big\}$ \\
+Array to hold bias updates: $\nabla b \leftarrow \big\{ \big\}$) \\
+Compute gradient of $J$ w.r.t output layer $\vec{x}^{(0)}$: \\
+
+$dx \leftarrow \nabla_{y^*} \big[ J(y^*,y) \big]$ \\
+
+\FOR {$l = L-2 , L-3 , ... ,2,1$}
+	\item Compute gradient of pre-activation values: 
+	\item $dx \leftarrow \nabla_{z^{(l)}} \big[ J \big] = dx \odot \partial\vec{a}^{(l)}\big[ z^{(l)} \big]$
+	\item Compute gradient w.r.t parameters in bais vectors and weighting arrays:
+	\item $db^{(l)} \leftarrow \nabla_{b^{(l)}} \big[ J \big] = dx$
+	\item $dW^{(l)} \leftarrow \nabla_{W^{(l)}} \big[ J \big] = dx \cdot x^{(l-1)}$
+	\item Insert $db^{(l)}$ and $dW^{(l)}$ into arrays $\nabla b$ and $\nabla W$ respectively
+
 \ENDFOR
 
-\item Return Updated weight and bias parameters
-\RETURN $W , b$
+ASSERT: $dW^{(i)}$ has same dimension as $W^{(i)}$ for $i \in [0,1,...,L-3,L-2]$ \\
+ASSERT: $db^{(i)}$ has same dimension as $b^{(i)}$ for $i \in [0,1,...,L-3,L-2]$ \\
+
+\FOR {$l = 0,1,...,L-3,L-2$}
+	\item Use each $db$ and $dW$ object, and the learning rate to 
+	\item $W^{(i)} \leftarrow W^{(i)} + (\alpha) dW^{(i)}$
+	\item $b^{(i)} \leftarrow b^{(i)} + (\alpha) db^{(i)}$
+\ENDFOR
+
+\RETURN Object containing updated weights: $\hat{W}^{(i)}$ with $i \in [1,1,...,L-2,L-1]$
+\RETURN Object containing updated biases: $\hat{b}^{(i)}$ with $i \in [1,1,...,L-2,L-1]$
 
 \end{algorithmic}
 \end{algorithm}
 
-\subsection*{Challenges of Gradient-Based Learning}
 
 
 

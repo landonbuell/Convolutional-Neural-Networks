@@ -125,12 +125,12 @@ def Plot_Metric (objs=[],attrbs='',metric='',ylab='',labs=[],title='',save=False
     plt.plot(kernel_sides,data[1],color='blue',linestyle='--',marker='^',ms=16,label=labs[1])
     plt.plot(kernel_sides,data[2],color='cyan',linestyle='--',marker='^',ms=16,label=labs[2])
     plt.plot(kernel_sides,data[3],color='green',linestyle='--',marker='^',ms=16,label=labs[3])
-    #plt.plot(kernel_sides,data[4],color='purple',linestyle='--',marker='^',ms=16,label=labs[4])
+    plt.plot(kernel_sides,data[4],color='purple',linestyle='--',marker='^',ms=16,label=labs[4])
 
-    #plt.plot(kernel_sides,data[5],color='gray',linestyle='-.',marker='s',ms=16,label=labs[5])
-    #plt.plot(kernel_sides,data[6],color='orange',linestyle='-.',marker='s',ms=16,label=labs[6])
-    #plt.plot(kernel_sides,data[7],color='magenta',linestyle='-.',marker='s',ms=16,label=labs[7])
-    #plt.plot(kernel_sides,data[8],color='yellow',linestyle='-.',marker='s',ms=16,label=labs[8])
+    plt.plot(kernel_sides,data[5],color='gray',linestyle='-.',marker='s',ms=16,label=labs[5])
+    plt.plot(kernel_sides,data[6],color='orange',linestyle='-.',marker='s',ms=16,label=labs[6])
+    plt.plot(kernel_sides,data[7],color='magenta',linestyle='-.',marker='s',ms=16,label=labs[7])
+    plt.plot(kernel_sides,data[8],color='yellow',linestyle='-.',marker='s',ms=16,label=labs[8])
 
     plt.xticks(kernel_sides,['2x2','3x3','4x4','5x5','6x6'],size=50)
     if metric in ['Average Precision','Average Recall']:
