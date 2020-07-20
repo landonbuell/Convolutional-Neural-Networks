@@ -17,6 +17,8 @@ import tensorflow.keras as keras
 
             #### VARIABLES ####
 
+
+
 N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
                   'Double_Layer':   [(2,2),(3,3),(4,4),(5,5),(6,6)],
                   #'Triple_Layer':   [(2,2,2),(3,3,3),(4,4,4),(5,5,5),(6,6,6)],
@@ -26,8 +28,8 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall','Average Train Time']
 
 #approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
-approx_index = np.arange(0,4)
-outfile_name = 'Approx4.csv'
+approx_index = np.arange(0,8)
+outfile_name = 'Comp8.csv'
 
 output_path = 'C:\\Users\\Landon\\Documents\\GitHub\Convolutional-Neural-Networks\\' + \
                 'Error-Compensation-Attacks\\Raw_Data_v1'
@@ -76,22 +78,21 @@ class CompensationLayer (keras.layers.Layer):
       
         self.rows = rows        # rows to compensate
         self.cols = cols        # cols to compensate
+        self.rowlen = len(self.rows)
+        self.collen = len(self.cols)
         self.nchs = 3           # number of channels
 
     def compensate(self,X):
-        """ Apply Compensation to samples in batch X """
-        b = len(self.rows)/2         # approx border width
-        X = np.copy(X)         
-        for x in X:             # each sample 
+        """ Apply Compensation to samples in batch X """      
+        # Compensate top & Bottom rows
+        X = np.copy(X)
+        X[:,self.rows[0]:self.rows[-1],:,:] = \
+            X[:,self.rows[0]+self.rowlen:self.rows[-1]+self.rowlen,:,:] 
+        X[:,32-self.rows[-1]:32-self.rows[0],:,:] = \
+            X[:,32-self.rows[-1]-self.rowlen:32-self.rows[0]-self.rowlen,:,:] 
+        #X = tf.transpose(X,perm=(0,2,1,3))  
+        
 
-            x[self.toprows] = x[self.b:2*self.b]                # patch top
-            x[self.botrows] = x[(32-(2*self.b)):(32-self.b)]    # patch bottom         
-            x = np.transpose(x,axes=(1,0,2))
-
-            x[self.toprows] = x[self.b:2*self.b]                # patch top
-            x[self.botrows] = x[(32-(2*self.b)):(32-self.b)]    # patch bottom 
-            x = np.transpose(x,axes=(1,0,2))
-                
         return X
 
     def call (self,X):
@@ -113,7 +114,7 @@ def Network_Model (name,kernel_sizes,rows,cols):
     model.add(keras.layers.InputLayer(input_shape=(32,32,3),name='Input'))
 
     model.add(ApproximationLayer(rows=rows,cols=cols,name='Approx'))
-    #model.add(CompensationLayer(rows=rows,cols=cols,name='Comp'))
+    model.add(CompensationLayer(rows=rows,cols=cols,name='Comp'))
 
     # Each Layer Group
     for i,side in enumerate(kernel_sizes):

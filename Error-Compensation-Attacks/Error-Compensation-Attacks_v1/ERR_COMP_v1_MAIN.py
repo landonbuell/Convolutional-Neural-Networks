@@ -41,6 +41,13 @@ if __name__ == '__main__':
         N_iters = 4             # Time to repeat each model
         n_epochs = 10           # epochs over data set
 
+        X = X_train[0:10]
+        CompLayer = utils.CompensationLayer(rows=utils.approx_index,
+                                            cols=utils.approx_index)
+        Y = CompLayer.call(X)
+        utils.Plot_Sample(Y[0],' ')
+
+
         # ITERATE BY LAYER
         for N_LAYERS in LAYER_MODELS.keys():            # Each number of layers
             print('Layers: '+str(N_LAYERS)+'-',time.perf_counter())     # indicate layers
