@@ -28,11 +28,11 @@ N_layer_models = {'Single_Layer':   [(2,),(3,),(4,),(5,),(6,)],
 dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall','Average Train Time']
 
 #approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
-approx_index = np.arange(0,2)
-outfile_name = 'Comp2.csv'
+approx_index = np.arange(0,8)
+outfile_name = 'Approx8B.csv'
 
 output_path = 'C:\\Users\\Landon\\Documents\\GitHub\Convolutional-Neural-Networks\\' + \
-                'Error-Compensation-Attacks\\Raw_Data_v1'
+                'Error-Compensation-Attacks\\Raw_Data_v1B'
 
             #### CLASS OBJECTS ####
 
@@ -61,7 +61,7 @@ class ApproximationLayer (keras.layers.Layer):
     def call (self,X):
         """ Call Layer Object w/ X, return output Y """
         now = datetime.datetime.now()
-        if (now.microsecond % 2) == 0 :     # even microsecond
+        if (now.microsecond % 3) == 0 :     # ~33%
             # beta = True, commence attack!
             return self.W*X     # return hadamard prod
         else:                   # use exact
@@ -117,7 +117,7 @@ def Network_Model (name,kernel_sizes,rows,cols):
     model.add(keras.layers.InputLayer(input_shape=(32,32,3),name='Input'))
 
     model.add(ApproximationLayer(rows=rows,cols=cols,name='Approx'))
-    model.add(CompensationLayer(rows=rows,cols=cols,name='Comp'))
+    #model.add(CompensationLayer(rows=rows,cols=cols,name='Comp'))
 
     # Each Layer Group
     for i,side in enumerate(kernel_sizes):

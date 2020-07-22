@@ -193,7 +193,7 @@ $dx \leftarrow \nabla_{y^*}J(y,y^*)$ \\
 \end{algorithmic}
 \end{algorithm}
 
-\subsection*{Challenges of Gradient-Based Learning}
+\subsection{Challenges of Gradient-Based Learning}
 
 
 
@@ -201,8 +201,38 @@ $dx \leftarrow \nabla_{y^*}J(y,y^*)$ \\
 
 \section{Stochastic Gradient Descent}
 
-\paragraph*{}Stochastic Gradient Descent (SGD) is considered to be amoung the more powerful and versatile variations of basic gradient-based optimization methods. It follows all of the same rules of previously introduce gradient descent, but add adds are sort of augmentation to it as well.
+\paragraph*{}Stochastic Gradient Descent (SGD) is considered to be among the more powerful and versatile variations of basic gradient-based optimization methods \cite{Geron}. It follows all of the same rules of previously introduced gradient descent and back propagation, but take advantage of a few extra tactics. The first and most obvious that we have compute the gradient over a \textit{mini-batch} of $m$ samples, and then average by the number of samples, and use this quantity to update the parameters in $\Theta$. This ensures that no single sample creates a bias in the optimization procedure. Rather, a random batch of samples which are ideally share similar distributions \cite{James}.
 
+\paragraph*{}Additionally, SGD often places more emphasis on the learning rate hyper-parameter $\alpha$. Instead of a constant, it is standard practice to  scale the learning rate to scale the learning rate according to the iteration number. Often, when the initial set of parameters are tested, the result gradient is large because it tends to me "far" from the local minimum. This, we begin with a larger learning rate to amplify the initial steps effects on the cost. As the solver proceeds, the loss tends to become smaller and smaller as it's gets "closer" to a local minimum, and thus the learning rate shrinks appropriately in order to ensure that a minimum is not overshot or skipped.
+
+\paragraph*{}For a learning rate that is constant, we denote $\alpha$ and for one that changes with each iteration $i$, we denote $\alpha_i$. Often the learning rate $alpha$ or learning rate schedule, $\alpha(i)$ is chosen with "trial-and error" as a hyper parameter, and it's exact value or change is values variable by each problem \cite{Goodfellow}. Additionally, Neural networks may employ a \textit{stopping criteria} $S$, which is either a numerical condition or a number of steps that if reached, the gradient descent optimizer stops executing and what ever set of parameters are chosen, is taken to be the solution. This is useful for ensuring that a network does not over fit on a set of data, and a network does not step and indefinite amount of time on a single batch.
+
+\paragraph*{}Below, we outline a pseudo-code example for executing stochastic gradient descent.
+
+\begin{algorithm}
+\caption{Stocastic Gradient Descent (SGD) in a neural network}
+\label{algSGD}
+
+\begin{algorithmic}
+
+\REQUIRE Learning rate $\alpha$ or learning rate schedule, $\alpha(i)$.
+\REQUIRE Subroutine/function to compute gradient of cost function.
+\REQUIRE Mini-batch size, $m$
+\REQUIRE Stopping criterion $S$
+
+\WHILE {Stopping Criterion $S$ is \FALSE}
+	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ whand corresponding target values 
+	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
+	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
+	\item $\Delta\Theta \leftarrow \frac{1}{m}\nabla_{\Theta} \big[ \sum_i J(y^{(i)},y^{*(i)}) \big] $
+	\item Apply update rule from batch, see eqn. (\ref{gradient step})
+	\item $\Theta \leftarrow \Theta + (-\alpha_i) \Delta\Theta$.
+	
+\ENDWHILE
+
+
+\end{algorithmic}
+\end{algorithm}
 
 % ================================================================
 
