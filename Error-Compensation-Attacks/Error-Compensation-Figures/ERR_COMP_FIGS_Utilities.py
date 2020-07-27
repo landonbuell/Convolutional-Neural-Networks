@@ -68,6 +68,7 @@ def Plot_PercentDiff (title,ylab,labs,ydata,save=False,show=True):
     plt.xlabel('2D Kernel Shape',size=40,weight='bold')
 
     kernel_sides = np.array([2,3,4,5,6])
+    plt.hlines(0,2,7,color='black')
 
     plt.plot(kernel_sides,ydata[0],color='blue',linestyle='-',marker='^',ms=20,label=labs[0])
     plt.plot(kernel_sides,ydata[1],color='green',linestyle='-',marker='^',ms=20,label=labs[1])

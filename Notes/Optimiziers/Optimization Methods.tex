@@ -205,12 +205,12 @@ $dx \leftarrow \nabla_{y^*}J(y,y^*)$ \\
 
 \paragraph*{}Additionally, SGD often places more emphasis on the learning rate hyper-parameter $\alpha$. Instead of a constant, it is standard practice to  scale the learning rate to scale the learning rate according to the iteration number. Often, when the initial set of parameters are tested, the result gradient is large because it tends to me "far" from the local minimum. This, we begin with a larger learning rate to amplify the initial steps effects on the cost. As the solver proceeds, the loss tends to become smaller and smaller as it's gets "closer" to a local minimum, and thus the learning rate shrinks appropriately in order to ensure that a minimum is not overshot or skipped.
 
-\paragraph*{}For a learning rate that is constant, we denote $\alpha$ and for one that changes with each iteration $i$, we denote $\alpha_i$. Often the learning rate $alpha$ or learning rate schedule, $\alpha(i)$ is chosen with "trial-and error" as a hyper parameter, and it's exact value or change is values variable by each problem \cite{Goodfellow}. Additionally, Neural networks may employ a \textit{stopping criteria} $S$, which is either a numerical condition or a number of steps that if reached, the gradient descent optimizer stops executing and what ever set of parameters are chosen, is taken to be the solution. This is useful for ensuring that a network does not over fit on a set of data, and a network does not step and indefinite amount of time on a single batch.
+\paragraph*{}For a learning rate that is constant, we denote $\alpha$ and for one that changes with each iteration $i$, we denote $\alpha_i$. Often the learning rate $\alpha$ or learning rate schedule, $\alpha(i)$ is chosen with "trial-and error" as a hyper parameter, and it's exact value or change is values variable by each problem \cite{Goodfellow}. Additionally, Neural networks may employ a \textit{stopping criteria} $S$, which is either a numerical condition or a number of steps that if reached, the gradient descent optimizer stops executing and what ever set of parameters are chosen, is taken to be the solution. This is useful for ensuring that a network does not over fit on a set of data, and a network does not step and indefinite amount of time on a single batch.
 
 \paragraph*{}Below, we outline a pseudo-code example for executing stochastic gradient descent.
 
 \begin{algorithm}
-\caption{Stocastic Gradient Descent (SGD) in a neural network}
+\caption{Stochastic Gradient Descent (SGD) in a neural network}
 \label{algSGD}
 
 \begin{algorithmic}
@@ -221,20 +221,74 @@ $dx \leftarrow \nabla_{y^*}J(y,y^*)$ \\
 \REQUIRE Stopping criterion $S$
 
 \WHILE {Stopping Criterion $S$ is \FALSE}
-	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ whand corresponding target values 
+	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
 	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
 	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
-	\item $\Delta\Theta \leftarrow \frac{1}{m}\nabla_{\Theta} \big[ \sum_i J(y^{(i)},y^{*(i)}) \big] $
+	\item $\Delta\Theta \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
 	\item Apply update rule from batch, see eqn. (\ref{gradient step})
-	\item $\Theta \leftarrow \Theta + (-\alpha_i) \Delta\Theta$.
-	
+	\item $\Theta \leftarrow \Theta + (-\alpha_i) \Delta\Theta$.	
+	\item $i \leftarrow i + 1$
 \ENDWHILE
-
 
 \end{algorithmic}
 \end{algorithm}
 
+\subsection{Momentum Hyper-parameter}
+
+\paragraph*{}Stochastic Gradient Descent is a powerful and versatile learning algorithm, but in higher dimensional parameter spaces may take a long time to execute and converge on a reasonable set of values for $\Theta$. Additionally, the learning rate, $\alpha$ can be chosen to accelerate this process but the exact appropriate value and consequences may vary drastically with each problem. For this reason, we can choose to add a \textit{momentum hyper-parameter} to the SGD optimizer method \cite{Geron}. This enables a faster convergence when faced with high curvature. 
+
+\paragraph*{}Momentum seeks to use an rolling average or previous gradients and continues to move in that direction, while exponentially decaying.  The name momentum is a loose reference to it's physical analog, in which a \textit{mass} is used to scale a \textit{velocity}. In this case, velocity is the gradient descent, being scaled by unit mass and additional hyper-parameter $\beta$. We denote momentum as a vector $v$, as it is reasonable to consider it as a velocity that moves through parameter space. When adding momentum to a SGD optimizer, the update rule changes to becomes:
+
+\begin{equation}
+\label{momentum update}
+\begin{split}
+v =&  \beta v + (-\alpha_i)\nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \Big] ,
+\hspace{1cm} \beta \in [0,1) \\
+\Theta =&  \Theta + v
+\end{split} 
+\end{equation}
+
+
+\paragraph*{}The velocity parameter works to accumulate the elements in the gradient vector with each iteration. A larger value of $\beta$ compared to 
+$\alpha$ is used to weight more previous iterations to calculate the affect on the next iteration.
+
+\begin{algorithm}
+\caption{Stochastic Gradient Descent (SGD) in a neural network}
+\label{algSGD}
+
+\begin{algorithmic}
+
+\REQUIRE Learning rate $\alpha$ or learning rate schedule, $\alpha(i)$.
+\REQUIRE Hyper-paramater $\beta \in [0,1)$
+\REQUIRE Subroutine/function to compute gradient of cost function.
+\REQUIRE Mini-batch size, $m$
+\REQUIRE Stopping criterion $S$
+
+\WHILE {Stopping Criterion $S$ is \FALSE}
+	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
+	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
+	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
+	\item $\Delta\Theta \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
+	\item Compute velocity, and apply update from eqn. (\ref{momentum update})
+	\item $v \leftarrow \beta v + (-\alpha_i)\Delta\Theta$
+	\item $\Theta \leftarrow \Theta + v$
+	\item $i \leftarrow i + 1$
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Nesterov's Momentum}
+
+
+\paragraph*{}
+
+
 % ================================================================
+
+\section{Adaptive Learning Algorithms}
+
+\subsection{}
 
 
 % ================================================================
@@ -246,7 +300,7 @@ $dx \leftarrow \nabla_{y^*}J(y,y^*)$ \\
 Géron Aurélien. \textit{Hands-on Machine Learning with Scikit-Learn and TensorFlow: Concepts, Tools, and Techniques to Build Intelligent Systems}. O'Reilly, 2017.
 
 \bibitem{Goodfellow}
-Goodfellow, Ian, et al.\textit{Deep Learning}. MIT Press, 2017.
+Goodfellow, Ian, et al. \textit{Deep Learning}. MIT Press, 2017.
 
 \bibitem{James}
 James, Gareth, et al. \textit{An Introduction to Statistical Learning with Applications in R}. Springer, 2017.

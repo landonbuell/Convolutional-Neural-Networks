@@ -55,5 +55,5 @@ if __name__ == '__main__':
         diff = utils.percent_diff(baseline,np.array(filedata[col],dtype=np.float64))
         dt.append(diff)        # add the percent diff
 
-    utils.Plot_PercentDiff('Percent Differences in Fitting Time','Percentage Difference',
+    utils.Plot_PercentDiff('Fitting Time Difference from Baseline','Percentage Difference',
                            labs=filedata.columns,ydata=dt)
