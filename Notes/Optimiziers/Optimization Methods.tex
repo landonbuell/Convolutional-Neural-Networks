@@ -139,8 +139,8 @@ $W^{(l)} \in \mathbb{R}^{N \times M} = \big\{ \theta_0 , \theta_1 , ... , \theta
 \paragraph*{}Both $\Theta^*$ and $\nabla_\Theta \big[ J(\Theta) \big]$ exist in the same dimensional space, $\mathbb{R}^k$, and thus can be added together - or rather we add the \textit{negative} gradient to decrease the cost. The elements in $\Theta^*$ provides a sort of starting point, and the elements in $-\nabla_\theta \big[ J(\Theta) \big]$ act as a sort of \textit{step} to take, such that changing each element, $\theta^*_i$ by some amount $\frac{\partial J}{\partial \theta_i}$ results in a small decrease in the overall cost function. Generally, across all parameters in the parameters object, we note this update rule as:
 
 \begin{equation}
-\label{gradient step}
-\Theta^* = \Theta^* + -\alpha \nabla_\Theta \big[ J(\Theta) \big]
+\label{gradient update}
+\Theta = \Theta + -\alpha \nabla_\Theta \big[ J(\Theta) \big]
 \end{equation}
 
 \paragraph*{}Another trouble arises when we reconsider that each element in the gradient vector is often not well-defined by a traditional mathematical function, meaning we cannot simply use symbols and standard calculus rules to find the necessary values in eqn. (\ref{gradient step}), we need to use numerical approximations, and \textit{back propagation} to compute each partial derivative. 
@@ -227,7 +227,7 @@ $dx \leftarrow \nabla_{y^*}J(y,y^*)$ \\
 	\item $\Delta\Theta \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
 	\item Apply update rule from batch, see eqn. (\ref{gradient step})
 	\item $\Theta \leftarrow \Theta + (-\alpha_i) \Delta\Theta$.	
-	\item $i \leftarrow i + 1$
+	\item Update Iteration number: $i \leftarrow i + 1$
 \ENDWHILE
 
 \end{algorithmic}
@@ -253,13 +253,14 @@ v =&  \beta v + (-\alpha_i)\nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^
 $\alpha$ is used to weight more previous iterations to calculate the affect on the next iteration.
 
 \begin{algorithm}
-\caption{Stochastic Gradient Descent (SGD) in a neural network}
+\caption{Stochastic Gradient Descent (SGD) optimizer for a neural network}
 \label{algSGD}
 
 \begin{algorithmic}
 
 \REQUIRE Learning rate $\alpha$ or learning rate schedule, $\alpha(i)$.
-\REQUIRE Hyper-paramater $\beta \in [0,1)$
+\REQUIRE Initial velocity $v(0)$ hyper-parameter (usually left at $0$).
+\REQUIRE Hyper-parameter $\beta \in [0,1)$
 \REQUIRE Subroutine/function to compute gradient of cost function.
 \REQUIRE Mini-batch size, $m$
 \REQUIRE Stopping criterion $S$
@@ -268,18 +269,17 @@ $\alpha$ is used to weight more previous iterations to calculate the affect on t
 	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
 	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
 	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
-	\item $\Delta\Theta \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
+	\item $\nabla J \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
 	\item Compute velocity, and apply update from eqn. (\ref{momentum update})
-	\item $v \leftarrow \beta v + (-\alpha_i)\Delta\Theta$
+	\item $v \leftarrow \beta v + (-\alpha_i)\nabla J$
 	\item $\Theta \leftarrow \Theta + v$
-	\item $i \leftarrow i + 1$
+	\item Update Iteration number: $i \leftarrow i + 1$
 \ENDWHILE
 
 \end{algorithmic}
 \end{algorithm}
 
 \subsection{Nesterov's Momentum}
-
 
 \paragraph*{}
 
@@ -288,7 +288,58 @@ $\alpha$ is used to weight more previous iterations to calculate the affect on t
 
 \section{Adaptive Learning Algorithms}
 
-\subsection{}
+\paragraph*{}It has been experimentally shown that the learning rate $\alpha$ is an incredibly important hyper-parameter in the performance of an optimizer \cite{Geron}. Instead of applying a fixed learning rate or learning rate schedule, we can choose to use an \textit{adaptive learning rate} method. Furthermore since some parameters will be more sensitive to the learning rate than other, we can introduce a modification to the learning rate such that it is a scalar, but accompanied by a vector that scales each element in $\Theta$ differently \cite{Goodfellow}. We can then adapt each learning rate in the process of optimizing.
+
+\subsection{AdaGrad}
+
+\paragraph*{}The AdaGrad optimizer individually adapts learning rates of each network parameter based on the sum of previous values of the gradient cost function. Parameter learning rates are updated by scaling them inversely proportional to the square-root of the sum of all previous squared gradient values \cite{Goodfellow}. We notate with accumulated gradient $r$,  and corresponding update rule, with stabilizing parameter $\delta$, and learning rate $\alpha$:
+
+\begin{equation}
+\label{AdaGrad update}
+\begin{split}
+r =& r + \nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \Big] 
+\odot \nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \Big] \\
+\Theta =& \Theta + -\frac{\alpha}{\delta + \sqrt{r}} \odot \nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \Big] 
+\end{split}
+\end{equation}
+
+\paragraph*{}AdaGrad's method of accumulating past gradients to iterative update the learning rate, along with it's parameters allow for quick optimization problems with relatively convex solutions, but slower optimization with non-convex functions.
+
+\begin{algorithm}[H]
+\caption{Adaptive Gradient (AdaGrad) optimizer for a neural network}
+\label{algAdaGrad}
+
+\begin{algorithmic}
+
+\REQUIRE Learning rate $\alpha$.
+\REQUIRE Small constant $\delta$ for numerical stabilization, usually about $10^-7$.
+\REQUIRE Subroutine/function to compute gradient of cost function.
+\REQUIRE Mini-batch size, $m$
+\REQUIRE Stopping criterion $S$
+
+\WHILE {Stopping Criterion $S$ is \FALSE}
+	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
+	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
+	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
+	\item $\nabla J \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
+	\item Compute accumulated squared gradient: $r \leftarrow r  + \nabla J \odot \nabla J$
+	\item Apply update rule from eqn. (\ref{AdaGrad update})
+	\item $\Delta \Theta \leftarrow -\frac{\alpha}{\delta+\sqrt{r}} \odot \nabla J$
+	\item $\Theta = \Theta + \Delta \Theta$	
+	\item Update Iteration number: $i \leftarrow i + 1$
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}
+
+\section{RMS-Prop}
+
+
+\section{Adaptive-Moments}
+
+% ================================================================
+
+\section{Approximate Second-Order Methods}
 
 
 % ================================================================

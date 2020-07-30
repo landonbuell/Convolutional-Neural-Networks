@@ -18,29 +18,30 @@ import ERR_COMP_FIGS_Utilities as utils
 
 if __name__ == '__main__':
 
-    """
+
     infile = '4Pixels.xlsx'
     filedata = pd.read_excel(infile,index_col=0)
     print(filedata.head())
 
     # Plot Loss Metrics
-    cols = ['Baseline Loss','Approximated Loss','Blurred Loss','Compensated Loss']
+    cols = ['Baseline Loss','Approximated Loss','33% Blurred Loss','50% Blurred Loss','Compensated Loss']
     data = [filedata[x] for x in cols]
     utils.Plot_Metrics('4 Pixel Border Loss','Loss Function Value',data,
                        'loss',True,False)
 
     # Plot Precision Metrics
-    cols = ['Baseline Precision','Approximated Precision','Blurred Precision','Compensated Precision']
+    cols = ['Baseline Precision','Approximated Precision',
+            '33% Blurred Precision','50% Blurred Precision','Compensated Precision']
     data = [filedata[x] for x in cols]
     utils.Plot_Metrics('4 Pixel Border Precision Score','Precision Score Value',data,
                        'precision',True,False)
 
     # Plot Precision Metrics
-    cols = ['Baseline Recall','Approximated Recall','Blurred Recall ','Compensated Recall']
+    cols = ['Baseline Recall','Approximated Recall',
+            '33% Blurred Recall ', '50% Blurred Recall ','Compensated Recall']
     data = [filedata[x] for x in cols]
     utils.Plot_Metrics('4 Pixel Border Recall Score','Recall Score Value',data,
                        'recall',True,False)
-    """
 
     infile = 'ErrComp_TimeDiff.xlsx'
     filedata = pd.read_excel(infile,index_col=0)

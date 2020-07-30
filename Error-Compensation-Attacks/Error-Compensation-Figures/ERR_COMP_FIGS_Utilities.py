@@ -28,14 +28,15 @@ def Plot_Metrics (title,ylab,ydata,metric,save=False,show=True):
     plt.figure(figsize=(20,12))
     plt.title(title,size=60,weight='bold',pad=20)
     plt.ylabel(ylab,size=40,weight='bold')
-    plt.xlabel('2D Kernel Shape',size=40,weight='bold')
+    plt.xlabel('Kernel Shape',size=40,weight='bold')
 
     kernel_sides = np.array([2,3,4,5,6])
 
     plt.plot(kernel_sides,ydata[0],color='red',linestyle='-',marker='o',ms=20,label='Baseline')
     plt.plot(kernel_sides,ydata[1],color='blue',linestyle='-',marker='^',ms=20,label='Approximated')
-    plt.plot(kernel_sides,ydata[2],color='magenta',linestyle='-',marker='s',ms=20,label='Blurred Approximation')
-    plt.plot(kernel_sides,ydata[3],color='gray',linestyle='-',marker='H',ms=20,label='Compensated')
+    plt.plot(kernel_sides,ydata[2],color='magenta',linestyle='-',marker='s',ms=20,label='33% Blurred')
+    plt.plot(kernel_sides,ydata[3],color='green',linestyle='-',marker='H',ms=20,label='50% Blurred')
+    plt.plot(kernel_sides,ydata[4],color='gray',linestyle='-',marker='v',ms=20,label='Compensated')
     
     if metric in ['precision','recall']:
         plt.yticks(np.arange(0,1.1,0.1),size=35)
@@ -65,7 +66,7 @@ def Plot_PercentDiff (title,ylab,labs,ydata,save=False,show=True):
     plt.figure(figsize=(20,12))
     plt.title(title,size=60,weight='bold',pad=20)
     plt.ylabel(ylab,size=40,weight='bold')
-    plt.xlabel('2D Kernel Shape',size=40,weight='bold')
+    plt.xlabel('Kernel Shape',size=40,weight='bold')
 
     kernel_sides = np.array([2,3,4,5,6])
     plt.hlines(0,2,7,color='black')
@@ -81,7 +82,7 @@ def Plot_PercentDiff (title,ylab,labs,ydata,save=False,show=True):
     plt.plot(kernel_sides,ydata[7],color='magenta',linestyle='--',marker='s',ms=20,label=labs[7])
 
    
-    plt.xticks(kernel_sides,['2x2','3x3','4x4','5x5','6x6'],size=40)
+    plt.xticks(kernel_sides,['2 x 2','3 x 3','4 x 4','5 x 5','6 x 6'],size=40)
     plt.yticks(np.arange(-15,+16,5),size=40)
     plt.grid()
     plt.legend(fontsize=25,loc=0)    
