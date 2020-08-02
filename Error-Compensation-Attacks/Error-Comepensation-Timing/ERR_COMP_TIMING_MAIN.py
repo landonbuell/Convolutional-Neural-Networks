@@ -22,5 +22,7 @@ import ERR_COMP_TIMING_Utils as utils
 if __name__ == '__main__':
 
     X_train,y_train,X_test,y_test = utils.Load_CIFAR10()
+
+
     
 
