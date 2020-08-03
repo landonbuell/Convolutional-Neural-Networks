@@ -44,7 +44,7 @@ if __name__ == '__main__':
     data = [filedata[x] for x in cols]
     utils.Plot_Metrics('4 Pixel Border Recall Score','Recall Score Value',data,
                        'recall',True,False)
-    """
+
             #### PLOT EXECUTION TIME PERCENTAGE ####
 
     infile = 'ErrComp_TimeDiff.xlsx'
@@ -63,7 +63,6 @@ if __name__ == '__main__':
     utils.Plot_PercentDiff('Fitting Time Difference from Baseline','Percentage Difference',
                            labs=filedata.columns,ydata=dt)
     
-    """
             #### PLOT COMEPNSATION vs. EXECUTION TIME ####
     path = 'C:\\Users\\Landon\\Documents\\GitHub\\Convolutional-Neural-Networks\\' + \
                 'Error-Compensation-Attacks\\Raw_Data_Timing'
