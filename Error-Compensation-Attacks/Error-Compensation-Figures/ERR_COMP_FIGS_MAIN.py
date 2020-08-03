@@ -18,6 +18,8 @@ import ERR_COMP_FIGS_Utilities as utils
 
 if __name__ == '__main__':
 
+    
+        #### PLOT METRICS ####
 
     infile = '4Pixels.xlsx'
     filedata = pd.read_excel(infile,index_col=0)
@@ -42,6 +44,8 @@ if __name__ == '__main__':
     data = [filedata[x] for x in cols]
     utils.Plot_Metrics('4 Pixel Border Recall Score','Recall Score Value',data,
                        'recall',True,False)
+    """
+            #### PLOT EXECUTION TIME PERCENTAGE ####
 
     infile = 'ErrComp_TimeDiff.xlsx'
     filedata = pd.read_excel(infile,index_col=0)
@@ -58,3 +62,27 @@ if __name__ == '__main__':
 
     utils.Plot_PercentDiff('Fitting Time Difference from Baseline','Percentage Difference',
                            labs=filedata.columns,ydata=dt)
+    
+    """
+            #### PLOT COMEPNSATION vs. EXECUTION TIME ####
+    path = 'C:\\Users\\Landon\\Documents\\GitHub\\Convolutional-Neural-Networks\\' + \
+                'Error-Compensation-Attacks\\Raw_Data_Timing'
+    infiles = ['Compensate2time.csv','Compensate4time.csv',
+               'Compensate6time.csv','Compensate8time.csv']
+    plot_data = np.array([])
+
+    for file in infiles:
+        filedata = pd.read_csv(os.path.join(path,file),index_col=0)
+        filedata = filedata.drop(['Model'],axis=1)
+        executionTime = filedata.to_numpy(dtype=np.float64)[:,0]
+        compensationTime = filedata.to_numpy(dtype=np.float64)[:,1]
+        layerDiff = 100*(compensationTime/executionTime)
+        plot_data = np.append(plot_data,layerDiff)
+
+    plot_data = plot_data.reshape(len(infiles),-1)
+    labels = ['2 Pixel Border','4 Pixel Border','6 Pixel Border','8 Pixel Border']
+    utils.Plot_PercentDiff2('Compensation in Forward Pass','Percentage of Time',
+                            labels,plot_data,show=True)
+
+
+        
