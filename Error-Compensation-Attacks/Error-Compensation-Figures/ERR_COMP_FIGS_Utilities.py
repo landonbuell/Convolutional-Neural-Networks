@@ -115,7 +115,7 @@ def Plot_PercentDiff2 (savename,ylab,labs,ydata,save=False,show=True):
     plt.plot(kernel_sides,ydata[2],color='gray',linestyle='-',marker='v',ms=30,label=labs[2])
     plt.plot(kernel_sides,ydata[3],color='purple',linestyle='-',marker='v',ms=30,label=labs[3])
 
-    plt.xticks(kernel_sides,['2 x 2','3 x 3','4 x 4','5 x 5','6 x 6'],size=40)
+    plt.xticks(kernel_sides,['2x2','3x3','4x4','5x5','6x6'],size=40)
     plt.yticks(np.arange(4,13,2),['4%','6%','8%','10%','12%'],size=40)
     plt.grid()
     plt.legend(fontsize=30,loc=0)    

@@ -21,8 +21,8 @@ if __name__ == '__main__':
     
         #### PLOT METRICS ####
 
-    infile = '4Pixels.xlsx'
-    filedata = pd.read_excel(infile,index_col=0)
+    infile = '4Pixels.csv'
+    filedata = pd.read_csv(infile,index_col=0)
     print(filedata.head())
 
     # Plot Loss Metrics
@@ -47,8 +47,8 @@ if __name__ == '__main__':
 
             #### PLOT EXECUTION TIME PERCENTAGE ####
 
-    infile = 'ErrComp_TimeDiff.xlsx'
-    filedata = pd.read_excel(infile,index_col=0)
+    infile = 'ErrComp_TimeDiff.csv'
+    filedata = pd.read_csv(infile,index_col=0)
     print(filedata.head())
 
     dt = []
