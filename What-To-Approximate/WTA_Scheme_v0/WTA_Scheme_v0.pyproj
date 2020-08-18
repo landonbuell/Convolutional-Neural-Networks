@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f159ed7c-8949-4f6a-b04e-cca904f8c66a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>WTA_Scheme_v0.py</StartupFile>
+    <StartupFile>WTA_MAIN.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="WTA_Scheme_v0.py" />
+    <Compile Include="WTA_Utilities.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WTA_MAIN.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
