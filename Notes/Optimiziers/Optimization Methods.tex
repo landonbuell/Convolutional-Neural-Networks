@@ -253,7 +253,7 @@ v =&  \beta v + (-\alpha_i)\nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^
 $\alpha$ is used to weight more previous iterations to calculate the affect on the next iteration.
 
 \begin{algorithm}
-\caption{Stochastic Gradient Descent (SGD) optimizer for a neural network}
+\caption{Stochastic Gradient Descent (SGD) optimizer with momentum}
 \label{algSGD}
 
 \begin{algorithmic}
@@ -281,7 +281,45 @@ $\alpha$ is used to weight more previous iterations to calculate the affect on t
 
 \subsection{Nesterov's Momentum}
 
+\paragraph*{}Nesterov's momentum is an extension of the traditional momentum scalar. Instead of the tradiontal momentum update rule, the the gradient of the cost function is evaluated using the standard back-propagation method, as well as the momentum from the previous step. This way, Netserov's momentum can be interpreted as adding an additional step  that serves as a sort of correction \cite{Geron,Goodfellow}. The update rule of Nesterov momentum is given by:
+
+\begin{equation}
+\label{Nesterov update}
+\begin{split}
+v =&  \beta v + (-\alpha_i)\nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)}+\beta v,y^{*(n)}) \Big] ,
+\hspace{1cm} \beta \in [0,1) \\
+\Theta =&  \Theta + v
+\end{split} 
+\end{equation}
+
 \paragraph*{}
+
+\begin{algorithm}
+\caption{Stochastic Gradient Descent (SGD) optimizer with Nesterov momentum}
+\label{algSGD}
+
+\begin{algorithmic}
+
+\REQUIRE Learning rate $\alpha$ or learning rate schedule, $\alpha(i)$.
+\REQUIRE Initial velocity $v(0)$ hyper-parameter (usually left at $0$).
+\REQUIRE Hyper-parameter $\beta \in [0,1)$
+\REQUIRE Subroutine/function to compute gradient of cost function.
+\REQUIRE Mini-batch size, $m$
+\REQUIRE Stopping criterion $S$
+
+\WHILE {Stopping Criterion $S$ is \FALSE}
+	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
+	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
+	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
+	\item $\nabla J \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
+	\item Compute velocity, and apply update from eqn. (\ref{momentum update})
+	\item $v \leftarrow \beta v + (-\alpha_i)\nabla J$
+	\item $\Theta \leftarrow \Theta + v$
+	\item Update Iteration number: $i \leftarrow i + 1$
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}
 
 
 % ================================================================
@@ -332,10 +370,40 @@ r =& r + \nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \B
 \end{algorithmic}
 \end{algorithm}
 
-\section{RMS-Prop}
+\subsection{RMS-Prop}
 
 
-\section{Adaptive-Moments}
+\subsection{Adaptive-Moments}
+
+\paragraph*{}The Adaptive-Moments algorithm, also called \textit{ADAM} for short, is a powerful variant of algorithms with an adaptive learning rate. In ADAM, momentum is incorproated directly into update rule
+
+\begin{algorithm}[H]
+\caption{Adaptive Gradient (AdaGrad) optimizer for a neural network}
+\label{algAdaGrad}
+
+\begin{algorithmic}
+
+\REQUIRE Stepsize $\varepsilon$
+\REQUIRE Small constant $\delta$ for numerical stabilization, usually about $10^-7$.
+\REQUIRE constants $\rho_1$, $\rho_2$ used got exponential decay rates, usually $0.9$ and $0.999$ respectively.
+\REQUIRE Subroutine/function to compute gradient of cost function.
+\REQUIRE Mini-batch size, $m$
+\REQUIRE Stopping criterion $S$
+
+\WHILE {Stopping Criterion $S$ is \FALSE}
+	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
+	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
+	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
+	\item $\nabla J \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
+	\item Compute accumulated squared gradient: $r \leftarrow r  + \nabla J \odot \nabla J$
+	\item Apply update rule from eqn. (\ref{AdaGrad update})
+	\item $\Delta \Theta \leftarrow -\frac{\alpha}{\delta+\sqrt{r}} \odot \nabla J$
+	\item $\Theta = \Theta + \Delta \Theta$	
+	\item Update Iteration number: $i \leftarrow i + 1$
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}
 
 % ================================================================
 

@@ -13,7 +13,7 @@ import os
 import time
 import tensorflow.keras as keras
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import WTA_Utilities as utils
 

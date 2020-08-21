@@ -9,6 +9,7 @@ What-to-Approximate Scheme
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import os
 import tensorflow as tf
 import tensorflow.keras as keras
@@ -18,7 +19,7 @@ import tensorflow.keras as keras
 KERNELSIZES = np.array([2,3,4,5,6])
 
 FrameCols = ['Model Name','Loss','Precision','Recall']
-FrameName = 'Baseline.csv'
+FrameName = 'Approx300.csv'
 
         #### FUNCTIONS DEFINITIONS ####
 
@@ -28,16 +29,38 @@ def CIFAR10 ():
     (X_train,y_train),(X_test,y_test) = keras.datasets.cifar10.load_data()
     return X_train,y_train,X_test,y_test
 
-
+def PlotSample(X):
+    """ Plot sample X """
+    plt.figure(figsize=(16,12))
+    plt.imshow(X)
+    plt.show()
+    
 
         #### CLASS DEFINTIONS ####
 
 class WhatToApproximateLayer (keras.layers.Layer):
    """ What-To-Approximate Layer For CNN Network """
    
-   def __init__(self):
+   def __init__(self,maskSize=100):
        """ Initialize Class Object Instance """
        super(WhatToApproximateLayer,self).__init__(trainable=False)
+       self.maskSize = maskSize
+       self.W = self.InitWeights()
+       
+   def InitWeights (self):
+        """ Intialize Weight Matrix """
+        W =  np.ones(shape=(32,32),dtype=np.uint8)   
+        maskRows = np.random.randint(low=0,high=31,size=self.maskSize)
+        maskCols = np.random.randint(low=0,high=31,size=self.maskSize)
+        for i,j in zip(maskRows,maskCols):
+            W[i,j] = 0
+        W = np.random.permutation(W).reshape(32,32)
+        W = np.transpose(np.array([W,W,W]),axes=(1,2,0))
+        return W
+
+   def Call (self,X):
+       """ Call WTA layer """
+       return X * self.W    # hadamard product w/ weights
 
 
 class NeuralNetwork :
@@ -60,7 +83,7 @@ class NeuralNetwork :
         """
         model = keras.models.Sequential(name=self.modelName)
         model.add(keras.layers.InputLayer(input_shape=(32,32,3),name='Input'))
-
+        model.add(WhatToApproximateLayer(maskSize=300))
         # Each Layer Group
         for i,side in enumerate(self.kernelSizes):
             model.add(keras.layers.Conv2D(filters=64,kernel_size=side,strides=(1,1),padding='same',
@@ -90,3 +113,5 @@ class NeuralNetwork :
         """ Evaluate Neural Network Model """
         scores = self.model.evaluate(x=X,y=Y,verbose=0)
         return scores
+
+
