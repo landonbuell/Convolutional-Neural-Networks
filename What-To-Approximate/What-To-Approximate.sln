@@ -7,6 +7,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WTA_Scheme_v0", "WTA_Scheme
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WTA_Visualization", "WTA_Visualization\WTA_Visualization.pyproj", "{DB0032CB-29F7-489B-967C-BE9561B18FF4}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WTA_Figures", "WTA_Figures\WTA_Figures.pyproj", "{A26FE662-6D81-43C8-B46C-4E91F7983502}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,8 @@ Global
 		{F159ED7C-8949-4F6A-B04E-CCA904F8C66A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB0032CB-29F7-489B-967C-BE9561B18FF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DB0032CB-29F7-489B-967C-BE9561B18FF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A26FE662-6D81-43C8-B46C-4E91F7983502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A26FE662-6D81-43C8-B46C-4E91F7983502}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

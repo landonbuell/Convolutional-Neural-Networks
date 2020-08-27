@@ -32,9 +32,11 @@
 \maketitle
 
 % ================================================================
+% ================================================================
 
 \section{Introduction}
 
+% ================================================================
 
 \subsection{Deep Feed-Forward Neural Network Structure}
 
@@ -89,6 +91,8 @@ For a network with $L$ layers, we can define a forward pass computation with alg
 \end{algorithmic}
 \end{algorithm}
 
+% ================================================================
+
 \subsection{Optimization Motivation}
 
 \paragraph*{}Ultimately any output is function of the input, and the parameters in each layer. By convention, these parameters can be concatenated into a single object called $\Theta$. For smaller neural networks, $\Theta$ may only have several hundred elements, but for increasingly complex models, there can upwards of several million elements within the object. The goal of the network then is to find a particular set of elements $\{ \theta_0 , \theta_1 , ... \}$ that allow a network to produce a desirable output based on that input. To do this, we require a set of samples $X = \{x_0,x_1,x_2,....\}$ and a set of corresponding labels 
@@ -99,6 +103,8 @@ $Y = \{y_0,y_1,y_2,...\}$, such that element $x_i$ should produce result $y_i$, 
 \paragraph*{}The value of the cost function is then directly dependent on the expected output, $y_i$ and the given output $y_i^*$. The cost of a single sample can be shown as $J = J( y_i , y_i^* )$. However, the output is implicitly dependent on the the network input $x_i$ and the parameters in each layer, given by $\Theta$. Since the latter two are fixed objects, we can then only adjust the elements in the object $\Theta$. We do so to allow for increasingly lower values of the objective function, $J(\Theta)$, which indicates that on average, the network model is producing more and more accurate predictions. This process is called \textit{optimization}. 
 
 \paragraph*{}It is worth noting that machine learning does differ from explicit multi-dimensional optimization. In machine learning, the performance of a neural network is typically measured by a standard statistical metric such as precision score, recall score, accuracy rating, etc. \cite{Geron}. These measures are far more interpretable to a human, and often more indicative that a model is performing as desired than the cost function itself. Thus, we optimize the elements in $J(\Theta)$ in hopes that doing so will also improve these related performance metrics \cite{Goodfellow}.Despite this indirect optimization, it is the basis for much of machine-learning.
+
+% ================================================================
 
 \subsection{The $\Theta$ Object}
 
@@ -114,7 +120,7 @@ Where $W^{(i)}$ , $b^{(i)}$ gives a weighting and element in the $i$-th layer.
 $W^{(l)} \in \mathbb{R}^{N \times M} = \big\{ \theta_0 , \theta_1 , ... , \theta_{N \times M - 1} \big\}$. Then, $\Theta$ is an object that contains matrices and vectors corresponding to the numerous parameter contained within each layer. Each of those parameters can be further broken down into it's constituent elements which are $\theta_0 , \theta_1 , \theta_2 , .... $. 
 
 
-
+% ================================================================
 % ================================================================
 
 \section{Gradient Based Learning}
@@ -124,6 +130,8 @@ $W^{(l)} \in \mathbb{R}^{N \times M} = \big\{ \theta_0 , \theta_1 , ... , \theta
 \paragraph*{}We need to then find the appropriate position in parameter-space as to minimize $J$. This task becomes even more difficult when considering that we do not define $J$ explicitly for each position in the space. Furthermore, $J$ may often contain discontinuities, or ill-conditionings, and is not easily represented by a traditional analytical function, thus we cannot solve the optimization with standard whiteboard mathematics. For deep and complex nerual networks, even over a finite set of possible floating-point values, this can amount to trillions of possible locations in parameter space to test, which is unpractical for computational implementation. This prevents us from traditional brute-force testing methods in hopes to find a local or global minimum. 
 
 \paragraph*{}Instead, we brute-force a \textit{guess} or series of guesses for a possible solution. This guess is a particular point in parameter space that either be chosen randomly, or derived from a previously found solution. We can then optimize $J(\Theta)$ based on the guess or collection of guesses by adjusting each value in $\Theta$ as the reduce the value of $J$ by a small quantity. By repeating this process hundreds of times, under the right conditions, we can take a pseudo-random guess at the solution and slowly adjust each element to develop an approximation of the solution. This process is a simplification of \textit{gradient descent} algorithm.
+
+% ================================================================
 
 \subsection{Gradient Descent}
 
@@ -145,9 +153,11 @@ $W^{(l)} \in \mathbb{R}^{N \times M} = \big\{ \theta_0 , \theta_1 , ... , \theta
 
 \paragraph*{}Another trouble arises when we reconsider that each element in the gradient vector is often not well-defined by a traditional mathematical function, meaning we cannot simply use symbols and standard calculus rules to find the necessary values in eqn. (\ref{gradient step}), we need to use numerical approximations, and \textit{back propagation} to compute each partial derivative. 
 
+% ================================================================
+
 \subsection{Backwards-Propagation}
 
-\paragraph*{}Given the recursive nature of the function, we cannot compute each element in the gradient vector by conventional derivatives. We have to use the chain rule from calculus to  begin at the final output of the network and work backwards to the entry layer to compute each derivative. This process is called \textit{back-propagation}. 
+\paragraph*{}Given the recursive nature of the function, we cannot compute each element in the gradient vector by conventional derivatives. We have to use the chain rule from calculus to  begin at the final output of the network and work backwards to the entry layer to compute the numerical derivative with respect to each parameter. This process is called \textit{backwards-propagation}. 
 
 \paragraph*{}To begin, we compute the gradient of the cost function with respect each element in the output layer. $\nabla_{y^*}\big[J(\Theta)\big]$. Next, recall that a layer's operation represented by the function $f^{(l)}$ may often be the composition of many functions, such as a dense layer having a linear matrix-vector product, which may then be subject to a non-linear activation function. We also need to apply the chain rule within each layer to ensure that each element is accurately computed.
 
@@ -193,10 +203,12 @@ $dx \leftarrow \nabla_{y^*}J(y,y^*)$ \\
 \end{algorithmic}
 \end{algorithm}
 
+% ================================================================
+
 \subsection{Challenges of Gradient-Based Learning}
 
 
-
+% ================================================================
 % ================================================================
 
 \section{Stochastic Gradient Descent}
@@ -232,6 +244,8 @@ $dx \leftarrow \nabla_{y^*}J(y,y^*)$ \\
 
 \end{algorithmic}
 \end{algorithm}
+
+% ================================================================
 
 \subsection{Momentum Hyper-parameter}
 
@@ -279,9 +293,11 @@ $\alpha$ is used to weight more previous iterations to calculate the affect on t
 \end{algorithmic}
 \end{algorithm}
 
+% ================================================================
+
 \subsection{Nesterov's Momentum}
 
-\paragraph*{}Nesterov's momentum is an extension of the traditional momentum scalar. Instead of the tradiontal momentum update rule, the the gradient of the cost function is evaluated using the standard back-propagation method, as well as the momentum from the previous step. This way, Netserov's momentum can be interpreted as adding an additional step  that serves as a sort of correction \cite{Geron,Goodfellow}. The update rule of Nesterov momentum is given by:
+\paragraph*{}Nesterov's momentum is an extension of the traditional momentum scalar. Instead of the previous momentum update rule, the the gradient of the cost function is evaluated using the standard back-propagation method, as well as the momentum from the previous step. This way, Nesterov's momentum can be interpreted as adding an additional step that serves as a sort of correction \cite{Geron,Goodfellow}. The update rule of Nesterov momentum is given by:
 
 \begin{equation}
 \label{Nesterov update}
@@ -321,16 +337,20 @@ v =&  \beta v + (-\alpha_i)\nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^
 \end{algorithmic}
 \end{algorithm}
 
-
 % ================================================================
+% ================================================================
+
+\newpage
 
 \section{Adaptive Learning Algorithms}
 
-\paragraph*{}It has been experimentally shown that the learning rate $\alpha$ is an incredibly important hyper-parameter in the performance of an optimizer \cite{Geron}. Instead of applying a fixed learning rate or learning rate schedule, we can choose to use an \textit{adaptive learning rate} method. Furthermore since some parameters will be more sensitive to the learning rate than other, we can introduce a modification to the learning rate such that it is a scalar, but accompanied by a vector that scales each element in $\Theta$ differently \cite{Goodfellow}. We can then adapt each learning rate in the process of optimizing.
+\paragraph*{}It has been experimentally shown that the learning rate $\alpha$ is an incredibly important hyper-parameter in the performance of an optimizer \cite{Geron}. Instead of applying a fixed learning rate or learning rate schedule, we can choose to use an \textit{adaptive learning rate} method. Furthermore since some parameters will be more sensitive to the learning rate than other, we can introduce a modification to the learning rate such that it is a scalar, but accompanied by a vector that scales each element in $\Theta$ differently \cite{Goodfellow}. We can then adapt each learning rate in the process of optimizing. Algorithms that use this concept are called "Adaptive Learning Algorithms".
 
-\subsection{AdaGrad}
+% ================================================================
 
-\paragraph*{}The AdaGrad optimizer individually adapts learning rates of each network parameter based on the sum of previous values of the gradient cost function. Parameter learning rates are updated by scaling them inversely proportional to the square-root of the sum of all previous squared gradient values \cite{Goodfellow}. We notate with accumulated gradient $r$,  and corresponding update rule, with stabilizing parameter $\delta$, and learning rate $\alpha$:
+\subsection{Adaptive-Gradients}
+
+\paragraph*{}The Adaptive gradients, or \textit{AdaGrad}, optimizer individually adapts learning rates of each network parameter based on the sum of previous values of the gradient cost function. Parameter learning rates are updated by scaling them inversely proportional to the square-root of the sum of all previous squared gradient values \cite{Goodfellow,Geron}. We notate with accumulated gradient $r$,  and corresponding update rule, with stabilizing parameter $\delta$, and learning rate $\alpha$:
 
 \begin{equation}
 \label{AdaGrad update}
@@ -350,45 +370,12 @@ r =& r + \nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \B
 \begin{algorithmic}
 
 \REQUIRE Learning rate $\alpha$.
-\REQUIRE Small constant $\delta$ for numerical stabilization, usually about $10^-7$.
+\REQUIRE Small constant $\delta$ for numerical stabilization, usually about $10^{-7}$.
 \REQUIRE Subroutine/function to compute gradient of cost function.
 \REQUIRE Mini-batch size, $m$
 \REQUIRE Stopping criterion $S$
 
-\WHILE {Stopping Criterion $S$ is \FALSE}
-	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
-	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
-	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
-	\item $\nabla J \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
-	\item Compute accumulated squared gradient: $r \leftarrow r  + \nabla J \odot \nabla J$
-	\item Apply update rule from eqn. (\ref{AdaGrad update})
-	\item $\Delta \Theta \leftarrow -\frac{\alpha}{\delta+\sqrt{r}} \odot \nabla J$
-	\item $\Theta = \Theta + \Delta \Theta$	
-	\item Update Iteration number: $i \leftarrow i + 1$
-\ENDWHILE
-
-\end{algorithmic}
-\end{algorithm}
-
-\subsection{RMS-Prop}
-
-
-\subsection{Adaptive-Moments}
-
-\paragraph*{}The Adaptive-Moments algorithm, also called \textit{ADAM} for short, is a powerful variant of algorithms with an adaptive learning rate. In ADAM, momentum is incorproated directly into update rule
-
-\begin{algorithm}[H]
-\caption{Adaptive Gradient (AdaGrad) optimizer for a neural network}
-\label{algAdaGrad}
-
-\begin{algorithmic}
-
-\REQUIRE Stepsize $\varepsilon$
-\REQUIRE Small constant $\delta$ for numerical stabilization, usually about $10^-7$.
-\REQUIRE constants $\rho_1$, $\rho_2$ used got exponential decay rates, usually $0.9$ and $0.999$ respectively.
-\REQUIRE Subroutine/function to compute gradient of cost function.
-\REQUIRE Mini-batch size, $m$
-\REQUIRE Stopping criterion $S$
+\item Initialize Accumulation Variable, $r \leftarrow 0$
 
 \WHILE {Stopping Criterion $S$ is \FALSE}
 	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
@@ -407,7 +394,126 @@ r =& r + \nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \B
 
 % ================================================================
 
+\newpage
+
+\subsection{RMS-Prop}
+
+\paragraph*{}RMS-Propagation or \textit{RMS-Prop} for short, is a modification of the AdaGrad optimizer. Since AdaGrad accumulates gradients throughout the trainign process, the steps size close to a convergence point often diminishes too quickly, and a true minimum is often never fully reached \cite{Geron}. To combat this problem, RMS-prop only uses the gradients from more recenter iterations, which also allows it to perform better in non-convex loss functions. RMS-prop implements an exponentially decaying average that weights recent updates more heavily, and older updates much lighter. It introduces an additional weighting hyper-parameter $\rho$:
+
+\begin{equation}
+\label{RMSprop Update}
+\begin{split}
+r &= \rho r + (1 - \rho) \nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \Big] \\
+\Theta &= \Theta + (-\alpha) \frac{1}{\sqrt{r + \delta}}
+\end{split}
+\end{equation}
+
+\paragraph*{}In a convex or non-convex space, the RMS-Prop algorithm will allow for generally stable convergence quickly. It has experimentally found itself to be very efficient and practical \cite{Goodfellow}. This makes it an idea optimizer for many neural network users.  Below is shown a pseudo-code for implementing an RMS-prop optimizer.
+
+\begin{algorithm}[H]
+\caption{RMS-Propagation (RMSprop) optimizer for a neural network}
+\label{algAdaGrad}
+
+\begin{algorithmic}
+
+\REQUIRE Learning rate $\alpha$, decay rate $\rho$.
+\REQUIRE Small constant $\delta$ for numerical stabilization, usually about $10^{-7}$.
+\REQUIRE Subroutine/function to compute gradient of cost function.
+\REQUIRE Mini-batch size, $m$
+\REQUIRE Stopping criterion $S$
+
+Initialize Accumulation Variable, $r \leftarrow 0$
+
+\WHILE {Stopping Criterion $S$ is \FALSE}
+	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
+	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
+	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
+	\item $\nabla J \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
+	\item Compute accumulated squared gradient: $r \leftarrow \rho r + (1 - \rho) \nabla J \odot \nabla J$
+	\item Apply update rule from eqn. (\ref{AdaGrad update})
+	\item $\Delta \Theta \leftarrow -\frac{\alpha}{\delta+\sqrt{r}} \odot \nabla J$
+	\item $\Theta = \Theta + \Delta \Theta$	
+	\item Update Iteration number: $i \leftarrow i + 1$
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+% ================================================================
+
+\newpage
+
+\subsection{Adaptive-Moments}
+
+\paragraph*{}The Adaptive-Moments algorithm, also called \textit{ADAM} for short, is a powerful variant of algorithms with an adaptive learning rate. ADAM combines ideas of gradient momentum optimization as as elements from the RMS-Prop algorithm. It tracks an exponentially decaying average of past gradients, as well as exponentially decaying average of past squared gradients \cite{Geron}. As an extra step, ADAM also includes correction factors for both first order moments \cite{Goodfellow}.
+
+\paragraph*{}Because of the corrections, and necessary hyper-parameters, ADAM comes with a much more demanding update rule. For iteration $t$ with moment decay parameters $\rho_1$ and $\rho_2$, and learning rate $\alpha$, the ADAM update is given: 
+
+\begin{equation}
+\label{ADAM update}
+\begin{split}
+s &= \rho_1 s + (1 - \rho_1) \nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \Big]  \\
+r &= \rho_2 r + (1 - \rho_2) \nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \Big] \odot
+							\nabla_{\Theta} \Big[ \frac{1}{m} \sum_{n=1}^{m} J(y^{(n)},y^{*(n)}) \Big]  \\
+s' &= \frac{s}{1-\rho_1^t} \\
+r' &= \frac{r}{1-\rho_2^t} \\
+\Theta &= \Theta + (-\alpha)\frac{s'}{\sqrt{r'}+\delta} \\
+\end{split}
+\end{equation}
+
+\paragraph*{}The parameter $s$ and $r$ are the \textit{biases} moment estimations, which are decayed by hyper-parameters $\rho_1$ and $\rho_2$ respectively. Notice how $s$ tracks the gradient magnitude directly, whereas $r$ tracks the square of the gradient magnitude. $s'$ and $r'$ are the bias corrects for each moment.
+
+
+\begin{algorithm}[H]
+\caption{Adaptive-Moments (ADAM) optimizer for a neural network}
+\label{algAdaGrad}
+
+\begin{algorithmic}
+\REQUIRE Stepsize $\varepsilon$
+\REQUIRE Small constant $\delta$ for numerical stabilization, usually about $10^{-7}$.
+\REQUIRE constants $\rho_1$, $\rho_2$ used got exponential decay rates, usually $0.9$ and $0.999$ respectively.
+\REQUIRE Subroutine/function to compute gradient of cost function.
+\REQUIRE Mini-batch size, $m$
+\REQUIRE Stopping criterion $S$
+
+Initalize moment variables and iteration counter $s = 0$, $r = 0$, $i = 0$
+
+\WHILE {Stopping Criterion $S$ is \FALSE}
+	\item Extract a mini-batch of $m$ samples from larger data set $X$. $[x^{(0)},x^{(1)},...,x^{(m-1)}]$ and corresponding target values 
+	$[y^{(0)},y^{(1)},...,y^{(m-1)}]$.
+	\item Compute numerical gradient estimate of each sample in batch. This can be done with standard back-propagation in algorithm (\ref{algBackProp}) and 			 	normalize by batch size $m$:
+	\item $\nabla J \leftarrow \frac{1}{m}\nabla_{\Theta} \Big[ \sum_n J(y^{(n)},y^{*(n)}) \Big] $
+	
+	\item Compute first bias moment: $s \leftarrow \rho_1 s + (1 - \rho_1) \nabla J$
+	\item Compute second bias moment: $r \leftarrow \rho_2 s + (1 - \rho_2) \nabla J \odot \nabla J$
+	\item First bias correction: $s' \leftarrow \frac{s}{1 - \rho_1^i}$
+	\item Second bias correction: $r' \leftarrow \frac{r}{1 - \rho_2^i}$
+	
+	\item Compute And Apply update:	$\Delta \Theta = (-\varepsilon) \frac{s'}{\sqrt{r'} + \delta}$
+	\item $\Theta = \Theta + \Delta \Theta$	
+	\item Update Iteration number: $i \leftarrow i + 1$
+\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}
+
+% ================================================================
+% ================================================================
+
 \section{Approximate Second-Order Methods}
+
+
+% ================================================================
+
+
+% ================================================================
+
+% ================================================================
+
+
+% ================================================================
 
 
 % ================================================================
