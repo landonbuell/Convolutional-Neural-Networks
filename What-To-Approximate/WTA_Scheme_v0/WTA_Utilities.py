@@ -94,6 +94,7 @@ class NeuralNetwork :
 
         # Dense Layers
         model.add(keras.layers.Flatten(name='F1'))
+        #model.add(WhatToApproximateLayer(maskSize=100))
         model.add(keras.layers.Dense(units=128,activation='relu',name='D1'))
         model.add(keras.layers.Dense(units=10,activation='softmax',name='Output'))
  

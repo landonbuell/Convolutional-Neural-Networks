@@ -46,11 +46,13 @@ if __name__ == '__main__':
             likeModelData = np.append(likeModelData,scores)
             
 
+        # Process data for output
         likeModelData = likeModelData.reshape(N_iters,-1)      
         averageScores = np.mean(likeModelData,axis=0)
         exportData = np.array([NETWORK.modelName])
         exportData = np.append(exportData,averageScores)
     
+        # Convert into DataFrame and Write to CSV file
         frame = pd.DataFrame(data=[exportData],columns=utils.FrameCols)
         frame.to_csv(path_or_buf=outputBuffer,mode='a',header=False)
 
