@@ -69,7 +69,7 @@ if __name__ == '__main__':
             for KERNEL_SIZE in LAYER_MODELS[N_LAYERS]:    # Each number of nodes
                 print('\tDensity: '+str(KERNEL_SIZE[0])+'-',time.perf_counter())  #inicate nodes
                 model_name = str(N_LAYERS)+'_'+str(KERNEL_SIZE[0])
-                like_model_data = np.array([])          # hold dat from each iter
+                like_model_data = np.array([])          # hold data from each iter
                 
                 for i in range(N_iters):            # Each Iteration
                     print('\t\tIteration: '+str(i)+'-',time.perf_counter())
@@ -78,7 +78,7 @@ if __name__ == '__main__':
                     HIST = MODEL.fit(x=X_train,y=y_train,batch_size=128,
                                      epochs=n_epochs,verbose=0)             # train model
                     METRICS = MODEL.evaluate(x=X_test,y=y_test,batch_size=128,
-                                            verbose=0)
+                                            verbose=0)                      # evaluate after training
                     like_model_data = np.append(like_model_data,METRICS)    # add metrics to array
 
                 # Compute Averages of N_iters Models
@@ -86,6 +86,7 @@ if __name__ == '__main__':
                 stats = np.mean(like_model_data,axis=0)                 # avg over N_iters
                 print("\t\t\t",stats)
                 
+                # CONSTRUCT OUTPUT TABLE, WRITE TO LOCAL PATH
                 row = pd.DataFrame(data=[[model_name,stats[0],stats[1],stats[2]]],
                                    columns=utils.dataframe_cols)                        # make frame
                 row.to_csv(outpath,columns=utils.dataframe_cols,header=False,mode='a')  # append to file

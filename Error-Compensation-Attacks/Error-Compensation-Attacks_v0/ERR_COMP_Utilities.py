@@ -26,7 +26,6 @@ dataframe_cols = ['Model','Average Loss','Average Precision','Average Recall']
 
 approx_index = np.concatenate((np.arange(0,6),np.arange(26,32)),axis=-1)
 outfile_name = 'Comp_6.csv'
-
 output_path = 'C:/Users/Landon/Documents/GitHub/Convolutional-Neural-Networks/Error-Compensation-Attacks/Raw_Data'
 
 
@@ -65,8 +64,8 @@ class ApproximationLayer (keras.layers.Layer):
 
     def call (self,X):
         """ Call Layer Object w/ X, return output Y """
-        Y = self.approximate(X)
-        return Y
+        Y = self.approximate(X)     # apply approximation function above
+        return Y                    # return new activations 
 
 class CompensationLayer (keras.layers.Layer):
     """ Compensation Layer Object, 
@@ -101,13 +100,15 @@ class CompensationLayer (keras.layers.Layer):
 
     def call (self,X):
         """ Call Layer Object w/ X, return output Y"""
-        Y = self.compensate(X)
-        return Y
+        Y = self.compensate(X)  # apply compensation
+        return Y                # return new activations
 
 class AbsoluteValueLayer (keras.layers.Layer):
-    """ Compute absolute value of inputs """
+    """ Compute absolute value of inputs
+            This layer is only used to ensure non-negative outputs
+            It does not participate in the training process """
 
-    def __init__(self,rows=[],cols=[]):
+    def __init__(self):
         """ Initialize Layer Instance """
         super(AbsoluteValueLayer,self).__init__(trainable=False)
 
